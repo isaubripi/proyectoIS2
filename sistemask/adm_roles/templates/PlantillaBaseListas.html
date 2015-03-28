@@ -1,0 +1,39 @@
+{% extends 'PlantillaBase.html' %}
+{% block poup %}{% endblock %}
+
+{% block Content %}
+    <div class="header">
+        <div class="right_header"> <!--a href="#" class="messages">Messages</a-->
+            <!--<form action="/" method="get">{% csrf_token %}
+                <u> Usuario</u>:  {{ logueado.nick }}  ||
+                <a href="/" class="logout">cerrar sesión</a>
+            </form>-->
+        </div>
+	</div>
+    <div class="main_content">
+    	<div style="text-align: center;"><b><h1><font color="white">{% block TituloMenu %}{% endblock %}</font></h1></b></div>
+        {% block MigasDePan %}{% endblock %}
+        <div class="center_content">
+            <div class="left_content">
+                <div class="sidebar_box">
+         		    <div class="sidebar_box_content">
+         				<!--<img src="{{ STATIC_URL }}Imagenes/images/info.png" alt="" title="" class="sidebar_icon_right" />-->
+
+      				</div>
+         		</div>
+    		</div>
+            <div class="right_content">
+				<br>
+				<br>
+                <h2>{% block TituloLista %}{% endblock %}</h2>
+                <table id="rounded-corner" summary="2007 Major IT Companies' Profit">
+    				<thead>{% block Columnas %}{% endblock %}</thead>
+                    <tbody>{% block MostrarDatos%}{% endblock %}</tbody>
+                </table>
+                <div style="text-align: center;"><span style="color:#FF0000">{{ error }}</span></div>
+                <table>{% block Botones %}{% endblock %}</table>
+            </div>
+            <div class="clear"> </div>
+        </div>
+    </div>
+{% endblock %}

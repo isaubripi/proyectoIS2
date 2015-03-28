@@ -1,0 +1,32 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Asignar Rol::{% endblock %}
+{% block TituloMenu %} ASIGNAR ROL A USUARIOS {% endblock %}
+{% block TituloOperacion %} Lista de Usuarios que no poseen el rol {% endblock %}
+{% block DatosOperacion %}
+    <form action="/asignar/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre del Rol</label></dt><dt><font color = 'green' > {{ rol.nombre }}</font></dt></dl>
+            <dl><dt><label>Usuarios:</label></dt>
+                <dd>
+                    <select name="usuario" required>
+                        <option>Seleccionar usuario</option>
+                        {% for usuario in lista_usuarios %}
+                            <option value={{ usuario.username }}>{{ usuario.username }}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </dl>
+        </fieldset>
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='rol' value={{ rol.id }} >
+        <input type="submit" value="Asignar">
+    </form>
+    <form action="/inicio/rol/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="submit" value="<Atrás">
+    </form>
+{% endblock %}
+{% block Botones %}
+{% endblock %}

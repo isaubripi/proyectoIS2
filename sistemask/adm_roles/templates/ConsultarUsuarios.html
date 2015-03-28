@@ -1,0 +1,23 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Consultar Usuarios::{% endblock %}
+{% block TituloMenu %} CONSULTA DE USUARIOS {% endblock %}
+{% block TituloOperacion %} Lista de Usuarios que poseen el rol {% endblock %}
+{% block DatosOperacion %}
+    <fieldset>
+        <dl><dt><label>Nombre del Rol</label></dt><dt>{{ rol.nombre }}</dt></dl>
+        <dl><dt><label>Usuarios:</label></dt>
+        <dt>
+        {% for rol in lista_roles %}
+            {{ rol.usuario.username }}<br>
+        {% endfor %}
+        </dt>
+        </dl>
+    </fieldset>
+{% endblock %}
+{% block Botones %}
+    <form action="/inicio/rol/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="submit" value="<Atrás">
+    </form>
+{% endblock %}

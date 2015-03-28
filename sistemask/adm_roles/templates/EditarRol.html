@@ -1,0 +1,84 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Rol::{% endblock %}
+{% block TituloMenu %} EDITAR ROL {% endblock %}
+{% block TituloOperacion %} Formulario Rol {% endblock %}
+{% block DatosOperacion %}
+    <form action="/editar/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><div style="text-align: center;"><span style="color:#ffaf1e">Obs: Las modificaciones afectaran a todos los usuarios que posean dicho rol</span></div></dl>
+            <dl><dt><label>Nombre:</label></dt><dd>
+                <input type="hidden" name="nombre_rol" value="{{ rol.nombre }}"/></dd>
+                <input type="text" name="nombre_nuevo_rol" value="{{ rol.nombre }}" required/></dd>
+            </dl>
+            <p><h3>Permisos de Administración de Proyectos</h3></p>
+            <p>
+                <input type="checkbox" name="crear_proyecto" {% if rol.crear_proyecto %} checked {% endif %}>Crear proyecto
+                <input type="checkbox" name="modificar_proyecto" {% if rol.modificar_proyecto %} checked {% endif %}>Modificar proyecto
+                <input type="checkbox" name="eliminar_proyecto" {% if rol.eliminar_proyecto %} checked {% endif %}>Eliminar proyecto
+                <input type="checkbox" name="cerrar_proyecto" {% if rol.cerrar_proyecto %} checked {% endif %}>Cerrar proyecto
+            </p>
+            <p><h3>Permisos de Administración de Usuarios</h3></p>
+            <p>
+                <input type="checkbox" name="crear_usuario"{% if rol.crear_usuario %} checked {% endif %}>Crear usuario
+                <input type="checkbox" name="modificar_usuario"{% if rol.modificar_usuario %} checked {% endif %}>Modificar usuario
+                <input type="checkbox" name="eliminar_usuario"{% if rol.eliminar_usuario %} checked {% endif %}>Eliminar usuario
+            </p
+            <p><h3>Permisos de Administración de Roles</h3></p>
+            <p>
+                <input type="checkbox" name="agregar_rol"{% if rol.agregar_rol %} checked {% endif %}>Agregar rol
+                <input type="checkbox" name="modificar_rol"{% if rol.modificar_rol %} checked {% endif %}>Modificar rol
+                <input type="checkbox" name="eliminar_rol"{% if rol.eliminar_rol %} checked {% endif %}>Eliminar rol
+            </p>
+            <p><h3>Permisos de Generar resumen de clientes y burndownchart</h3></p>
+            <p>
+                <input type="checkbox" name="generar_resumen_clientes"{% if rol.generar_resumen_clientes %} checked {% endif %}>Generar resumen de clientes
+                <input type="checkbox" name="crear_burndown"{% if rol.crear_burndown %} checked {% endif %}>Crear burndown
+            </p>
+            <p><h3>Permisos de Asignación</h3></p>
+            <p>
+                <input type="checkbox" name="asignar_usuario_inicial"{% if rol.asignar_usuario_inicial %} checked {% endif %}>Asignar usuario inicial
+                <input type="checkbox" name="asignar_permisos_roles"{% if rol.asignar_permisos_roles %} checked {% endif %}>Asignar permisos a roles
+                <input type="checkbox" name="asignar_roles_usuario"{% if rol.asignar_roles_usuario %} checked {% endif %}>Asignar roles a usuario
+                <input type="checkbox" name="asignar_usuarios_proyecto"{% if rol.asignar_usuarios_proyecto %} checked {% endif %}>Asignar usuarios a proyecto
+            </p>
+            <p><h3>Permisos de Listar</h3></p>
+            <p>
+                <input type="checkbox" name="listar_usuarios"{% if rol.listar_usuarios %} checked {% endif %}>Listar usuarios
+                <input type="checkbox" name="listar_proyectos"{% if rol.listar_proyectos %} checked {% endif %}>Listar proyectos
+            </p>
+            <p><h3>Permisos de Administración de Sprints</h3></p>
+            <p>
+                <input type="checkbox" name="agregar_sprint"{% if rol.agregar_sprint %} checked {% endif %}>Agregar sprint
+                <input type="checkbox" name="modificar_sprint"{% if rol.modificar_sprint %} checked {% endif %}>Modificar sprint
+                <input type="checkbox" name="eliminar_sprint"{% if rol.eliminar_sprint %} checked {% endif %}>Eliminar sprint
+                <input type="checkbox" name="activar_sprint"{% if rol.activar_sprint %} checked {% endif %}>Activar sprint
+            </p>
+            <p><h3>Permisos de Administración de User Stories</h3></p>
+            <p>
+                <input type="checkbox" name="agregar_historia"{% if rol.agregar_historia %} checked {% endif %}>Agregar historia
+                <input type="checkbox" name="modificar_historia"{% if rol.modificar_historia %} checked {% endif %}>Modificar historia
+                <input type="checkbox" name="eliminar_historia"{% if rol.eliminar_historia %} checked {% endif %}>Eliminar historia
+                <input type="checkbox" name="adjuntar_archivos"{% if rol.adjuntar_archivos %} checked {% endif %}>Adjuntar archivos<br>
+                <input type="checkbox" name="cargar_horas"{% if rol.cargar_horas %} checked {% endif %}>Cargar horas trabajadas
+                <input type="checkbox" name="actualizar_estado"{% if rol.actualizar_estado %} checked {% endif %}>Actualizar estado
+                <input type="checkbox" name="ver_historial"{% if rol.ver_historial %} checked {% endif %}>Ver historial
+                <input type="checkbox" name="validar_historia"{% if rol.validar_historia %} checked {% endif %}>Validar historia
+            </p>
+            <p><h3>Permisos de Administración de Tabla kanban</h3></p>
+            <p>
+                <input type="checkbox" name="crear_flujo"{% if rol.crear_flujo %} checked {% endif %}>Crear flujo
+                <input type="checkbox" name="modificar_flujo"{% if rol.modificar_flujo %} checked {% endif %}>Modificar flujo
+                <input type="checkbox" name="eliminar_flujo"{% if rol.eliminar_flujo %} checked {% endif %}>Eliminar flujo
+                <input type="checkbox" name="ver_tabla"{% if rol.ver_tabla %} checked {% endif %}>Ver tabla
+            </p>
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='rol' value={{ rol.id }}>
+        <input type="submit" value="Actualizar">
+    </form>
+    <form action="/inicio/rol/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}

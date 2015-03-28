@@ -1,0 +1,19 @@
+{% extends 'PlantillaBase.html' %}
+
+{% block Content %}
+    <div class="header"> </div>
+    <div class="main_content">
+    	<div style="text-align: center;"><b><h1><font color="white">{% block TituloMenu %}{% endblock %}</font></h1></b></div>
+        <div class="right_content">
+			<br>
+			<br>
+            <h2>{% block TituloOperacion %}{% endblock %}</h2>
+            <table id="rounded-corner" summary="2007 Major IT Companies' Profit">
+                {% block DatosOperacion %}{% endblock %}
+            </table>
+            <div style="text-align: center;"><span style="color:#FF0000">{{ error }}</span></div>
+            <table>{% block Botones %}{% endblock %}</table>
+        </div>
+        <div class="clear"> </div>
+    </div>
+{% endblock %}

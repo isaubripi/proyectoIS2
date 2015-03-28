@@ -1,0 +1,589 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module adm_usuarios.views</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="adm_usuarios.html"><font color="#ffffff">adm_usuarios</font></a>.views</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/isidro/proyectois2/sistemask/adm_usuarios/views.py">/home/isidro/proyectois2/sistemask/adm_usuarios/views.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;coding=utf-8</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="django.http.request.html">django.http.request</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>(<a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>, <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>, <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#CambioEstado">CambioEstado</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#EditarUsuario">EditarUsuario</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#EditarUsuarioConfirmar">EditarUsuarioConfirmar</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#ListarUsuario">ListarUsuario</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#RegistrarUsuario">RegistrarUsuario</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#eliminar">eliminar</a>
+</font></dt><dt><font face="helvetica, arial"><a href="adm_usuarios.views.html#inicio">inicio</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CambioEstado">class <strong>CambioEstado</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;para&nbsp;cambiar&nbsp;el&nbsp;estado&nbsp;de&nbsp;un&nbsp;usuario<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#CambioEstado">CambioEstado</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CambioEstado-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Cambia&nbsp;el&nbsp;estado&nbsp;del&nbsp;usuario&nbsp;de&nbsp;activo&nbsp;a&nbsp;inactivo<br>
+luego&nbsp;el&nbsp;usuario&nbsp;eliminado&nbsp;ya&nbsp;no&nbsp;se&nbsp;muestra<br>
+en&nbsp;la&nbsp;lista&nbsp;de&nbsp;usuarios&nbsp;activos</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="CambioEstado-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="CambioEstado-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="CambioEstado-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="CambioEstado-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="CambioEstado-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="CambioEstado-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="CambioEstado-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="CambioEstado-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="CambioEstado-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EditarUsuario">class <strong>EditarUsuario</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;que&nbsp;muestra&nbsp;el&nbsp;formulario&nbsp;para&nbsp;la&nbsp;modificacion<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#EditarUsuario">EditarUsuario</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="EditarUsuario-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Se&nbsp;encarga&nbsp;de&nbsp;retornar&nbsp;la&nbsp;pagina&nbsp;con&nbsp;los<br>
+datos&nbsp;cargados&nbsp;del&nbsp;usuario</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="EditarUsuario-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="EditarUsuario-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="EditarUsuario-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="EditarUsuario-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="EditarUsuario-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="EditarUsuario-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="EditarUsuario-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="EditarUsuario-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="EditarUsuario-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EditarUsuarioConfirmar">class <strong>EditarUsuarioConfirmar</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Verifica&nbsp;los&nbsp;cambios&nbsp;realizados&nbsp;y&nbsp;los&nbsp;valida<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#EditarUsuarioConfirmar">EditarUsuarioConfirmar</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Se&nbsp;asegura&nbsp;que&nbsp;el&nbsp;momento&nbsp;de&nbsp;cambiar&nbsp;ciertos&nbsp;datos&nbsp;de&nbsp;los&nbsp;usuarios<br>
+no&nbsp;se&nbsp;repitan&nbsp;datos&nbsp;como:<br>
+*&nbsp;nombre&nbsp;de&nbsp;usuario<br>
+*&nbsp;cedula&nbsp;de&nbsp;identidad<br>
+*&nbsp;correo&nbsp;electronico<br>
+&nbsp;<br>
+luego&nbsp;realiza&nbsp;la&nbsp;actualizacion&nbsp;y&nbsp;vuelve<br>
+a&nbsp;la&nbsp;pagina&nbsp;inicial&nbsp;de&nbsp;la&nbsp;administracion&nbsp;de&nbsp;usuarios</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="EditarUsuarioConfirmar-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="EditarUsuarioConfirmar-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="EditarUsuarioConfirmar-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="EditarUsuarioConfirmar-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="EditarUsuarioConfirmar-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ListarUsuario">class <strong>ListarUsuario</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;para&nbsp;controlar&nbsp;la&nbsp;creacion&nbsp;de&nbsp;usuarios<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#ListarUsuario">ListarUsuario</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ListarUsuario-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Este&nbsp;metodo&nbsp;se&nbsp;encarga&nbsp;de&nbsp;recibir&nbsp;los&nbsp;datos&nbsp;para&nbsp;la&nbsp;creacion<br>
+de&nbsp;un&nbsp;usuario.<br>
+Hace&nbsp;las&nbsp;verficaciones&nbsp;correspondientes&nbsp;para&nbsp;que&nbsp;no&nbsp;se&nbsp;permita&nbsp;repetir:<br>
+-&nbsp;nombres&nbsp;de&nbsp;usuarios<br>
+-&nbsp;cedula&nbsp;de&nbsp;identidad<br>
+-&nbsp;correo&nbsp;electronico<br>
+&nbsp;<br>
+luego&nbsp;retorna&nbsp;la&nbsp;pantalla&nbsp;inicial&nbsp;de&nbsp;la&nbsp;administracion<br>
+de&nbsp;usuarios</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="ListarUsuario-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="ListarUsuario-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="ListarUsuario-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="ListarUsuario-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="ListarUsuario-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="ListarUsuario-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ListarUsuario-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="ListarUsuario-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="ListarUsuario-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RegistrarUsuario">class <strong>RegistrarUsuario</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;para&nbsp;lazar&nbsp;el&nbsp;formulario&nbsp;de&nbsp;creacion<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#RegistrarUsuario">RegistrarUsuario</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="RegistrarUsuario-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>retorna&nbsp;el&nbsp;formulario&nbsp;para&nbsp;la&nbsp;creacion</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="RegistrarUsuario-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="RegistrarUsuario-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="RegistrarUsuario-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="RegistrarUsuario-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="RegistrarUsuario-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="RegistrarUsuario-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="RegistrarUsuario-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="RegistrarUsuario-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="RegistrarUsuario-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="eliminar">class <strong>eliminar</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;para&nbsp;mostrar&nbsp;la&nbsp;pagina&nbsp;de&nbsp;eliminacion<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#eliminar">eliminar</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="eliminar-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Retorna&nbsp;una&nbsp;pagina&nbsp;donde&nbsp;se&nbsp;confirma&nbsp;la&nbsp;eliminacion&nbsp;de&nbsp;un<br>
+usuario</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="eliminar-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="eliminar-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="eliminar-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="eliminar-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="eliminar-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="eliminar-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="eliminar-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="eliminar-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="eliminar-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="inicio">class <strong>inicio</strong></a>(<a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Esta&nbsp;clase&nbsp;se&nbsp;encarga&nbsp;de&nbsp;realizar&nbsp;la&nbsp;autenticacion&nbsp;de&nbsp;usuarios<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="adm_usuarios.views.html#inicio">inicio</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a></dd>
+<dd><a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a></dd>
+<dd><a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a></dd>
+<dd><a href="django.views.generic.base.html#View">django.views.generic.base.View</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="inicio-post"><strong>post</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Este&nbsp;metodo&nbsp;se&nbsp;encarga&nbsp;de&nbsp;verificar&nbsp;el&nbsp;usuario&nbsp;y&nbsp;la<br>
+contrasenha&nbsp;para&nbsp;luego&nbsp;enviar&nbsp;la&nbsp;pagina&nbsp;de&nbsp;<a href="#inicio">inicio</a></tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateView">django.views.generic.base.TemplateView</a>:<br>
+<dl><dt><a name="inicio-get"><strong>get</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><a name="inicio-get_template_names"><strong>get_template_names</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;template&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;request.&nbsp;Must&nbsp;return<br>
+a&nbsp;list.&nbsp;May&nbsp;not&nbsp;be&nbsp;called&nbsp;if&nbsp;render_to_response&nbsp;is&nbsp;overridden.</tt></dd></dl>
+
+<dl><dt><a name="inicio-render_to_response"><strong>render_to_response</strong></a>(self, context, **response_kwargs)</dt><dd><tt>Returns&nbsp;a&nbsp;response,&nbsp;using&nbsp;the&nbsp;`response_class`&nbsp;for&nbsp;this<br>
+view,&nbsp;with&nbsp;a&nbsp;template&nbsp;rendered&nbsp;with&nbsp;the&nbsp;given&nbsp;context.<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;keyword&nbsp;arguments&nbsp;are&nbsp;provided,&nbsp;they&nbsp;will&nbsp;be<br>
+passed&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;response&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#TemplateResponseMixin">django.views.generic.base.TemplateResponseMixin</a>:<br>
+<dl><dt><strong>content_type</strong> = None</dl>
+
+<dl><dt><strong>response_class</strong> = &lt;class 'django.template.response.TemplateResponse'&gt;</dl>
+
+<dl><dt><strong>template_name</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#ContextMixin">django.views.generic.base.ContextMixin</a>:<br>
+<dl><dt><a name="inicio-get_context_data"><strong>get_context_data</strong></a>(self, **kwargs)</dt></dl>
+
+<hr>
+Methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="inicio-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>Constructor.&nbsp;Called&nbsp;in&nbsp;the&nbsp;URLconf;&nbsp;can&nbsp;contain&nbsp;helpful&nbsp;extra<br>
+keyword&nbsp;arguments,&nbsp;and&nbsp;other&nbsp;things.</tt></dd></dl>
+
+<dl><dt><a name="inicio-dispatch"><strong>dispatch</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="inicio-http_method_not_allowed"><strong>http_method_not_allowed</strong></a>(self, request, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="inicio-options"><strong>options</strong></a>(self, request, *args, **kwargs)</dt><dd><tt>Handles&nbsp;responding&nbsp;to&nbsp;requests&nbsp;for&nbsp;the&nbsp;OPTIONS&nbsp;HTTP&nbsp;verb.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><a name="inicio-as_view"><strong>as_view</strong></a>(cls, **initkwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Main&nbsp;entry&nbsp;point&nbsp;for&nbsp;a&nbsp;request-response&nbsp;process.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="django.views.generic.base.html#View">django.views.generic.base.View</a>:<br>
+<dl><dt><strong>http_method_names</strong> = [u'get', u'post', u'put', u'patch', u'delete', u'head', u'options', u'trace']</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

@@ -1,0 +1,12 @@
+
+{% block title  %} SISTEMA DE GESTION DE PROYECTOS AGILES SK {% endblock %}
+{% block content %}
+    <h3>Ingresar al Sistema</h3>
+    {% if message %}
+    <b>{{message}}</b>
+    {% endif %}
+    <form action="" method="post">{% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Ingresar"/>
+    </form>
+{% endblock %}

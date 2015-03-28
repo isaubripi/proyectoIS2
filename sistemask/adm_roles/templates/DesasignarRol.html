@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Desasignar Rol::{% endblock %}
+{% block TituloMenu %} DESASIGNAR ROL {% endblock %}
+{% block TituloOperacion %} Rol desasignado del usuario {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Los cambios han sido guardados. </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/inicio/rol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

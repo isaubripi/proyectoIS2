@@ -1,0 +1,56 @@
+{% extends 'PlantillaBase.html' %}
+{% block title %}::Menu Inicio::{% endblock %}
+{% block import %}
+<!--<link rel="stylesheet" type="text/css" media="all" href="{{ STATIC_URL }}niceforms-default.css" />-->
+{% endblock %}
+{% block Content %}
+    <div id="main_container">
+        <div class="header">
+            <div class="right_header"> <!--a href="#" class="messages">Messages</a-->
+                <form action="/" method="get">{% csrf_token %}
+                    <a href="/" class="logout">Salir del Sistema</a>
+                </form>
+            </div>
+    	</div>
+        <div class="main_content">
+            <div style="text-align: center;"><b><h1><font color="green">BIENVENIDO <td> {{ i.username }} </td></font></h1></b></div>
+ 			<div class="center_content">
+    		    <div class="left_content">
+                    <div class="sidebar_box">
+         				<div class="sidebar_box_content">
+         				    <!--<img src="{{ STATIC_URL }}images/info.png" alt="" title="" class="sidebar_icon_right" />-->
+      					</div>
+         		    </div>
+    			</div>
+                <div class="right_content">
+					<br>
+					<br>
+				    <h2>En este panel de tareas, Ud. puede observar las operaciones que puede realizar:</h2>
+                  	<table id="rounded-corner" summary="2007 Major IT Companies' Profit">
+		                <!--tbody>
+		    	            <tr>
+		        	            <td><input type="checkbox" name="" /></td>
+		                        <!td>1</td>
+		                        <td>NomPro</td>
+		                        <td>iniciado</td>
+		                        <td>Rodrigo</td>
+			                    <td>Fecha Inicio</td>
+			                    <td>Fecha Fin</td>
+		                    </tr>
+		    	            <!NO OLVIDAR... poner en cada fila 'ingresar' y 'generar informr'>
+		                </tbody-->
+	                </table>
+	                <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>Crear Proyecto</strong><span class="bt_green_r"></span></a>
+     	            <a href="#" class="bt_blue"><span class="ubt_blue_lft"></span><strong>Ingresar al Proyecto</strong><span class="bt_blue_r"></span></a>
+     	            <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>Generar Informe</strong><span class="bt_blue_r"></span></a-->
+                    <form action= "/inicio/usuario/" method="post"> {% csrf_token %}
+     	                <input type="submit" value="Administrar Usuarios">
+                    </form>
+                    <form action="/inicio/rol/" method="post"> {% csrf_token %}
+                        <input type="submit" value="Administrar Roles" >
+                    </form>
+  	        </div> <!right-content>
+            <div class="clear"> </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'PlantillaBase.html' %}
+{% block title %}::Cambio Estado::{% endblock %}
+{% block Content %}
+    <div id="main_container">
+		    <div class="header"></div>
+    		<div class="main_content">
+    			<div style="text-align: center;"><b><h1><font color="white">CAMBIO DE ESTADO</font></h1></b></div>
+ 			    <div class="center_content">
+   				    <div class="right_content">
+				    	<br>
+					    <br>
+				        <center><h3>El usuario pasó al estado: INACTIVO</h3></center>
+                    </div>   <!--end of center content -->
+    			    <div class="clear"></div>
+
+    		    </div> <!--end of main content-->
+                <form action="/inicio/usuario/" method="POST"> {% csrf_token %}
+                        <center><input type="submit" value="Aceptar"></center>
+                    </form>
+		    </div>
+
+    </div>
+{% endblock %}

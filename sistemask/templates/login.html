@@ -1,0 +1,27 @@
+{% extends 'PlantillaBase.html' %}
+{% block title %} ::LOGIN {% endblock %}
+{% block Content %}
+    <br><br><br><br>
+    <div class="login_form">
+        <h1> SISTEMA DE GESTION DE PROYECTOS AGILES SK<h1>
+            <br>
+        <h3>Ingresar al Sistema</h3>
+        <form action='/inicio/'  method="POST" class="niceform"> {% csrf_token %}
+               <fieldset>
+                   <dl>
+                       <dt><label for="email">Usuario:</label></dt>
+	        	       <dd><input type="text" name="user" size="40"/></dd>
+                   </dl>
+                   <dl>
+	                   <dt><label for="password">Contraseña:</label></dt>
+	             	   <dd><input name="pass" type="password" size="40"/></dd>
+	           	   </dl>
+                   <div style="text-align: center;"><span style="color:#FF0000">{{ error }}</span></div>
+                   <br><br>
+                   <dl class="submit">
+	               		<input type="submit" name="submit" id="submit" value="Ingresar" />
+	               </dl>
+               </fieldset>
+        </form>
+    </div>
+{% endblock %}
