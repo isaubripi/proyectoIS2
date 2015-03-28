@@ -9,7 +9,7 @@ class Usuario(models.Model):
     cedula= models.CharField(max_length=10)
     email= models.CharField(max_length=20)
     estado= models.BooleanField(default=True)
-    #permiso= models.ManyToManyField(Rol)
+
 
 '''Un usuario posee los sgtes atributos:
 username: Es el nombre que se utiliza para ingresar al sistema

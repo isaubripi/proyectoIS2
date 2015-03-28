@@ -17,7 +17,7 @@ class inicio(TemplateView):
             buscar_user = request.POST['user']                          #llamo es el login:
             buscar_password = request.POST['pass']                      #Verifica el nombre de usuario y la
             error= ""                                                   #contrasenha ingresadas para verificar
-            for i in Usuario.objects.all():                            #si existe la entrada en la BD Usuarios
+            for i in Usuario.objects.all():                            #si existe la entrada en la tabla Usuarios
                 if i.estado:
                     if i.username == buscar_user:
                         if i.password == buscar_password:
@@ -53,12 +53,12 @@ class ListarUsuario(TemplateView):
         de usuarios
         """
 
-        if 'user' in request.POST:                                     #La pagina quien lo llama es CrearUsuario.html?
+        if 'user' in request.POST:                                     #La pagina quien lo llama es CrearUsuario.html
             new_user= request.POST['user']
                                                                     #Comprueba absolutamente todos los datos
             new_nombre= request.POST['nombre']                          #ingresados para averiguar si no se trata de
             new_apellido= request.POST['apellido']                      #un dato vacio el cual genera problemas al
-            new_email= request.POST['email']                            #intentar guardar en la BD
+            new_email= request.POST['email']                            #intentar guardar en la tabla correspondiente
             new_cedula= request.POST['cedula']
             new_password= request.POST['pass']
 
@@ -210,59 +210,3 @@ class EditarUsuarioConfirmar(TemplateView):
         else:
             return render(request, 'EditarUsuario.html', {'usuario':modificacion})
 
-
-
-
-'''def adm_usuarios_inicio(request):
-    u = User.objects.all().order_by('-id')
-    return render_to_response('adm_usuarios_inicio.html',{"u": u}, context_instance=RequestContext(request))'''
-
-
-
-'''def register_view(request):
-    form = RegisterForm()
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            usuario = form.cleaned_data['username']
-            nombre = form.cleaned_data['first_name']
-            apellido = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            password_one = form.cleaned_data['password_one']
-            password_two = form.cleaned_data['password_two']
-            u = User(username = usuario,email=email,password= password_one,first_name= nombre, last_name= apellido )
-            u.save() #Guardar el objeto
-            return render_to_response('registro_exito.html',context_instance= RequestContext(request))
-        else:
-            ctx = {'form': form}
-            return render_to_response('registro.html', ctx, context_instance= RequestContext(request))
-    ctx = {'form': form}
-    return render_to_response('registro.html', ctx, context_instance= RequestContext(request))
-
-
-def editar_usuario(request, id):
-    u = User.objects.get(id=id)
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            usuario = form.cleaned_data['username']
-            nombre = form.cleaned_data['first_name']
-            apellido = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            password_one = form.cleaned_data['password_one']
-            password_two = form.cleaned_data['password_two']
-            u = User(username = usuario,email=email,password= password_one,first_name= nombre, last_name= apellido )
-            u.save() #Guardar el objeto
-    if request.method == "GET":
-        form = RegisterForm(initial={
-            'usuario' : u.username,
-            'nombre' : u.first_name,
-            'apellido' : u.last_name,
-            'email' : u.email,
-            'password_one' : u.password,
-            #'password_two' : u.password_two,
-
-        })
-    ctx = {'form':form,User:u}
-
-    return render_to_response('editar_usuario.html', ctx, context_instance= RequestContext(request))'''

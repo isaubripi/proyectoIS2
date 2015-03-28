@@ -1,14 +1,7 @@
 {% extends 'PlantillaBase.html' %}
 {% block title %}::Editar Usuario::{% endblock %}}
 {% block import %}
-    <!--<script type="text/javascript" src="{{ STATIC_URL }}jconfirmaction.jquery.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.ask').jConfirmAction();
-		});
-	</script>
-	<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}niceforms.js"></script>
-	<link rel="stylesheet" type="text/css" media="all" href="{{ STATIC_URL }}niceforms-default.css" />-->
+
 {% endblock %}
 {% block Content %}
     <div id="main_container">
@@ -60,7 +53,7 @@
                         <form action="/inicio/usuario/" method="POST">{% csrf_token %}
                             <input type="submit" value="<Atrás">
                         </form>
-                        <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>canselar</strong><span class="bt_green_r"></span></a>
+                        <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>cancelar</strong><span class="bt_green_r"></span></a>
      	                <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>aceptar</strong><span class="bt_blue_r"></span></a-->
   	               </div>   <!--end of center content -->
     	    <div class="clear"></div>

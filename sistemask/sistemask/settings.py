@@ -15,9 +15,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-#from unipath import Path
-#PROJECT_PATH= Path(__file__).ancestor(2)
-#TEMPLATE_DIRS= PROJECT_PATH.child('templates')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -89,10 +87,9 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
 
 STATIC_URL = '/static/'
-#STATICFILES_DIRS= (PROJECT_PATH.child('static'),)
+
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
