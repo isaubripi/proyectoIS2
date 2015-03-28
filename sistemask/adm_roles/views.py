@@ -8,7 +8,7 @@ from .models import Rol
 
 # Create your views here.
 class RolView(TemplateView):
-    '''Esta clase muestra la lista de roles.
+    '''Esta clase muestra la lista de roles activos.
 
     '''
     template_name = 'Rol.html'
@@ -20,7 +20,10 @@ class RolView(TemplateView):
 
 
 class CrearRol(RolView):
+    '''Esta clase crea un rol.
 
+
+    '''
     template_name = 'CrearRol.html'
     def post(self, request, *args, **kwargs):
 
@@ -28,6 +31,11 @@ class CrearRol(RolView):
         return render(request, self.template_name, {'lista_usuarios' : lista})
 
 class CrearRolConfirm(CrearRol):
+    '''Esta clase confirma la creacion de un nuevo rol.
+    Cada rol tiene un campo para usuario a quien se le da el rol.
+
+
+    '''
     template_name = 'CrearRolConfirm.html'
     def post(self, request, *args, **kwargs):
 
@@ -81,6 +89,10 @@ class CrearRolConfirm(CrearRol):
 
 
 class EditarRol(RolView):
+    '''Esta clase edita o modifica un rol existente.
+    El rol de Scrum Master no se puede modificar.
+
+    '''
     template_name = 'EditarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -95,6 +107,9 @@ class EditarRol(RolView):
         return render(request, self.template_name, diccionario)
 
 class EditarRolConfirmar(EditarRol):
+    '''Esta clase confirma la modificacion de un rol.
+
+    '''
     template_name = 'EditarRolConfirm.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -176,6 +191,10 @@ class EditarRolConfirmar(EditarRol):
         return render(request, self.template_name, diccionario)
 
 class EliminarRol(RolView):
+    '''Esta clase elimina un rol, es decir, pone en estado inactivo el rol.
+    El rol de Scrum Master no se puede eliminar.
+
+    '''
     template_name = 'EliminarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -193,6 +212,9 @@ class EliminarRol(RolView):
         return render(request, self.template_name, diccionario)
 
 class ConsultarRol(RolView):
+    '''Esta clase muestra la lista de los roles activos en el sistema.
+
+    '''
     template_name = 'ConsultarUsuarios.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -203,6 +225,10 @@ class ConsultarRol(RolView):
         return render(request, self.template_name, diccionario)
 
 class DesasignarRol(RolView):
+    '''Esta clase desasigna un rol de un usuario.
+    El rol de Scrum Master no se puede eliminar.
+
+    '''
     template_name = 'DesasignarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -221,6 +247,9 @@ class DesasignarRol(RolView):
         return render(request, self.template_name, diccionario)
 
 class AsignarRol(RolView):
+    '''Esta clase asigna un rol a un usuario.
+
+    '''
     template_name = 'AsignarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -248,6 +277,10 @@ class AsignarRol(RolView):
             return render(request, self.template_name, diccionario)
 
 class AsignarRolConfirm(RolView):
+    '''Esta clase confirma la asignación de un rol a un usuario.
+
+    Crear un objeto de rol cuando se asigna a un usuario.
+    '''
     template_name = 'AsignarRolConfirm.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
