@@ -3,6 +3,7 @@
 {% block TituloMenu %} EDITAR ROL {% endblock %}
 {% block TituloOperacion %} Formulario Rol {% endblock %}
 {% block DatosOperacion %}
+    <h1> <font color = 'green'>MODIFICAR ROL </font></h1>
     <form action="/editar/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
             <dl><div style="text-align: center;"><span style="color:#ffaf1e">Obs: Las modificaciones afectaran a todos los usuarios que posean dicho rol</span></div></dl>
