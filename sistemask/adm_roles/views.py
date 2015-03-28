@@ -12,42 +12,25 @@ class RolView(TemplateView):
 
     '''
     template_name = 'Rol.html'
-    #context_object_name = 'lista_roles'
+
     def post(self, request, *args, **kwargs):
-        #diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
-        #f len(Rol.objects.filter(nombre= 'Lider del Proyecto', usuario= usuario_logueado, proyecto= proyecto_actual)):
-            #diccionario[self.context_object_name]= Rol.objects.filter(proyecto= proyecto_actual, activo= True)
+
         lista = Rol.objects.filter(activo = True)
         return render(request, self.template_name, {'lista':lista})
-        #else:
-         #   diccionario[super(RolView, self).context_object_name]= Fase.objects.filter(proyecto= proyecto_actual)
-         #   diccionario['error']= 'No posee permisos para visualizar los roles del proyecto'
-         #   return render(request, super(RolView, self).template_name, diccionario)
+
 
 class CrearRol(RolView):
 
     template_name = 'CrearRol.html'
     def post(self, request, *args, **kwargs):
-        #diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         lista = Usuario.objects.all()
         return render(request, self.template_name, {'lista_usuarios' : lista})
 
 class CrearRolConfirm(CrearRol):
     template_name = 'CrearRolConfirm.html'
     def post(self, request, *args, **kwargs):
-        #diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         rol_nombre= request.POST['nombre_rol']
         if len(Rol.objects.filter(nombre= rol_nombre, activo= True)):
             error = "Nombre del rol ya existe. Intente otro"
@@ -101,14 +84,12 @@ class EditarRol(RolView):
     template_name = 'EditarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         if rol_actual.nombre== 'Scrum Master':
             error = 'Rol: Scrum Master - No se puede modificar'
-            #diccionario[super(EditarRol, self).context_object_name]= Rol.objects.filter(proyecto= proyecto_actual, activo= True)
+
             return render(request, super(EditarRol, self).template_name, {'error':error})
         diccionario['rol']= rol_actual
         return render(request, self.template_name, diccionario)
@@ -117,10 +98,7 @@ class EditarRolConfirmar(EditarRol):
     template_name = 'EditarRolConfirm.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         roles= Rol.objects.filter(nombre= request.POST['nombre_rol'])
         nuevo_rol_nombre= request.POST['nombre_nuevo_rol']
         #Actualizamos los permisos
@@ -201,14 +179,12 @@ class EliminarRol(RolView):
     template_name = 'EliminarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         if rol_actual.nombre== 'Scrum Master':
             diccionario['error']= 'Rol: Scrum Master - No se puede eliminar'
-            #diccionario[super(EliminarRol, self).context_object_name]= Rol.objects.filter(proyecto= proyecto_actual, activo= True)
+
             return render(request, super(EliminarRol, self).template_name, diccionario)
         roles= Rol.objects.filter(nombre= rol_actual.nombre, activo= True)
         for rol_actual in roles:
@@ -220,10 +196,9 @@ class ConsultarRol(RolView):
     template_name = 'ConsultarUsuarios.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['rol']= rol_actual
+
         diccionario['lista_roles']= Rol.objects.filter(nombre=rol_actual.nombre, activo= True)
         return render(request, self.template_name, diccionario)
 
@@ -231,14 +206,12 @@ class DesasignarRol(RolView):
     template_name = 'DesasignarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         if rol_actual.nombre== 'Scrum Master':
             diccionario['error']= 'Rol: Scrum Master - Operacion No Permitida'
-            #diccionario[super(DesasignarRol, self).context_object_name]= Rol.objects.filter( activo= True)
+
             return render(request, super(DesasignarRol, self).template_name, diccionario)
         rol_actual.activo= False
         rol_actual.save()
@@ -251,15 +224,13 @@ class AsignarRol(RolView):
     template_name = 'AsignarRol.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         diccionario['rol']= rol_actual
         if rol_actual.nombre== 'Scrum Master':
             diccionario['error']= 'Rol: Scrum Master - Operacion No Permitida'
-            #diccionario[super(AsignarRol, self).context_object_name]= Rol.objects.filter( activo= True)
+
             return render(request, super(AsignarRol, self).template_name, diccionario)
         usuarios_rol= []    #Usuarios que pertenecen al Rol
 
@@ -280,12 +251,10 @@ class AsignarRolConfirm(RolView):
     template_name = 'AsignarRolConfirm.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+
         rol_actual= Rol.objects.get(id= request.POST['rol'])
         usuario_rol= Usuario.objects.get(username= request.POST['usuario'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+
         diccionario['rol']= rol_actual
 
         nuevo_rol= Rol(
