@@ -1,0 +1,20 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Flujo::{% endblock %}
+{% block TituloMenu %} CREAR FLUJO {% endblock %}
+{% block TituloOperacion %} Formulario Flujo {% endblock %}
+{% block DatosOperacion %}
+    <form action="/inicio/flujo/crear/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_flujo"required /></dd></dl>
+            <dl><dt><label>Descripcion:</label></dt><dd><input type="text" name="descripcion_flujo"required /></dd></dl>
+
+
+            <input type="hidden" name="activo" value="true">
+        <input type="submit" value="Crear">
+    </form>
+    <form action="/inicio/flujo/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}

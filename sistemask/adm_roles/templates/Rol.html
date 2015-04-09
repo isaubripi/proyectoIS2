@@ -9,6 +9,7 @@
         <th scope="col" class="rounded">Nombre</th>
         <th scope="col" class="rounded"><font color="green">Editar</font></th>
         <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+        <th scope="col" class="rounded"><font color="black">Des/Asignar Permisos</font></th>
         <th scope="col" class="rounded"><font color="blue">Asignar</font></th>
         <th scope="col" class="rounded"><font color="violet">Desasignar</font></th>
         <th scope="col" class="rounded"><font color="brown">Consultar Usuarios</font></th>
@@ -39,6 +40,17 @@
                     <input type="submit" value="Eliminar">
                 </form>
             </td>
+
+            <td>
+                <form action= "/inicio/rol/asignarpermisos/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='rol' value={{ rol.id }} >
+                    <input type="submit" value="Asignar permisos">
+                </form>
+            </td>
+
+
             <td>
                 <form action= "/asignar/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >

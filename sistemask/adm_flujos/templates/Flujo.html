@@ -1,0 +1,53 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Flujos:: {% endblock %}
+{% block TituloMenu %} ADMINISTRACION DE FLUJOS DEL PROYECTO {% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE FLUJOS</font></h1></b></div>
+<h2>Lista de Flujos del Sistema</h2>
+    <tr>
+        <th scope="col" class="rounded">Nombre</th>
+        <th scope="col" class="rounded"><font color="green">Editar</font></th>
+        <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+        <th scope="col" class="rounded"><font color="black">Administrar Actividades</font></th>
+    </tr>
+
+{% endblock %}
+{% block MostrarDatos%}
+    {% for flujo in lista %}
+        <tr>
+            <td>{{ flujo.nombre }}</td>
+
+            <td>
+                <form action= "inicio/flujo/editar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='flujo' value={{ flujo.id }} >
+                    <input type="submit" value="Modificar">
+                </form>
+            </td>
+            <td>
+                <form action= "inicio/flujo/eliminar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='flujo' value={{ flujo.id }} >
+                    <input type="submit" value="Eliminar">
+                </form>
+            </td>
+        </tr>
+    {% end for %}
+{% end block %}
+
+
+{% block Botones%}
+    <form action="/inicio/flujo/crear/" method="POST">{% csrf_token %}
+        <input type="submit" value="Crear nuevo flujo">
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+    </form>
+    <form action="/inicio/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.db import models
-
+from adm_usuarios.models import Usuario
 
 
 class Rol(models.Model):
@@ -70,6 +70,7 @@ class Rol(models.Model):
     ver_tabla = models.BooleanField(default=False)
 
     activo = models.BooleanField(default=False)
+    usuario= models.ForeignKey(Usuario)
 
     def __unicode__(self):
         return self.nombre
