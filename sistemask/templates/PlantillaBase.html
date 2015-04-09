@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}Estilos/style.css" />
+	<script type="text/javascript" src="{{ STATIC_URL }}JavaScript/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}JavaScript/ddaccordion.js"></script>
+	<script type="text/javascript">
+        ddaccordion.init({
+	        headerclass: "submenuheader", //Shared CSS class name of headers group
+	        contentclass: "submenu", //Shared CSS class name of contents group
+	        revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+        	mouseoverdelay: 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+	        collapseprev: true, //Collapse previous content (so only one open at any time)? true/false
+	        defaultexpanded: [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+	        onemustopen: false, //Specify whether at least one header should be open always (so never all headers closed)
+	        animatedefault: false, //Should contents open by default be animated into view?
+        	persiststate: true, //persist state of opened contents within browser session?
+	        toggleclass: ["", ""], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+	        togglehtml: ["suffix", "<img src='{{ STATIC_URL }}Imagenes/images/plus.gif' class='statusicon' />", "<img src='{{ STATIC_URL }}Imagenes/images/minus.gif' class='statusicon' />"],
+	        animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+	        oninit:function(headers, expandedindices){ //custom code to run when headers have initalized
+		        //do nothing
+	        },
+	        onopenclose:function(header, index, state, isuseractivated){ //custom code to run whenever a header is opened or closed
+		        //do nothing
+	        }
+        })
+	</script>
+    <script type="text/javascript" src="{{ STATIC_URL }}JavaScript/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+	<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}JavaScript/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="{{ STATIC_URL }}Estilos/niceforms-default.css" />
+    <style>
+		#submitt {
+		    font-weight: bold;
+		    cursor: pointer;
+		    padding: 5px;
+		    margin: 0 10px 20px 0;
+		    border: 1px solid #ccc;
+		    background: #eee;
+		    border-radius: 8px 8px 8px 8px;
+		}
+		#submitt:hover {background: #ddd;}
+    </style>
+
+    <script type="text/javascript">
+			function mostrarVentana()
+			{
+			    var ventana = document.getElementById('miVentana'); // Accedemos al contenedor
+			    ventana.style.marginTop = "250px";
+			    ventana.style.marginLeft = ((document.body.clientWidth-300) / 2) +  "px";
+			    ventana.style.display = 'block';
+			}
+			function ocultarVentana()
+			{
+			    var ventana = document.getElementById('miVentana'); // Accedemos al contenedor
+			    ventana.style.display = 'none';
+			}
+	</script>
+    <script language="JavaScript">
+		function item(source) {
+		  checkboxes = document.getElementsByClassName('item');
+		  for(var i=0, n=checkboxes.length;i<n;i++) {
+		    checkboxes[i].checked = source.checked;
+		  }
+		}
+        function atributo(source) {
+		  checkboxes = document.getElementsByClassName('atributo');
+		  for(var i=0, n=checkboxes.length;i<n;i++) {
+		    checkboxes[i].checked = source.checked;
+		  }
+		}
+        function tipo_de_item(source) {
+		  checkboxes = document.getElementsByClassName('tipo_de_item');
+		  for(var i=0, n=checkboxes.length;i<n;i++) {
+		    checkboxes[i].checked = source.checked;
+		  }
+		}
+        function tipo_de_atributo(source) {
+		  checkboxes = document.getElementsByClassName('tipo_de_atributo');
+		  for(var i=0, n=checkboxes.length;i<n;i++) {
+		    checkboxes[i].checked = source.checked;
+		  }
+		}
+	</script>
+
+</head>
+
+
+{% block poup %}{% endblock %}
+
+<body>
+    <div id="main_container">
+       {% block Content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -5,7 +5,7 @@
     {% if message %}
     <b>{{message}}</b>
     {% endif %}
-    <form action="" method="post">{% csrf_token %}
+    <form action='/proyecto/' method="POST"> {% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="Ingresar"/>
     </form>

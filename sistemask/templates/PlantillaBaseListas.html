@@ -4,10 +4,10 @@
 {% block Content %}
     <div class="header">
         <div class="right_header"> <!--a href="#" class="messages">Messages</a-->
-            <!--<form action="/" method="get">{% csrf_token %}
-                <u> Usuario</u>:  {{ logueado.nick }}  ||
-                <a href="/" class="logout">cerrar sesión</a>
-            </form>-->
+            <form action="/" method="get">{% csrf_token %}
+                <u> Usuario</u>:  {{ logueado.username }}  ||
+                <a href="/" class="logout">Salir del Sistema</a>
+            </form>
         </div>
 	</div>
     <div class="main_content">
@@ -17,8 +17,9 @@
             <div class="left_content">
                 <div class="sidebar_box">
          		    <div class="sidebar_box_content">
-         				<!--<img src="{{ STATIC_URL }}Imagenes/images/info.png" alt="" title="" class="sidebar_icon_right" />-->
+         			    <h3></h3>
 
+         				<p></p>
       				</div>
          		</div>
     		</div>
