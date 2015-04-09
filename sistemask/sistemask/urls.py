@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^$', LoginView.as_view(), name="login" ),
     #url(r'^$', 'sistemask.views.login_page', name="login"),
     #PROYECTO
-    url(r'^proyecto/', include('adm_proyectos.urls')),
+    #url(r'^proyecto/', include('adm_proyectos.urls')),
 
     #url(r'^', include('adm_usuarios.urls')),
     #url(r'^', include('adm_roles.urls')),
