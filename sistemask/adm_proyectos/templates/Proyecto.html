@@ -1,0 +1,74 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Menu Inicio::{% endblock %}
+{% block TituloMenu %} BIENVENIDO AL SISTEMA SK {% endblock %}
+{% block MigasDePan %}>>>Inicio{% endblock %}
+{% block TituloLista %} Lista de Proyectos {% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block Columnas %}
+    <tr>
+		<th scope="col" class="rounded">Nombre</th>
+		<th scope="col" class="rounded">Scrum Master</th>
+		<th scope="col" class="rounded">Eliminar</th>
+        <th scope="col" class="rounded">Modificar</th>
+        <th scope="col" class="rounded">Inicializar</th>
+        <th scope="col" class="rounded">Ingresar</th>
+	</tr>
+{% endblock %}
+{% block MostrarDatos%}
+    {% for proyecto in lista_proyectos %}
+            {%  for usuario in proyecto.scrum_team.all %}
+                {% ifequal usuario.id logueado.id %}
+		    	    <tr>
+                        <td>{{ proyecto.nombre }}</td>
+                        <td>{{ proyecto.scrum_master }}</td>
+                        <td>
+                            <form action= "/proyecto/eliminar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="submit" value="Eliminar" id="submitt">
+                            </form>
+                        </td>
+                        <td>
+                            <form action= "/proyecto/modificar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="submit" value="Modificar" id="submitt">
+                            </form>
+                        </td>
+                        <td>
+                            <form action= "/proyecto/inicializar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="submit" value="Inicializar" id="submitt">
+                            </form>
+                        </td>
+                        <td>
+                            <form action= "/proyecto/ingresar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="submit" value="Ingresar" id="submitt">
+                            </form>
+                        </td>
+                    </tr>
+                {% endifequal %}
+            {% endfor %}
+    {% endfor %}
+{% endblock %}
+{% block Botones %}
+    <form action= "/proyecto/usuario/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+     	<input type="submit" value="Administrar Usuarios" id="submitt">
+    </form>
+    <form action= "/proyecto/crear/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+     	<input type="submit" value="Crear Proyecto" id="submitt">
+    </form>
+    <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
+        <input type="hidden" name='codigo' value={{ logueado.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Modificar mis Datos" id="submitt">
+    </form>
+
+{% endblock %}

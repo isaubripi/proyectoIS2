@@ -1,0 +1,38 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Proyecto::{% endblock %}
+{% block TituloMenu %} CREAR PROYECTO {% endblock %}
+{% block TituloOperacion %} Formulario Proyecto {% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/modificar/confirmar/"method="post">{% csrf_token %}
+        <fieldset>
+            <dl>
+                <dt><label>Nombre:</label></dt>
+                <dd><input type="text" value= "{{ proyecto.nombre }}" name="nombre_proyecto" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Descripcion:</label></dt>
+                <dd><input type="text" value= "{{ proyecto.descripcion }}" name="descripcion_proyecto" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Scrum Master:</label></dt>
+                <dd>
+                    <select  name="scrum_master"id="submitt" required>
+                        <option value="">Seleccione un usuario</option>
+                        {% for usuario in lista_usuarios %}
+                            <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </dl>
+        </fieldset>
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="submit" value="Guardar" id="submitt">
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+    </form>
+    <form action="/proyecto/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+{% endblock %}
+{% block Botones%}
+{% endblock %}
