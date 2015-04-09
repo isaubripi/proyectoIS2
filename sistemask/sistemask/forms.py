@@ -1,6 +1,7 @@
 __author__ = 'isidro'
 
 from django.contrib.auth.models import User
+from adm_usuarios.models import Usuario
 from django import forms
 #Formulario de login
 class LoginForm(forms.Form):

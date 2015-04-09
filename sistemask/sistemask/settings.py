@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'adm_usuarios',
     'adm_roles',
+    'adm_proyectos',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -93,3 +94,7 @@ STATIC_URL = '/static/'
 
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
+LOGIN_URL = 'mysite_login'
+LOGOUT_URL = 'mysite_logout'
+LOGIN_REDIRECT_URL = '/'
