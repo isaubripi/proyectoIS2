@@ -27,14 +27,14 @@
                     <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
                         <input type="hidden" name='codigo' value="{{ usuario.id }}" >
                         <input type="hidden" name='login' value={{ logueado.id }} >
-                       <input type="submit" value="Modificar" id="submitt">
+                       <input type="submit" value="Modificar" id="submit">
                     </form>
                 </td>
 		        <td>
                     <form action="/proyecto/usuario/eliminar/" method="post">{% csrf_token %}
                         <input type="hidden" name='codigo' value="{{ usuario.id }}" >
                         <input type="hidden" name='login' value={{ logueado.id }} >
-                        <input type="submit" value="Eliminar" id="submitt">
+                        <input type="submit" value="Eliminar" id="submit">
                     </form>
 		        </td>
                 <td>
@@ -46,10 +46,10 @@
 {% block Botones%}
     <form action= "/proyecto/usuario/crear/" method="POST"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="submit" value="Crear" id="submitt">
+        <input type="submit" value="Crear" id="submit">
     </form>
     <form action="/proyecto/" method="POST"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="submit" value="<Menú Inicio" id="submitt"><br>
+        <input type="submit" value="<Menú Inicio" id="submit"><br>
     </form>
 {% endblock %}
