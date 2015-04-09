@@ -6,7 +6,7 @@
     <form action="/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
             <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_rol"required /></dd></dl>
-            <dl>
+            <!--<dl>
                 <dt><label>Usuario:</label></dt>
                 <dd>
                     <select  name="usuario_rol" required>
@@ -77,7 +77,7 @@
                 <input type="checkbox" name="modificar_flujo">Modificar flujo
                 <input type="checkbox" name="eliminar_flujo">Eliminar flujo
                 <input type="checkbox" name="ver_tabla">Ver tabla
-            </p>
+            </p>!-->
             <input type="hidden" name="activo" value="true">
         <input type="submit" value="Crear">
     </form>

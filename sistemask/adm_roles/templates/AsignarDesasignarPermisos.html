@@ -1,17 +1,17 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Editar Rol::{% endblock %}
-{% block TituloMenu %} EDITAR ROL {% endblock %}
+{% block title %}::Asignar/Desasignar Permisos a Rol::{% endblock %}
+{% block TituloMenu %} ASIGNAR/DESASIGNAR PERMISOS A ROL {% endblock %}
 {% block TituloOperacion %} Formulario Rol {% endblock %}
 {% block DatosOperacion %}
-    <h1> <font color = 'green'>MODIFICAR ROL </font></h1>
-    <form action="/editar/confirmar/" method="POST">{% csrf_token %}
+    <h1> <font color = 'green'>ASIGNACION DE PERMISOS A ROL </font></h1>
+    <form action="/inicio/rol/asignarpermisos/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
-            <dl><div style="text-align: center;"><span style="color:#ffaf1e">Obs: Las modificaciones afectaran a todos los usuarios que posean dicho rol</span></div></dl>
-            <dl><dt><label>Nombre:</label></dt><dd>
+            <dl><div style="text-align: center;"><span style="color:#ffaf1e">Obs: Las asignaciones de permisos afectaran a todos los usuarios que posean dicho rol</span></div></dl>
+            <dl><dt><label>Nombre: {{ rol.nombre }}</label></dt><dd>
                 <input type="hidden" name="nombre_rol" value="{{ rol.nombre }}"/></dd>
-                <input type="text" name="nombre_nuevo_rol" value="{{ rol.nombre }}" required/></dd>
+                <!--<input type="text" name="nombre_nuevo_rol" value="{{ rol.nombre }}" required/></dd>!-->
             </dl>
-            <!--<p><h3>Permisos de Administración de Proyectos</h3></p>
+            <p><h3>Permisos de Administración de Proyectos</h3></p>
             <p>
                 <input type="checkbox" name="crear_proyecto" {% if rol.crear_proyecto %} checked {% endif %}>Crear proyecto
                 <input type="checkbox" name="modificar_proyecto" {% if rol.modificar_proyecto %} checked {% endif %}>Modificar proyecto
@@ -71,7 +71,7 @@
                 <input type="checkbox" name="modificar_flujo"{% if rol.modificar_flujo %} checked {% endif %}>Modificar flujo
                 <input type="checkbox" name="eliminar_flujo"{% if rol.eliminar_flujo %} checked {% endif %}>Eliminar flujo
                 <input type="checkbox" name="ver_tabla"{% if rol.ver_tabla %} checked {% endif %}>Ver tabla
-            </p>!-->
+            </p>
         <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='rol' value={{ rol.id }}>
