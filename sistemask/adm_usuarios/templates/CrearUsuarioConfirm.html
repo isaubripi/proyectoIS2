@@ -1,9 +1,9 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Eliminar Usuario::{% endblock %}
-{% block TituloMenu %} ELIMINAR USUARIO {% endblock %}
-{% block TituloOperacion %} Usuario Eliminado {% endblock %}
+{% block title %}::Crear Usuario::{% endblock %}
+{% block TituloMenu %} CREAR USUARIO {% endblock %}
+{% block TituloOperacion %} Usuario Creado {% endblock %}
 {% block DatosOperacion %}
-    <center><h3>El usuario pasó a modo &lt;&lt;&lt;INACTIVO&gt;&gt;&gt;</h3></center>
+    <center><h3>El usuario se cre&oacute exitosamente. </h3></center>
 {% endblock %}
 {% block Botones %}
     <form action="/proyecto/usuario/" method="POST"> {% csrf_token %}

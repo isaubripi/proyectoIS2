@@ -1,6 +1,114 @@
 # coding=utf-8
 
-from django.http import request
+from django.shortcuts import render
+from adm_proyectos.views import ProyectoView
+from .models import Usuario
+from adm_roles.models import Rol
+from adm_proyectos.models import Proyecto
+
+# Create your views here.
+#Lista de usuarios
+class UsuarioView(ProyectoView):
+    template_name = 'Usuario.html'
+    context_object_name = 'lista_usuarios'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        #Solamente el Administrador del Sistema puede ingresar a la Administracion de Usuarios
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+            diccionario[self.context_object_name]= Usuario.objects.filter(estado=True)
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permisos para ver los usuarios del sistema'
+            diccionario[super(UsuarioView, self).context_object_name]= Proyecto.objects.filter(activo= True)
+            return render(request, super(UsuarioView, self).template_name, diccionario)
+
+#Creacion de usuario
+class CrearUsuario(UsuarioView):
+    template_name = 'CrearUsuario.html'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        return render(request, self.template_name, diccionario)
+
+class CrearUsuarioConfirm(CrearUsuario):
+    template_name = 'CrearUsuarioConfirm.html'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        nuevo_nick= request.POST['user']
+        existe= Usuario.objects.filter(username= nuevo_nick)
+        if len(existe):
+            diccionario['error']= 'El nombre de usuario ya existe'
+            return render(request, super(CrearUsuarioConfirm, self).template_name, diccionario)
+        nuevo_usuario= Usuario()
+        nuevo_usuario.username= nuevo_nick
+        nuevo_usuario.password= request.POST['pass']
+        nuevo_usuario.nombre= request.POST['nombre']
+        nuevo_usuario.apellido= request.POST['apellido']
+        nuevo_usuario.cedula= request.POST['cedula']
+        nuevo_usuario.email= request.POST['email']
+        nuevo_usuario.save()
+        return render(request, self.template_name, diccionario)
+
+class EditarUsuario(UsuarioView):
+    template_name = 'EditarUsuario.html'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['usuario']= Usuario.objects.get(id= request.POST['codigo'])
+        return render(request, self.template_name, diccionario)
+
+class EditarUsuarioConfirm(EditarUsuario):
+    template_name = 'EditarUsuarioConfirm.html'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        modificacion= Usuario.objects.get(id= request.POST['codigo'])
+        modificacion_nick= request.POST['user']
+        existe= Usuario.objects.filter(username= modificacion_nick)
+        if len(existe) and existe[0]!=modificacion:
+            diccionario['error']= 'El nombre de usuario ya existe'
+            diccionario['usuario']= modificacion
+            return render(request, super(EditarUsuarioConfirm, self).template_name, diccionario)
+        modificacion.username= modificacion_nick
+        modificacion.password= request.POST['pass']
+        modificacion.nombre= request.POST['nombre']
+        modificacion.apellido= request.POST['apellido']
+        modificacion.cedula= request.POST['cedula']
+        modificacion.email= request.POST['email']
+        modificacion.save()
+        return render(request, self.template_name, diccionario)
+
+class EliminarUsuario(UsuarioView):
+    template_name = 'EliminarUsuario.html'
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        eliminado= Usuario.objects.get(id= request.POST['codigo'])
+        #Verificar si es Administrador del Sistema
+        if len(Rol.objects.filter(nombre='Scrum Master', usuario= eliminado)):
+            diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+            diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master'
+            return render(request, super(EliminarUsuario, self).template_name, diccionario)
+        #Verificar si es scrum master de algun proyecto
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= eliminado, activo= True)):
+            diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+            diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master de un proyecto activo'
+            return render(request, super(EliminarUsuario, self).template_name, diccionario)
+        eliminado.estado= False
+        eliminado.save()
+        return render(request, self.template_name, diccionario)
+
+
+
+'''from django.http import request
 from django.views.generic import TemplateView
 from adm_usuarios.models import Usuario
 
@@ -11,8 +119,11 @@ class inicio(TemplateView):
     """Esta clase se encarga de realizar la autenticacion de usuarios"""
 
     def post(self, request, *args, **kwargs):
+
         """Este metodo se encarga de verificar el usuario y la
-        contrasenha para luego enviar la pagina de inicio"""                #En el metodo post en la condicion if
+        contrasenha para luego enviar la pagina de inicio"""
+
+        diccionario = {}                                               #En el metodo post en la condicion if
         if 'user' in request.POST:                                      #preguntamos si la pagina desde donde se lo
             buscar_user = request.POST['user']                          #llamo es el login:
             buscar_password = request.POST['pass']                      #Verifica el nombre de usuario y la
@@ -21,21 +132,29 @@ class inicio(TemplateView):
                 if i.estado:
                     if i.username == buscar_user:
                         if i.password == buscar_password:
-                            return render(request, 'inicio.html')
+                            diccionario['logueado']= i
+                            return render(request, 'inicio.html', diccionario)
                         error= "Password incorrecto"
-                        return render(request, 'login.html', {'error':error})
+                        return render(request, 'login1.html', {'error':error})
             error= "Usuario incorrecto"
-            return render(request, 'login.html', {'error': error})
+            return render(request, 'login1.html', {'error': error})
         else:                                                           #Si no se trata de la pagina de login quien
-            return render(request, 'inicio.html')                       #lo llamo? Entonces no verifica absolutamente
+            return render(request, 'inicio.html', diccionario)                       #lo llamo? Entonces no verifica absolutamente
                                                                         #nada y muestra la pagina solicitada
 
 #La clase RegistrarUsuario se encarga de crear un nuevo usuario
 class RegistrarUsuario(TemplateView):
     """Clase para lazar el formulario de creacion"""
+    #context_object_name = 'lista_usuarios'
+    #template_name = CrearUsuario
     def post(self, request, *args, **kwargs):
-        """retorna el formulario para la creacion"""                    #Devuelve la pagina en donde se encuentra el
-        return render(request, 'CrearUsuario.html')                     #formulario
+        """
+        retorna el formulario para la creacion
+        """
+        #diccionario={}
+        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        #diccionario['logueado']= usuario_logueado                                          #Devuelve la pagina en donde se encuentra el
+        return render(request, 'CrearUsuario.html')                                         #formulario
 
 #La clase ListarUsuario se encarga de la vista principal de Administracion de Usuarios
 class ListarUsuario(TemplateView):
@@ -208,5 +327,5 @@ class EditarUsuarioConfirmar(TemplateView):
             modificacion.save()
             return render(request, 'EditarUsuarioConfirmar.html')
         else:
-            return render(request, 'EditarUsuario.html', {'usuario':modificacion})
+            return render(request, 'EditarUsuario.html', {'usuario':modificacion})'''
 

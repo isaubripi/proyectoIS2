@@ -1,62 +1,25 @@
-{% extends 'PlantillaBase.html' %}
-{% block title %}::Editar Usuario::{% endblock %}}
-{% block import %}
-
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Usuario::{% endblock %}
+{% block TituloMenu %}EDITAR USUARIO{% endblock %}
+{% block TituloOperacion %}Formulario Usuario{% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/usuario/editar/confirmar/" method="POST" class="niceform">{% csrf_token %}
+            <fieldset>
+            <dl><dt><label>Usuario:</label></dt><dd><input type="text" value= "{{ usuario.username }}" name="user" id="" size="54" required/></dd></dl>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" value= "{{ usuario.nombre }}" name="nombre" id="" size="54" /></dd></dl>
+            <dl><dt><label>Apellido:</label></dt><dd><input type="text" value= "{{ usuario.apellido }}" name="apellido" id="" size="54" /></dd></dl>
+            <dl><dt><label>CI:</label></dt><dd><input type="text" value= "{{ usuario.cedula }}" name="cedula" id="" size="54" required/></dd></dl>
+            <dl><dt><label>Email:</label></dt><dd><input type="email" value= "{{ usuario.email }}" name="email" id="" size="54" /></dd></dl>
+            <dl><dt><label>Contraseña:</label></dt><dd><input type="password" value="{{ usuario.password }}" name="pass" id="" size="54" required/></dd></dl>
+        </fieldset>
+        <input type="hidden" name='codigo' value={{ usuario.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Actualizar" id="submitt">
+    </form>
+    <form action="/proyecto/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Cancelar" id="submitt">
+    </form>
 {% endblock %}
-{% block Content %}
-    <div id="main_container">
-		<div class="header">
-            <br>
-		    <br>
-    	</div>
-    	<br>
-
-    	<div class="main_content">
-    		<div style="text-align: center;"><b><h1><font color="green">MODIFICAR USUARIO</font></h1></b></div>
- 			<div class="center_content">
-        		<div class="right_content">
-
-				        <h2>Modifique los datos</h2>
-                  		<table id="rounded-corner" summary="2007 Major IT Companies' Profit">
-							<form action="/inicio/usuario/editar/confirmar/" method="post" class="niceform">{% csrf_token %}
-	 			                <fieldset>
-		                    	    <dl>
-	        	        	            <dt><label for="email">Usuario:</label></dt>
-	        	        	            <dd><input type="text" name="user" value="{{ usuario.username }}" id="" size="54" /></dd>
-	        	        	        </dl>
-                                    <div class= right_content style="text-align: left ;"><span style="color:#FF0000">{{ error }}</span></div>
-					                <dl>
-	        	        	            <dt><label for="email">Nombre:</label></dt>
-	        	        	            <dd><input type="text" name="nombre" id="" size="54" value="{{ usuario.nombre }}"/></dd>
-	        	        	        </dl>
-					                <dl>
-	        	        	            <dt><label for="email">Apellido:</label></dt>
-	        	        	            <dd><input type="text" name="apellido" id="" size="54" value="{{ usuario.apellido }}"/></dd>
-	        	        	        </dl>
-					                <dl>
-	        	        	            <dt><label for="email">CI:</label></dt>
-	        	        	            <dd><input type="text" name="cedula" id="" size="54" value="{{ usuario.cedula }}"/></dd>
-	        	        	        </dl>
-					                <dl>
-	        	        	            <dt><label for="email">Email:</label></dt>
-	        	        	            <dd><input type="text" name="email" id="" size="54" value="{{ usuario.email }}"/></dd>
-	        	        	        </dl>
-	               			        <dl>
-	                        		    <dt><label for="password">Contraseña:</label></dt>
-	                        		    <dd><input type="password" name="pass" id="" size="54" value="{{ usuario.password }}"/></dd>
-	                    		    </dl>
-                                </fieldset>
-                                <input type="hidden" name="codigo" value="{{ usuario.id }}">
-                                <input type="submit" value="Confirmar">
-                            </form>
-						</table>
-                        <form action="/inicio/usuario/" method="POST">{% csrf_token %}
-                            <input type="submit" value="<Atrás">
-                        </form>
-                        <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>cancelar</strong><span class="bt_green_r"></span></a>
-     	                <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>aceptar</strong><span class="bt_blue_r"></span></a-->
-  	               </div>   <!--end of center content -->
-    	    <div class="clear"></div>
-        </div> <!--end of main content-->
-    </div>
+{% block Botones %}
 {% endblock %}

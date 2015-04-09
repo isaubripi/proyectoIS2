@@ -1,5 +1,6 @@
 
 from django.db import models
+from adm_roles.models import Rol
 
 class Usuario(models.Model):
     username= models.CharField(max_length=15, unique=True)
@@ -9,6 +10,10 @@ class Usuario(models.Model):
     cedula= models.CharField(max_length=10)
     email= models.CharField(max_length=20)
     estado= models.BooleanField(default=True)
+    roles = models.ManyToManyField(Rol)
+    def __unicode__(self):
+        return self.nombre
+
 
 
 '''Un usuario posee los sgtes atributos:

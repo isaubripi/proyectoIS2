@@ -1,61 +1,24 @@
-{% extends 'PlantillaBase.html' %}
-{% block title %} ::Agregar usuario::{% endblock %}
-
-{% block Content %}
-    <div id="main_container">
-		<div class="header">
-    	</div>
-
-    	<div class="main_content">
-    		<div style="text-align: center;"><b><h1><font color="green">AGREGAR USUARIOS</font></h1></b></div>
- 			<div class="center_content">
-        		<div class="right_content">
-				<br>
-				<br>
-				        <h2>Introduzca los datos para el nuevo usuario</h2>
-                  		<table id="" summary="2007 Major IT Companies' Profit">
-							<form action="/inicio/usuario/" method="post" class="niceform">{% csrf_token %}
-	 			                <fieldset color="red">
-		                    	    <dl>
-	        	        	            <label for="email">Usuario:</label>
-	        	        	            <input type="text" name="user"  value= "{{usuario.username}}" id="" size="54" />
-	        	        	        </dl>
-                                    <div class= right_content style="text-align: left ;"><span style="color:#FF0000">{{ error }}</span></div>
-					                <dl>
-	        	        	            <label for="email">Nombre:</label>
-	        	        	            <input type="text" name="nombre" value= "{{usuario.nombre}}" id="" size="54" />
-	        	        	        </dl>
-					                <dl>
-	        	        	            <label for="email">Apellido:</label>
-	        	        	            <input type="text" name="apellido" value="{{ usuario.apellido }}" id="" size="54" />
-	        	        	        </dl>
-					                <dl>
-	        	        	            <label for="email">CI:</label>
-	        	        	            <input type="text" name="cedula" value="{{ usuario.cedula }}" id="" size="54" />
-	        	        	        </dl>
-
-					                <dl>
-	        	        	            <label for="email">Email:</label>
-	        	        	            <input type="text" name="email" value="{{ usuario.email }}" id="" size="54" />
-	        	        	        </dl>
-
-	               			        <dl>
-	                        		    <label for="password">Contraseña:</label>
-	                        		    <input type="password" name="pass" value="{{ usuario.password }}" id="" size="54" />
-	                    		    </dl>
-                                    <div class= right_content style="text-align: left ;"><span style="color:#FF0000">{{ error2 }}</span></div>
-
-                                </fieldset>
-                                <input type="submit" value="Agregar">
-                            </form>
-						</table>
-                        <form action="/inicio/usuario/" method="POST">{% csrf_token %}
-                            <input type="submit" value="<- Regresar">
-                        </form>
-                        <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>canselar</strong><span class="bt_green_r"></span></a>
-     	                <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>aceptar</strong><span class="bt_blue_r"></span></a-->
-  	               </div>   <!--end of center content -->
-    	    <div class="clear"></div>
-        </div> <!--end of main content-->
-    </div>
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Proyecto::{% endblock %}
+{% block TituloMenu %} CREAR USUARIO {% endblock %}
+{% block TituloOperacion %} Formulario Usuario {% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/usuario/crear/confirmar/" method="POST" class="niceform">{% csrf_token %}
+            <fieldset>
+            <dl><dt><label>Usuario:</label></dt><dd><input type="text" name="user" id="" size="54" required/></dd></dl>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre" id="" size="54" /></dd></dl>
+            <dl><dt><label>Apellido:</label></dt><dd><input type="text" name="apellido" id="" size="54" /></dd></dl>
+            <dl><dt><label>CI:</label></dt><dd><input type="text" name="cedula" id="" size="54" required/></dd></dl>
+            <dl><dt><label>Email:</label></dt><dd><input type="email" name="email" id="" size="54" /></dd></dl>
+            <dl><dt><label>Contraseña:</label></dt><dd><input type="password" name="pass" id="" size="54" required/></dd></dl>
+        </fieldset>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Guardar" id="submitt">
+    </form>
+    <form action="/proyecto/usuario/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Cancelar" id="submitt">
+    </form>
+{% endblock %}
+{% block Botones %}
 {% endblock %}
