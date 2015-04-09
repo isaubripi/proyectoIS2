@@ -1,87 +1,55 @@
-{% extends 'PlantillaBase.html' %}
-{% block title %} ::Administrar Usuario::{% endblock %}
-{% block Content %}
-    <div id="main_container">
-		<div class="header">
-            <br>
-		    <br>
-		</div>
-    	<br>
-		<br>
-    	<div class="main_content">
-    		<div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE USUARIOS</font></h1></b></div>
- 		<div class="center_content">
-    	<div class="left_content">
-    		<div class="sidebar_box">
-         	    <div class="sidebar_box_top"></div>
-         	    <div class="sidebar_box_top"></div>
-         	    <div class="sidebar_box_top"></div>
-         	    <div class="sidebar_box_content">
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Administrar Usuario::{% endblock %}
+{% block TituloMenu %}ADMINISTRACION DE USUARIOS{% endblock %}
+{% block MigasDePan %}>>>Inicio>>Usuarios{% endblock %}
+{% block TituloLista %}Lista de Usuario{% endblock %}
+{% block Columnas %}
+    <tr>
 
-         	      	<!--<img src="{{ STATIC_URL }}images/info.png" alt="" title="" class="sidebar_icon_right" />-->
+		<center><th scope="col" class="rounded">Nombre</th></center>
+		<center><th scope="col" class="rounded">Apellido</th></center>
+        <center><th scope="col" class="rounded">Cedula</th></center>
+        <center><th scope="col" class="rounded">Email</th></center>
+        <center><th scope="col" class="rounded">Modificar</th></center>
+        <center><th scope="col" class="rounded">Eliminar</th></center>
+	</tr>
+{% endblock %}
+{% block MostrarDatos %}
+    {% for usuario in lista_usuarios %}
+		    <tr>
 
-      		  	</div>
-         	</div>
-     	</div>
-    	<div class="right_content">
-		    <br>
-		    <br>
-		    <h2>Lista de Usuarios del Sistema</h2>
-            	<table id="rounded-corner" summary="2007 Major IT Companies' Profit">
-    		    	<thead>
-    			        <tr>
-						    <th scope="col" class="rounded">Nombre</th>
-						    <th scope="col" class="rounded">Apellido</th>
-                            <th scope="col" class="rounded">Cedula</th>
-                            <th scope="col" class="rounded">Email </th>
-                            <th scope="col" class="rounded"><font color="green">Editar</font></th>
-                            <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
-		        		</tr>
- 					</thead>
-        			<!--tfoot>
-		            	<tr>
-		                	<td colspan="3" class="rounded-foot-left"><em><!ALGUN COMENTARIO></em></td>
-		            	    <td class="rounded-foot-right">&nbsp;</td>
-        		        </tr>
-		            </tfoot-->
-                	<tbody>
-                        {% for usuario in lista_usuarios %}
-                        {% if usuario.estado %}
-		    	        <tr>
+		        <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellido }}</td>
+                <td>{{ usuario.cedula }}</td>
+                <td>{{ usuario.email }}</td>
 
-		                    <td>{{ usuario.nombre }}</td>
-                            <td>{{ usuario.apellido}} </td>
-                            <td>{{ usuario.cedula }} </td>
-                            <td> {{ usuario.email}} </td>
-                            <td>
-                                <form action="/inicio/usuario/editar/" method="post">{% csrf_token %}
-                                    <input type="hidden" name='codigo' value="{{ usuario.id }}" >
-                                    <input type="submit" value="Modificar"><br>
-                                </form>
-                            </td>
-		                    <td>
-                                <form action="/inicio/usuario/cambio_estado/" method="post">{% csrf_token %}
-                                    <input type="hidden" name='codigo' value= "{{ usuario.id }}" >
-                                    <input type="submit" value="Eliminar"><br>
-                                </form>
-		                    </td>
-		                </tr>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-	            </table>
-                <form action= "/inicio/usuario/crear/" method="POST"> {% csrf_token %}
-                    <input type="submit" value="Crear">
-                </form>
-                <form action="/inicio/" method="POST"> {% csrf_token %}
-                    <input type="submit" value="<Menú Inicio"><br>
-                </form>
-	            <!--a href="#" class="bt_green"><span class="bt_green_lft"></span><strong>Crear Usuario</strong><span class="bt_green_r"></span></a>
-     	        <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>Cambio de Estado</strong><span class="bt_blue_r"></span></a>
-     	        <a href="#" class="bt_blue"><span class="bt_blue_lft"></span><strong>Consultar Usuario</strong><span class="bt_blue_r"></span></a-->
-  	        </div>   <!--end of center content -->
-    	    <div class="clear"></div>
-        </div> <!--end of main content-->
-   </div>
+                <td>
+                    <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
+                        <input type="hidden" name='codigo' value="{{ usuario.id }}" >
+                        <input type="hidden" name='login' value={{ logueado.id }} >
+                       <input type="submit" value="Modificar" id="submitt">
+                    </form>
+                </td>
+		        <td>
+                    <form action="/proyecto/usuario/eliminar/" method="post">{% csrf_token %}
+                        <input type="hidden" name='codigo' value="{{ usuario.id }}" >
+                        <input type="hidden" name='login' value={{ logueado.id }} >
+                        <input type="submit" value="Eliminar" id="submitt">
+                    </form>
+		        </td>
+                <td>
 
+		        </td>
+		    </tr>
+    {% endfor %}
+{% endblock %}
+{% block Botones%}
+    <form action= "/proyecto/usuario/crear/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Crear" id="submitt">
+    </form>
+    <form action="/proyecto/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Menú Inicio" id="submitt"><br>
+    </form>
 {% endblock %}
