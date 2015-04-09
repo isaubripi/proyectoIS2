@@ -1,5 +1,6 @@
 
 from django.db import models
+from adm_roles.models import Rol
 
 class Usuario(models.Model):
     username= models.CharField(max_length=15, unique=True)
@@ -17,6 +18,6 @@ nombre : Nombre del usuario
 apellido : Apellido del usuario
 Password : Contrasenha del usuario
 cedula : nro de cedula del usuario
-emial : direccion de correo electronico del usuario
+email : direccion de correo electronico del usuario
 estado : activo o inactivo, cuando esta inactivo sufio eliminacion logica'''
 
