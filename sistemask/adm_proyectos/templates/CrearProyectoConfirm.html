@@ -1,0 +1,13 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Proyecto::{% endblock %}
+{% block TituloMenu %} CREAR PROYECTO {% endblock %}
+{% block TituloOperacion %} Proyecto Creado {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>El proyecto se cre&oacute exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/proyecto/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

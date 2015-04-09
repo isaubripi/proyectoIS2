@@ -1,0 +1,36 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Inicializar Proyecto::{% endblock %}
+{% block TituloMenu %} INICIALIZAR PROYECTO {% endblock %}
+{% block TituloOperacion %} Formulario Proyecto {% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/inicializar/confirmar/" method="post" class="niceform">{% csrf_token %}
+        <fieldset>
+
+            <dl><dt><label>Fecha Inicio:</label></dt><dd><input type="date" name="fechaInicio" required=""/></dd></dl>
+            <dl><dt><label>Fecha Fin:</label></dt><dd><input type="date" name="fechaFin" required=""/></dd></dl>
+
+            <dl>
+                <dt><label>Usuarios miembros:</label></dt>
+                <dd>
+                    <select multiple name="miembros[]" id="submitt" required>
+                        <option value="" disabled>Seleccionar usuarios</option>
+                        {% for usuario in lista_usuarios %}
+                            {% ifnotequal usuario.id logueado.id %}
+                                <option value={{ usuario.username }}>{{ usuario.username }}</option>
+                            {% endifnotequal %}
+                        {% endfor %}
+                    </select>
+                </dd>
+            </dl>
+        </fieldset>
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Inicializar" id="submitt">
+    </form>
+    <form action="/proyecto/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras" id="submitt"><br>
+    </form>
+{% endblock %}
+{% block Botones %}
+{% endblock %}

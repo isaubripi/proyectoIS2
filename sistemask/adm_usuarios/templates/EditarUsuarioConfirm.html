@@ -1,0 +1,13 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar_ Usuario::{% endblock %}
+{% block TituloMenu %} EDITAR USUARIO {% endblock %}
+{% block TituloOperacion %} Usuario Actualizado {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Los cambios han sido guardados exitosamente.</h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/proyecto/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar" id="submitt"></center>
+    </form>
+{% endblock %}

@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     #url(r'^proyecto/', include('adm_proyectos.urls')),
 
     #url(r'^', include('adm_usuarios.urls')),
-    #url(r'^', include('adm_roles.urls')),
+    url(r'^', include('adm_roles.urls')),
     #url(r'^', include('adm_proyectos.urls')),
 
 )

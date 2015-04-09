@@ -13,7 +13,7 @@
             </div>
     	</div>
         <div class="main_content">
-            <div style="text-align: center;"><b><h1><font color="green">BIENVENIDO <td> {{ i.username }} </td></font></h1></b></div>
+            <div style="text-align: center;"><b><h1><font color="green">BIENVENIDO <td> {{ logueado.username }} </td></font></h1></b></div>
  			<div class="center_content">
     		    <div class="left_content">
                     <div class="sidebar_box">
@@ -48,6 +48,10 @@
                     </form>
                     <form action="/inicio/rol/" method="post"> {% csrf_token %}
                         <input type="submit" value="Administrar Roles" >
+                    </form>
+                     <form action="/inicio/Proyecto/" method="post"> {% csrf_token %}
+                         <input type="hidden" name='login' value= {{ logueado.id }} >
+                         <input type="submit" value="Administrar Proyectos" >
                     </form>
   	        </div> <!right-content>
             <div class="clear"> </div>
