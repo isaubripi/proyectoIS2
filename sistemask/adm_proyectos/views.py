@@ -11,9 +11,23 @@ from django.contrib.auth import logout
 from django.contrib import auth
 
 class ProyectoView(TemplateView):
+    """
+    Esta clase hereda de TemplateView
+    Se encarga se realizar al autenticacion del usuario y lo lleva a la pagina de inicio
+
+    """
     template_name = 'Proyecto.html'
     context_object_name = 'lista_proyectos'
     def post(self, request, *args, **kwargs):
+        """
+        Esta funcion se encarga de la autenticacion del usuario, utiliza post para enviar los datos
+        :param request:Peticion web
+        :param args:Para mapear los argumentos posicionales a al tupla
+        :param kwargs:Diccionario para mapear los argumentos de palabra clave
+        :return: Si el usuario existe: Envia a la pagina principal "Proyecto.html"
+                 Si el usuario no existe o es incorrecto: Envia un mensaje de error respectivamente
+
+        """
         diccionario= {}                                                  #Diccionario para ser retornado en HTML
         #Login.html es la unica pagina que envia un 'user' en el diccionario de request.POST
         if 'user' in request.POST:
@@ -32,18 +46,39 @@ class ProyectoView(TemplateView):
             diccionario['logueado']= Usuario.objects.get(id=request.POST['login'])
             return render(request, self.template_name, diccionario)
     def get(self, request, *args, **kwargs):
+        """
+        Esta funcion de encarga de retornar la pagina de login en caso que el acceso sea incorrecto, utiliza get para
+        obtner la pagina.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la misma pagina de login, con un error para indicar el acceso incorrecto
+        """
         return render(request, LoginView.template_name, {'error':'Acceso Incorrecto'})
 
 
 class CrearProyecto(ProyectoView):
+    """
+    Esta clase es la engarcada de crear un proyecto
+    Hereda de la clase ProyectoView
+    """
     template_name = 'CrearProyecto.html'
     context_object_name = 'lista_proyectos'
     def post(self, request, *args, **kwargs):
+        """
+        Se encarga de crear un nuevo proyecto, teniendo como condicion que el usuario sea SM
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna el formulacion para creacion de proyecto solo si el usuario poseer el rol de Scrum Master
+                 En caso contrario retorna un mensaje de denegacion de acceso en la misma pagina de inicio.
+        """
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Admin?
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Scrum Master
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
@@ -52,8 +87,21 @@ class CrearProyecto(ProyectoView):
             return render(request, super(CrearProyecto, self).template_name, diccionario)
 
 class CrearProyectoConfirm(CrearProyecto):
+    """
+    Para confirmar una creacion de proyecto. Boton "Guardar"
+    """
     template_name = 'CrearProyectoConfirm.html'
     def post(self, request, *args, **kwargs):
+        """
+        Se encarga de verificar que el  nombre del proyecto no se repita
+        para luego crear exitosamente el mismo
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error (en el caso que el nombre de proyecto ya exista) en la misma pagina
+                 Retorna una pagina en donde se muestra la creacion existosa del proyecto.
+        """
         diccionario= {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
@@ -78,8 +126,21 @@ class CrearProyectoConfirm(CrearProyecto):
 
 #Eliminacion Logica de Proyectos
 class EliminarProyecto(ProyectoView):
+    """
+    Para eliminar un proyecto en forma logica. Boton "Eliminar"
+    """
     template_name = 'EliminarProyecto.html'
     def post(self, request, *args, **kwargs):
+        """
+        Realiza la verificacion de roles y estado actual del proyecto,
+        luego elimina si es posible.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de eliminacion exitosa del proyecto (paso de activo a inactivo)
+                 Retorna mensajes de error en caso de que el usuario no sea SM o el proyecto no este finalizado.
+        """
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
@@ -101,7 +162,7 @@ class EliminarProyecto(ProyectoView):
         return render(request, super(EliminarProyecto,self).template_name, diccionario)
 
 
-#Generacion de Informe del Proyecto
+'''#Generacion de Informe del Proyecto
 class InformeProyecto(ProyectoView):
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -114,13 +175,26 @@ class InformeProyecto(ProyectoView):
             del diccionario[self.context_object_name]
             return render(request, 'InformeProyecto.html', diccionario)
         diccionario['error']= 'No se puede mostrar proyecto - No Iniciado'
-        return render(request, self.template_name, diccionario)
+        return render(request, self.template_name, diccionario)'''
 
 
 #Iniciando Proyecto
 class InicializarProyecto(ProyectoView):
+    """
+    Dejar el proyecto en un estado inicial luego de su creacion
+    """
     template_name = 'InicializarProyecto.html'
     def post(self, request, *args, **kwargs):
+        """
+        Realiza la verificacion de roles y estado del proyecto
+        para comprobar si es posible inicializar
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de inicializacion en caso que el usuario tenga el rol correspondiente
+                 Retorna mensajes de error en el caso que el usuario no posea el rol o el proyecto ya se encuentre inicializado
+        """
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
@@ -139,8 +213,23 @@ class InicializarProyecto(ProyectoView):
         return render(request, super(InicializarProyecto, self).template_name, diccionario)
 
 class InicializarProyectoConfirm(InicializarProyecto):
+    """
+    Confirma los datos de inicializacion del proyecto . Boton "Guardar"
+    """
     template_name = 'InicializarProyectoConfirm.html'
     def post(self, request, *args, **kwargs):
+        """
+        Realiza la comprobacion de la fecha de inicio y fecha de fin del proyecto, en caso fecha_Fin<fecha_Inicio,
+        se devuelve un error y se evita la inicializacion.
+        Si las fechas son correctas se procede a obtener los miembros del equipo scrum.
+        Luego se establece el estado del proyecto a I (Inicializado)
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna en la misma pagina, un error en caso de detectar que las fechas no se corresponden.
+                Retorna la pagina de inicializacion exitosa del proyecto.
+        """
         diccionario= {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
@@ -162,8 +251,19 @@ class InicializarProyectoConfirm(InicializarProyecto):
         return render(request, self.template_name, diccionario)
 
 class Ingresar(TemplateView):
+    """
+    Ingresar al entorno de un proyecto en particular
+    Se listan las operaciones realizables
+    """
     template_name = 'InicioProyecto.html'
     def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return:Retorna la pagina de inicio del proyecto.
+        """
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
@@ -172,15 +272,26 @@ class Ingresar(TemplateView):
         return render(request,self.template_name, diccionario)
 
 class ModificarProyecto(ProyectoView):
+    """
+    Modificacion de algunos campos de proyecto
+    """
     template_name = 'ModificarProyecto.html'
     context_object_name = 'lista_proyectos'
     def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de modificacion , con  los datos pre-cargados
+                 Retorna un mensaje de error, si el usuario no posee el rol correspondiente
+        """
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Admin?
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es SM
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
@@ -189,8 +300,20 @@ class ModificarProyecto(ProyectoView):
             return render(request, super(ModificarProyecto, self).template_name, diccionario)
 
 class ModificarProyectoConfirm(ModificarProyecto):
+    """
+    Confirma la modificacion de un proyecto
+    """
     template_name = 'ModificarProyectoConfirm.html'
     def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el nombre del proyecto sea unico y luego actualiza los datos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el nombre del proyecto sea repetido.
+                Retorna la pagina de modificacion exitosa del proyecto
+        """
         diccionario= {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado

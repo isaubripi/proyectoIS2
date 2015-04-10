@@ -3,10 +3,10 @@
 {% block content %}
     <h3>Ingresar al Sistema</h3>
     {% if message %}
-    <b>{{message}}</b>
+        <b>{{message}}</b>
     {% endif %}
-    <form action='/proyecto/' method="POST"> {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Ingresar"/>
+    <form id="formulario" action='' method="POST"> {% csrf_token %}
+        <table>{{formulario}}</table>
+        <p><input type="submit" value="Ingresar"/></p>
     </form>
 {% endblock %}
