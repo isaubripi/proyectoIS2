@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Asignar/Desasignar Permisos a Rol::{% endblock %}
+{% block TituloMenu %} ASIGNAR/DESASIGNAR PERMISOS A ROL {% endblock %}
+{% block TituloOperacion %} Rol Modificado {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Los permisos se asignaron/desasignaron exitosamente. </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/inicio/rol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value="{{ proyecto.id }}">
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Flujo::{% endblock %}
+{% block TituloMenu %} EDITAR FLUJO {% endblock %}
+{% block TituloOperacion %} Formulario Flujo {% endblock %}
+{% block DatosOperacion %}
+    <h1> <font color = 'green'>MODIFICAR FLUJO </font></h1>
+    <form action="/inicio/flujo/editar/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre:</label></dt><dd>
+                <input type="hidden" name="nombre_flujo" value="{{ flujo.nombre }}"/></dd>
+                <input type="text" name="nombre_nuevo_flujo" value="{{ flujo.nombre }}" required/></dd>
+            </dl>
+
+            <dl><dt><label>Descripcion:</label></dt><dd>
+                <input type="hidden" name="descripcion_flujo" value="{{ flujo.descripcion }}"/></dd>
+                <input type="text" name="descripcion_nuevo_flujo" value="{{ flujo.descripcion }}" required/></dd>
+            </dl>
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='rol' value={{ rol.id }}>
+        <input type="submit" value="Actualizar">
+    </form>
+    <form action="/inicio/flujo/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}
