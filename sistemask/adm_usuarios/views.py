@@ -106,6 +106,35 @@ class EliminarUsuario(UsuarioView):
         eliminado.save()
         return render(request, self.template_name, diccionario)
 
+class AsignarRoles(UsuarioView):
+    template_name = 'AsignarRoles.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id = request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+        usuario_actual = Usuario.objects.get(id = request.POST['usuario'])
+        diccionario['usuario_actual'] = usuario_actual
+        lista = Rol.objects.filter(activo=True)
+        diccionario['lista_roles'] = lista
+        return render(request, self.template_name, diccionario)
+
+class AsignarRolesConfirm(AsignarRoles):
+    template_name = 'AsignarRolesConfirm.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        usuario_actual = Usuario.objects.get(id = request.POST['user'])
+        lista = Rol.objects.filter(activo=True)
+        for rol in lista:
+            if 'rol.nombre' in request.POST:
+                nueva_relacion = Usuario.Roles()
+                nueva_relacion.usuario_id = usuario_actual.id
+                nueva_relacion.rol_id = rol.id
+                nueva_relacion.save()
+        return render(request, self.template_name, diccionario)
+
+
 
 
 '''from django.http import request

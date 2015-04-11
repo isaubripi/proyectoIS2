@@ -1,8 +1,14 @@
 from django.db import models
-from adm_usuarios.models import Usuario
+#from adm_usuarios.models import Usuario
 
 
 class Rol(models.Model):
+    '''
+    Esta clase define el modelo Rol.
+    Los campos de este modelo, ademas de todos los permisos del sistema, son:
+        nombre: nombre del rol,
+        activo: determina si el rol esta o no activo en el sistema.
+    '''
 
     nombre = models.CharField(max_length=50)
 
@@ -70,7 +76,7 @@ class Rol(models.Model):
     ver_tabla = models.BooleanField(default=False)
 
     activo = models.BooleanField(default=False)
-    usuario= models.ForeignKey(Usuario)
+    #usuario= models.ForeignKey(Usuario)
 
     def __unicode__(self):
         return self.nombre

@@ -12,6 +12,8 @@
         <center><th scope="col" class="rounded">Email</th></center>
         <center><th scope="col" class="rounded">Modificar</th></center>
         <center><th scope="col" class="rounded">Eliminar</th></center>
+        <center><th scope="col" class="rounded">Asignar Roles</th></center>
+
 	</tr>
 {% endblock %}
 {% block MostrarDatos %}
@@ -37,6 +39,14 @@
                         <input type="submit" value="Eliminar" id="submitt">
                     </form>
 		        </td>
+
+                <td>
+                    <form action="/proyecto/usuario/asignar/" method="post">{% csrf_token %}
+                        <input type="hidden" name='codigo' value="{{ usuario.id }}" >
+                        <input type="hidden" name='login' value={{ logueado.id }} >
+                       <input type="submit" value="Asignar roles" id="submitt">
+                    </form>
+                </td>
                 <td>
 
 		        </td>
