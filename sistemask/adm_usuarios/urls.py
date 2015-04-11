@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from .views import UsuarioView, CrearUsuario, CrearUsuarioConfirm, EditarUsuario, EditarUsuarioConfirm, EliminarUsuario
+from .views import UsuarioView, CrearUsuario, CrearUsuarioConfirm, EditarUsuario, EditarUsuarioConfirm, EliminarUsuario, AsignarRoles, AsignarRolesConfirm
 
 urlpatterns= patterns('',
     url('^$', UsuarioView.as_view(), name='usuario'),
@@ -8,6 +8,8 @@ urlpatterns= patterns('',
     url('^editar/$', EditarUsuario.as_view(), name='editar_usuario'),
     url('^editar/confirmar/$', EditarUsuarioConfirm.as_view(), name='editar_usuario_confirmar'),
     url('^eliminar/$', EliminarUsuario.as_view(), name='eliminar_usuario'),
+    url('^asignar/$', AsignarRoles.as_view(), name='asignar_roles'),
+    url('^asignar/confirmar/$', AsignarRolesConfirm.as_view(), name='asignar_roles_confirmar'),
     #url('^mostrar/$', MostrarUsuario.as_view(), name='mostrar_usuario'),
 )
 
