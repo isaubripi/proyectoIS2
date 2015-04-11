@@ -9,35 +9,60 @@ from .models import Rol
 # Create your views here.
 class RolView(TemplateView):
     '''Esta clase muestra la lista de roles activos.
+    Hereda de TemplateView.
+    template_name es el archivo html de esta clase.
 
     '''
     template_name = 'Rol.html'
 
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y la lista de roles activos.
+        '''
 
         lista = Rol.objects.filter(activo = True)
         return render(request, self.template_name, {'lista':lista})
 
 
 class CrearRol(RolView):
-    '''Esta clase crea un rol.
-
+    '''Esta clase crea roles.
+    Hereda de RolView.
+    template_name es el archivo html de esta clase.
 
     '''
     template_name = 'CrearRol.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y una lista de usuarios.
+        '''
 
         lista = Usuario.objects.all()
         return render(request, self.template_name, {'lista_usuarios' : lista})
 
 class CrearRolConfirm(CrearRol):
     '''Esta clase confirma la creacion de un nuevo rol.
-    Cada rol tiene un campo para usuario a quien se le da el rol.
-
+       Hereda de CrearRol.
+       template_name es el archivo html de esta clase.
 
     '''
     template_name = 'CrearRolConfirm.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request y el archivo html.
+        Si se introduce un nombre de rol existente lanza el error.
+        '''
 
         rol_nombre= request.POST['nombre_rol']
         if len(Rol.objects.filter(nombre= rol_nombre, activo= True)):
@@ -91,10 +116,18 @@ class CrearRolConfirm(CrearRol):
 class EditarRol(RolView):
     '''Esta clase edita o modifica un rol existente.
     El rol de Scrum Master no se puede modificar.
-
+    Hereda de RolView
+    template_name es el archivo html de esta clase
     '''
     template_name = 'EditarRol.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
         diccionario={}
 
         rol_actual= Rol.objects.get(id= request.POST['rol'])
@@ -108,10 +141,19 @@ class EditarRol(RolView):
 
 class EditarRolConfirmar(EditarRol):
     '''Esta clase confirma la modificacion de un rol.
+    Hereda de EditarRol.
+    template_name es el archivo html de esta clase.
 
     '''
     template_name = 'EditarRolConfirm.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
         diccionario={}
 
         roles= Rol.objects.filter(nombre= request.POST['nombre_rol'])
@@ -193,10 +235,19 @@ class EditarRolConfirmar(EditarRol):
 class EliminarRol(RolView):
     '''Esta clase elimina un rol, es decir, pone en estado inactivo el rol.
     El rol de Scrum Master no se puede eliminar.
+    Hereda de RolView.
+    template_name es el archivo html de esta funcion.
 
     '''
     template_name = 'EliminarRol.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
         diccionario={}
 
         rol_actual= Rol.objects.get(id= request.POST['rol'])
@@ -226,9 +277,21 @@ class ConsultarRol(RolView):
 
 
 class AsignarDesasignarPermisos(RolView):
+    '''
+    Esta clase asigna/desasigna permisos a un rol.
+    Hereda de RolView.
+    template_name es el archivo html de esta funcion.
+    '''
 
     template_name = 'AsignarDesasignarPermisos.html'
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
         diccionario={}
 
         rol_actual= Rol.objects.get(id=request.POST['rol'])
@@ -239,10 +302,22 @@ class AsignarDesasignarPermisos(RolView):
 
 
 class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
+    '''
+    Esta clase confirma la asignacion/desasignacion de permisos a un rol.
+    Hereda de AsignarDesasignarPermisos.
+    template_name es el archivo html de esta funcion.
+    '''
 
     template_name = 'AsignarDesasignarPermisosConfirmar.html'
 
     def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
         diccionario={}
 
         rol_actual = Rol.objects.get(nombre = request.POST['nombre_rol'], activo=True)
