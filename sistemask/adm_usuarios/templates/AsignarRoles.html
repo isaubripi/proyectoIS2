@@ -10,6 +10,8 @@
         {% for rol in lista_roles %}
             <input type="checkbox" name="{{ rol.nombre }}" >{{ rol.nombre }}<br>
 
+        <input type="hidden" name='login' value= "{{ logueado.id }}" >
+        <input type="hidden" name='user' value= "{{ usuario.id }}" >
         <input type="submit" value="Asignar">
     </form>
 
@@ -17,6 +19,7 @@
         <input type="hidden" name='login' value= "{{ logueado.id }}" >
         <input type="submit" value="Cancelar" id="submit">
     </form>
+        {% endfor %}
 {% endblock %}
 {% block Botones %}
 {% endblock %}
