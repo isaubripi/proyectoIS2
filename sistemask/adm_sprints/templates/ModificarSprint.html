@@ -1,0 +1,43 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Modificar Sprint::{% endblock %}
+{% block TituloMenu %} MODIFICAR SPRINT {% endblock %}
+{% block TituloOperacion %} Formulario Sprint {% endblock %}
+{% block DatosOperacion %}
+    <form action="/sprint/modificar/confirmar/"method="post">{% csrf_token %}
+        <fieldset>
+            <dl>
+                <dt><label>Nombre:</label></dt>
+                <dd><input type="text" value= "{{ sprint.nombre }}" name="nombre_sprint" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Descripcion:</label></dt>
+                <dd><input type="text" value= "{{ sprint.descripcion }}" name="descripcion_sprint" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Fecha Inicio:</label></dt>
+                <dd><input type="text" value= "{{ sprint.fecha_inicio }}" name="fecha_inicio" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Fecha Fin:</label></dt>
+                <dd><input type="text" value= "{{ sprint.fecha_fin }}" name="fecha_fin" id="" size="54" required/></dd></dl></dd>
+            </dl>
+            <dl>
+                <dt><label>Duracion:</label></dt>
+                <dd><input type="text" value= "{{ sprint.duracion }}" name="duracion" id="" size="54" required/></dd></dl></dd>
+            </dl>
+
+        </fieldset>
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="submit" value="Guardar" id="submitt">
+
+    </form>
+    <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+{% endblock %}
+{% block Botones%}
+{% endblock %}

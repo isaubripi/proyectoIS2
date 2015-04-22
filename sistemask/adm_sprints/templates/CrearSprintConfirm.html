@@ -1,0 +1,15 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Sprint::{% endblock %}
+{% block TituloMenu %} CREAR SPRINT {% endblock %}
+{% block TituloOperacion %} Sprint Creado {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>El Sprint se cre&oacute exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}
