@@ -5,7 +5,11 @@ from adm_proyectos.views import ProyectoView
 from .models import Usuario
 from adm_roles.models import Rol
 from adm_proyectos.models import Proyecto
+from django.views.generic import TemplateView
 
+from django.contrib.auth.models import User
+
+from adm_proyectos.views import LoginRequiredMixin
 # Create your views here.
 #Lista de usuarios
 class UsuarioView(ProyectoView):
@@ -25,7 +29,7 @@ class UsuarioView(ProyectoView):
             return render(request, super(UsuarioView, self).template_name, diccionario)
 
 #Creacion de usuario
-class CrearUsuario(UsuarioView):
+class CrearUsuario(LoginRequiredMixin, UsuarioView):
     template_name = 'CrearUsuario.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -52,9 +56,18 @@ class CrearUsuarioConfirm(CrearUsuario):
         nuevo_usuario.cedula= request.POST['cedula']
         nuevo_usuario.email= request.POST['email']
         nuevo_usuario.save()
+        nuevo_user= User()
+        nuevo_user.username = nuevo_nick
+        password = request.POST['pass']
+        nuevo_user.set_password(password)
+        nuevo_user.first_name = request.POST['nombre']
+        nuevo_user.last_name = request.POST['apellido']
+        nuevo_user.email = request.POST['email']
+        nuevo_user.is_active = True
+        nuevo_user.save()
         return render(request, self.template_name, diccionario)
 
-class EditarUsuario(UsuarioView):
+class EditarUsuario(LoginRequiredMixin, UsuarioView):
     template_name = 'EditarUsuario.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
@@ -71,6 +84,8 @@ class EditarUsuarioConfirm(EditarUsuario):
         diccionario['logueado']= usuario_logueado
         modificacion= Usuario.objects.get(id= request.POST['codigo'])
         modificacion_nick= request.POST['user']
+        username_old = modificacion.username
+        modificacion_user = User.objects.get(username=username_old)
         existe= Usuario.objects.filter(username= modificacion_nick)
         if len(existe) and existe[0]!=modificacion:
             diccionario['error']= 'El nombre de usuario ya existe'
@@ -83,15 +98,29 @@ class EditarUsuarioConfirm(EditarUsuario):
         modificacion.cedula= request.POST['cedula']
         modificacion.email= request.POST['email']
         modificacion.save()
+
+        #modificacion del model user
+
+        modificacion_nick_user = request.POST['user']
+        modificacion_user.username= modificacion_nick_user
+        password = request.POST['pass']
+        modificacion_user.set_password(password)
+        modificacion_user.first_name= request.POST['nombre']
+        modificacion_user.last_name= request.POST['apellido']
+        modificacion_user.email= request.POST['email']
+        modificacion_user.save()
         return render(request, self.template_name, diccionario)
 
-class EliminarUsuario(UsuarioView):
+class EliminarUsuario(LoginRequiredMixin, UsuarioView):
     template_name = 'EliminarUsuario.html'
     def post(self, request, *args, **kwargs):
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         eliminado= Usuario.objects.get(id= request.POST['codigo'])
+        delete = eliminado.username
+        eliminado_user = User.objects.get(username=delete)
+
         #Verificar si es Administrador del Sistema
         if len(Rol.objects.filter(nombre='Scrum Master', usuario= eliminado)):
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
@@ -104,9 +133,11 @@ class EliminarUsuario(UsuarioView):
             return render(request, super(EliminarUsuario, self).template_name, diccionario)
         eliminado.estado= False
         eliminado.save()
+        eliminado_user.is_active=False
+        eliminado_user.save()
         return render(request, self.template_name, diccionario)
 
-class AsignarRoles(UsuarioView):
+class AsignarRoles(LoginRequiredMixin, UsuarioView):
     template_name = 'AsignarRoles.html'
     def post(self, request, *args, **kwargs):
         diccionario = {}
