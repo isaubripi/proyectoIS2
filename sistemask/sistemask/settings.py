@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'adm_roles',
     'adm_proyectos',
     'adm_flujos',
+    'adm_sprints',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -96,6 +97,6 @@ STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
-LOGIN_URL = 'mysite_login'
-LOGOUT_URL = 'mysite_logout'
+LOGIN_URL = '/'
+LOGOUT_URL = '/salir'
 LOGIN_REDIRECT_URL = '/'

@@ -22,6 +22,12 @@ class LoginView(TemplateView):
     def get(self, request, *args, **kwargs):
         return render(request,self.template_name)
 
+@login_required(login_url='/')
+def cerrar(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+
+
 
 '''def login_page(request):
     message = None

@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     #url(r'^ingresar/$','sistemask.views.ingresar'),
 
     url(r'^', include('adm_flujos.urls')),
+    url(r'^sprint/', include('adm_sprints.urls')),
 
 )
 
