@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Historia::{% endblock %}
+{% block TituloMenu %} EDITAR HISTORIA {% endblock %}
+{% block TituloOperacion %} Historia Modificada {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Los cambios se guardaron exitosamente. </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/historia/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value="{{ proyecto.id }}">
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

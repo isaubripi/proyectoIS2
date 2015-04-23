@@ -1,0 +1,48 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Historia::{% endblock %}
+{% block TituloMenu %} EDITAR HISTORIA {% endblock %}
+{% block TituloOperacion %} Formulario Historia {% endblock %}
+{% block DatosOperacion %}
+    <h1> <font color = 'green'>MODIFICAR HISTORIA</font></h1>
+    <form action="/historia/editar/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre:</label></dt><dd>
+                <input type="hidden" name="nombre_historia" value="{{ historia.nombre }}"/></dd>
+                <input type="text" name="nuevo_nombre" value="{{ historia.nombre }}" required/></dd>
+            </dl>
+
+            <dl><dt><label>Prioridad:</label></dt><dd>
+                <input type="hidden" name="prioridad_historia" value="{{ historia.prioridad }}"/></dd>
+                <input type="number" name="nuevo_prioridad" value="{{ historia.prioridad }}" /></dd>
+            </dl>
+
+            <dl><dt><label>Valor Negocio:</label></dt><dd>
+                <input type="hidden" name="negocio_historia" value="{{ historia.val_negocio }}"/></dd>
+                <input type="number" name="nuevo_negocio" value="{{ historia.val_negocio }}" /></dd>
+            </dl>
+
+            <dl><dt><label>Valor Tecnico:</label></dt><dd>
+                <input type="hidden" name="tecnico_historia" value="{{ historia.val_tecnico }}"/></dd>
+                <input type="number" name="nuevo_tecnico" value="{{ historia.val_tecnico }}" /></dd>
+            </dl>
+
+            <dl><dt><label>Size:</label></dt><dd>
+                <input type="hidden" name="size_historia" value="{{ historia.size }}"/></dd>
+                <input type="number" name="nuevo_size" value="{{ historia.size }}" required/></dd>
+            </dl>
+
+            <dl><dt><label>Descripcion:</label></dt><dd>
+                <input type="hidden" name="descripcion_historia" value="{{ historia.descripcion }}"/></dd>
+                <input type="text" name="nuevo_descripcion" value="{{ historia.descripcion }}" required/></dd>
+            </dl>
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='historia' value={{ historia.id }}>
+        <input type="submit" value="Actualizar">
+    </form>
+    <form action="/historia/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}
