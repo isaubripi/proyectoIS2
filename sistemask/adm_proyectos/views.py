@@ -4,11 +4,23 @@ from .models import Proyecto
 from adm_usuarios.models import Usuario
 from adm_roles.models import Rol
 from sistemask.views import LoginView
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
+from .models import Cliente
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import auth
+
+from django.utils.decorators import method_decorator
+
+
+class LoginRequiredMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
 
 class ProyectoView(TemplateView):
     """
@@ -18,6 +30,7 @@ class ProyectoView(TemplateView):
     """
     template_name = 'Proyecto.html'
     context_object_name = 'lista_proyectos'
+
     def post(self, request, *args, **kwargs):
         """
         Esta funcion se encarga de la autenticacion del usuario, utiliza post para enviar los datos
@@ -31,11 +44,15 @@ class ProyectoView(TemplateView):
         diccionario= {}                                                  #Diccionario para ser retornado en HTML
         #Login.html es la unica pagina que envia un 'user' en el diccionario de request.POST
         if 'user' in request.POST:
-            existe= Usuario.objects.filter(username=request.POST['user'])
+            existe= Usuario.objects.filter(username=request.POST['user'], estado=True)
+            username = request.POST['user']
+            password = request.POST['pass']
             if len(existe):
                 if existe[0].password == request.POST['pass']:
+                    user = authenticate(username=username, password=password)
                     diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
                     diccionario['logueado']= existe[0]
+                    login(request, user)
                     return render(request, self.template_name, diccionario)
                 else: error= 'Password incorrecto'
             else: error= 'Nombre de usuario no existe'
@@ -58,13 +75,15 @@ class ProyectoView(TemplateView):
         return render(request, LoginView.template_name, {'error':'Acceso Incorrecto'})
 
 
-class CrearProyecto(ProyectoView):
+
+class CrearProyecto(LoginRequiredMixin, ProyectoView):
     """
     Esta clase es la engarcada de crear un proyecto
     Hereda de la clase ProyectoView
     """
     template_name = 'CrearProyecto.html'
     context_object_name = 'lista_proyectos'
+
     def post(self, request, *args, **kwargs):
         """
         Se encarga de crear un nuevo proyecto, teniendo como condicion que el usuario sea SM
@@ -74,6 +93,7 @@ class CrearProyecto(ProyectoView):
         :return: Retorna el formulacion para creacion de proyecto solo si el usuario poseer el rol de Scrum Master
                  En caso contrario retorna un mensaje de denegacion de acceso en la misma pagina de inicio.
         """
+        #Usuario = request.user
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
@@ -85,6 +105,7 @@ class CrearProyecto(ProyectoView):
         else:
             diccionario['error']= 'No puedes realizar esta accion'
             return render(request, super(CrearProyecto, self).template_name, diccionario)
+
 
 class CrearProyectoConfirm(CrearProyecto):
     """
@@ -125,11 +146,13 @@ class CrearProyectoConfirm(CrearProyecto):
             return render(request, self.template_name, diccionario)
 
 #Eliminacion Logica de Proyectos
-class EliminarProyecto(ProyectoView):
+class EliminarProyecto(LoginRequiredMixin, ProyectoView):
     """
     Para eliminar un proyecto en forma logica. Boton "Eliminar"
     """
     template_name = 'EliminarProyecto.html'
+
+
     def post(self, request, *args, **kwargs):
         """
         Realiza la verificacion de roles y estado actual del proyecto,
@@ -179,7 +202,7 @@ class InformeProyecto(ProyectoView):
 
 
 #Iniciando Proyecto
-class InicializarProyecto(ProyectoView):
+class InicializarProyecto(LoginRequiredMixin, ProyectoView):
     """
     Dejar el proyecto en un estado inicial luego de su creacion
     """
@@ -201,8 +224,9 @@ class InicializarProyecto(ProyectoView):
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
-            if proyecto_actual.estado == 'N':
+            if proyecto_actual.estado == 'N' or 'I':
                 diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+                diccionario['lista_clientes']=Cliente.objects.filter(estado=True)
                 diccionario['proyecto']= proyecto_actual
                 del diccionario[self.context_object_name]
                 return render(request, self.template_name, diccionario)
@@ -239,23 +263,29 @@ class InicializarProyectoConfirm(InicializarProyecto):
         if proyecto_detalles.fecha_fin < proyecto_detalles.fecha_inicio:
             diccionario['proyecto']= proyecto_detalles
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+            diccionario['lista_clientes']= Cliente.objects.filter(estado= True)
             diccionario['error']= 'ERROR - Fecha Inicio posterior a Fecha Fin'
             return render(request, super(InicializarProyectoConfirm, self).template_name, diccionario)
         #proyecto_detalles.sprints= request.POST['sprints']
         usuarios_miembros= request.POST.getlist('miembros[]')
         for i in usuarios_miembros: proyecto_detalles.scrum_team.add(Usuario.objects.get(username= i))
+        new_cliente= Cliente.objects.get(username= request.POST['cliente'])
+        proyecto_detalles.cliente= new_cliente
+
         proyecto_detalles.estado= 'I'
         proyecto_detalles.save()
         proyecto_detalles= Proyecto.objects.get(nombre= proyecto_detalles.nombre)
 
         return render(request, self.template_name, diccionario)
 
-class Ingresar(TemplateView):
+
+class Ingresar(LoginRequiredMixin, TemplateView):
     """
     Ingresar al entorno de un proyecto en particular
     Se listan las operaciones realizables
     """
     template_name = 'InicioProyecto.html'
+
     def post(self, request, *args, **kwargs):
         """
 
@@ -271,7 +301,7 @@ class Ingresar(TemplateView):
         diccionario['proyecto']= proyecto_detalles
         return render(request,self.template_name, diccionario)
 
-class ModificarProyecto(ProyectoView):
+class ModificarProyecto(LoginRequiredMixin, ProyectoView):
     """
     Modificacion de algunos campos de proyecto
     """

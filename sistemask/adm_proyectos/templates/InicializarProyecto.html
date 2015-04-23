@@ -22,6 +22,18 @@
                     </select>
                 </dd>
             </dl>
+
+             <dl>
+                <dt><label>Cliente:</label></dt>
+                <dd>
+                    <select  name="cliente"id="submitt" required>
+                        <option value="">Seleccione un usuario</option>
+                        {% for usuario in lista_clientes %}
+                            <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </dl>
         </fieldset>
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >

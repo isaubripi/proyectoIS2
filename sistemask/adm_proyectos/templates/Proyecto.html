@@ -57,14 +57,20 @@
     {% endfor %}
 {% endblock %}
 {% block Botones %}
-    <form action= "/proyecto/usuario/" method="post"> {% csrf_token %}
-        <input type="hidden" name='login' value={{ logueado.id }} >
-     	<input type="submit" value="Administrar Usuarios" id="submitt">
-    </form>
+
+    <br>
     <form action= "/proyecto/crear/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="Crear Proyecto" id="submitt">
     </form>
+    <br>
+      <form action= "/proyecto/usuario/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+     	<input type="submit" value="Administrar Usuarios" id="submitt">
+    </form>
+    <br>
+    <br>
+    <br>
     <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
         <input type="hidden" name='codigo' value={{ logueado.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >

@@ -1,5 +1,23 @@
 from django.db import models
 from adm_usuarios.models import Usuario
+from adm_roles.models import Rol
+
+
+class Cliente(models.Model):
+
+    username= models.CharField(max_length=15, unique=True)
+    nombre= models.CharField(max_length=50)
+    apellido= models.CharField(max_length=50)
+    password= models.CharField(max_length=10)
+    cedula= models.CharField(max_length=10)
+    email= models.CharField(max_length=20)
+    estado= models.BooleanField(default=True)
+    roles = models.ManyToManyField(Rol)
+
+    def __unicode__(self):
+        return self.nombre
+
+
 
 class Proyecto(models.Model):
     """
@@ -30,12 +48,11 @@ class Proyecto(models.Model):
     sprint_duracion = models.PositiveIntegerField(null= True)
     activo = models.BooleanField(default=True)
     estado= models.CharField ( max_length = 1 ,choices = estados_posibles,  default='N' )
+    cliente = models.ForeignKey(Cliente, null=True)
     #flujos = models.ManyToManyField(Flujo)
+
 
 
 def __unicode__(self):
     return self.nombre
-
-
-
 

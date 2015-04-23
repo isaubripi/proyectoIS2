@@ -9,25 +9,29 @@
 <h3> Equipo Scrum: </h3>
 {% for usuario in proyecto.scrum_team.all %}
     <td> * {{ usuario }}</td></br>
-
 {% endfor %}
-
-
+<h3> Cliente: {{ proyecto.cliente.username }} </h3>
 {% endblock %}
 {% block TituloLista %} Operaciones disponibles {% endblock %}
-
 
 {% block Botones %}
     <form action= "/flujo/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="Administrar Flujos" id="submitt">
     </form>
-
+    <br>
+    <form action= "/sprint/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Administrar Sprints" id="submitt">
+    </form>
+    <br>
     <form action= "/inicio/rol/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
+
      	<input type="submit" value="Administrar Roles" id="submitt">
     </form>
-
+    <br>
     <form action= "/proyecto/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="<Atras" id="submitt">
