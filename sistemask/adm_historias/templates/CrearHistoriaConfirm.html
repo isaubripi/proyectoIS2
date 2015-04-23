@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Historia::{% endblock %}
+{% block TituloMenu %} CREAR HISTORIA {% endblock %}
+{% block TituloOperacion %} Historia Creada {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>La historia de usuario se cre&oacute exitosamente. </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/historia/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value="{{ proyecto.id }}">
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

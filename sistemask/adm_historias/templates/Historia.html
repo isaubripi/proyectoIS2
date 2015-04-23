@@ -1,0 +1,52 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Historias:: {% endblock %}
+{% block TituloMenu %} ADMINISTRACION DE HISTORIAS DEL PROYECTO {% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+<h2>Lista de Historias del Proyecto</h2>
+    <tr>
+        <th scope="col" class="rounded">Nombre</th>
+        <th scope="col" class="rounded"><font color="green">Editar</font></th>
+        <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+    </tr>
+
+{% endblock %}
+{% block MostrarDatos%}
+    {% for historia in lista %}
+        <tr>
+            <td>{{ historia.nombre }}</td>
+
+            <td>
+                <form action= "/historia/editar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Modificar">
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/eliminar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Eliminar">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+
+{% block Botones%}
+    <form action="/historia/crear/" method="POST">{% csrf_token %}
+        <input type="submit" value="Crear nueva historia">
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+    </form>
+    <form action="/historia/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}
