@@ -29,6 +29,7 @@ urlpatterns = patterns('',
 
     url(r'^', include('adm_flujos.urls')),
     url(r'^sprint/', include('adm_sprints.urls')),
+    url(r'^historia/', include('adm_historias')),
 
 )
 
