@@ -28,6 +28,7 @@ class HistoriaView(TemplateView):
         diccionario['proyecto'] = proyecto_actual
         lista = Historia.objects.filter(proyecto=proyecto_actual, activo=True)
         diccionario['lista'] = lista
+        diccionario['logueado']= Usuario.objects.get(id=request.POST['login'])
         return render(request, self.template_name, diccionario)
 
 class CrearHistoria(HistoriaView):
@@ -47,6 +48,10 @@ class CrearHistoria(HistoriaView):
         '''
 
         diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         return render(request, self.template_name, diccionario)
 
 class CrearHistoriaConfirm(CrearHistoria):
@@ -64,9 +69,13 @@ class CrearHistoriaConfirm(CrearHistoria):
         :param kwargs:
         :return:
         '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
 
         hu_nombre = request.POST['nombre_historia']
-        #hu_proyecto = request.POST['proyecto']
+        hu_proyecto = request.POST['proyecto_historia']
         hu_prioridad = request.POST['prioridad_historia']
         hu_val_negocio = request.POST['negocio_historia']
         hu_val_tecnico = request.POST['tecnico_historia']
@@ -90,14 +99,15 @@ class CrearHistoriaConfirm(CrearHistoria):
             error_codigo = 'Codigo de historia ya existe. Intente otro'
             return render(request, super(CrearHistoriaConfirm, self).template_name, {'error':error_codigo})
 
-        nueva_historia = Historia(nombre=hu_nombre, #proyecto=hu_proyecto,
+        nueva_historia = Historia(nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
                                   prioridad=hu_prioridad,
                                   val_negocio=hu_val_negocio, val_tecnico=hu_val_tecnico, size=hu_size,
                                   descripcion=hu_descripcion, codigo=hu_codigo, #acumulador=hu_acumulador, historial=hu_historial, flujo=hu_flujo, estado=hu_estado,
                                   activo=True)
         #nueva_historia.asignado.add(Usuario.objects.get(nombre=hu_asignado))
+        diccionario['proyecto'] = Proyecto.objects.get(id=hu_proyecto)
         nueva_historia.save()
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)
 
 
 class EditarHistoria(TemplateView):
@@ -116,6 +126,11 @@ class EditarHistoria(TemplateView):
         :return:
         '''
         diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         historia_actual = Historia.objects.get(id=request.POST['historia'])
         diccionario['historia'] = historia_actual
         return render (request, self.template_name, diccionario)
@@ -135,6 +150,11 @@ class EditarHistoriaConfirm(EditarHistoria):
         :param kwargs:
         :return:
         '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
 
         historia_editada = Historia.objects.get(id=request.POST['historia'])
         nuevo_nombre = request.POST['nuevo_nombre']
@@ -157,7 +177,7 @@ class EditarHistoriaConfirm(EditarHistoria):
         historia_editada.descripcion = nuevo_descripcion
         historia_editada.save()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)
 
 class EliminarHistoria(HistoriaView):
     '''
@@ -174,9 +194,13 @@ class EliminarHistoria(HistoriaView):
         :param kwargs:
         :return:
         '''
-
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         historia_eliminada = Historia.objects.get(id=request.POST['historia'])
         historia_eliminada.activo = False
         historia_eliminada.save()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)

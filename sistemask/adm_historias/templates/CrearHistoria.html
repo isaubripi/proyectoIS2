@@ -45,13 +45,13 @@
             <dl><dt><label>Historial:</label></dt><dd><input type="text" name="historial_historia" value="1-Creacion historia" required /></dd></dl>
             <dl><dt><label>Descripcion:</label></dt><dd><input type="text" name="descripcion_historia"required /></dd></dl>
 
-            <input type="hidden" name="proyecto_historia" value="{{ proyecto.id }}">
+            <input type="hidden" name='proyecto_historia' value={{ proyecto.id }}>
 
             <input type="hidden" name="activo" value="true">
         <input type="submit" value="Crear">
     </form>
     <form action="/historia/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="<Atras">
     </form>
