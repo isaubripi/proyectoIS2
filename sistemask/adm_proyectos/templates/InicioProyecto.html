@@ -28,8 +28,15 @@
     <br>
     <form action= "/inicio/rol/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
-
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
      	<input type="submit" value="Administrar Roles" id="submitt">
+    </form>
+    <br>
+
+    <form action= "/historia/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Administrar Historias" id="submitt">
     </form>
     <br>
     <form action= "/proyecto/" method="post"> {% csrf_token %}

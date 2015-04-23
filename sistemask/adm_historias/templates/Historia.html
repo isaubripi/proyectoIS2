@@ -41,10 +41,10 @@
 {% block Botones%}
     <form action="/historia/crear/" method="POST">{% csrf_token %}
         <input type="submit" value="Crear nueva historia">
-        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
     </form>
-    <form action="/historia/" method="POST"> {% csrf_token %}
+    <form action="/proyecto/ingresar/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="<Atras"><br>
