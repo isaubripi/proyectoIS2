@@ -10,7 +10,6 @@
 		<center><th scope="col" class="rounded">Apellido</th></center>
         <center><th scope="col" class="rounded">Cedula</th></center>
         <center><th scope="col" class="rounded">Email</th></center>
-        <center><th scope="col" class="rounded">Modificar</th></center>
         <center><th scope="col" class="rounded">Eliminar</th></center>
         <center><th scope="col" class="rounded">Asignar Roles</th></center>
 
@@ -25,13 +24,6 @@
                 <td>{{ usuario.cedula }}</td>
                 <td>{{ usuario.email }}</td>
 
-                <td>
-                    <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
-                        <input type="hidden" name='codigo' value="{{ usuario.id }}" >
-                        <input type="hidden" name='login' value={{ logueado.id }} >
-                       <input type="submit" value="Modificar" id="submitt">
-                    </form>
-                </td>
 		        <td>
                     <form action="/proyecto/usuario/eliminar/" method="post">{% csrf_token %}
                         <input type="hidden" name='codigo' value="{{ usuario.id }}" >
