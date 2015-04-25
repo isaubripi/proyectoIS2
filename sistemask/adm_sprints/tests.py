@@ -5,43 +5,62 @@ from adm_sprints.models import Sprint
 from .models import Proyecto
 
 # Create your tests here.
-class ProyectoTest(TestCase):
+class SprintTest(TestCase):
     """
     En es la clase encargara de realizar las pruebas unitarias
     basicamente se prueban la creacion, modificacion y eliminacion
     """
-    print('Inicia pruebas unitarias de ABM SPRINT')
 
-    def creacion(self):
+
+    def setUp(self):
         """
-        Se crean 3 objetos tipo Proyecto
+        Se crean 3 objetos tipo Proyecto y se asigan a cada sprint
         :return:Nada
         """
-        Proyecto1 = Proyecto.objects.create(nombre= 'Sistema de informacion 1', descripcion= 'Escrito en java', scrum_master= Usuario.objects.create(nombre='Isidro'), scrum_team= Usuario.objects.create(nombre='Isidro'), fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
-        Proyecto2 = Proyecto.objects.create(nombre= 'Sistema de informacion 2', descripcion= 'Escrito en python', scrum_master= Usuario.objects.create(nombre='Juan'), scrum_team= Usuario.objects.create(nombre='Juan'), fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
-        Proyecto3 = Proyecto.objects.create(nombre= 'Sistema de informacion 3', descripcion= 'Escrito en c++', scrum_master= Usuario.objects.create(nombre='Ruben'), scrum_team= Usuario.objects.create(nombre='Ruben'), fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
+        print(':::::::::::Inicia pruebas unitarias de ABM SPRINT:::::::::::')
 
-        Sprint1 = Sprint.objects.create(nombre='Sprint 1', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto1)
-        Sprint2 = Sprint.objects.create(nombre='Sprint 2', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto2)
-        Sprint3 = Sprint.objects.create(nombre='Sprint 3', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto3)
+        u1 = Usuario.objects.create(username= 'isidro',nombre = 'Isidro', apellido = 'Brizuela', password = 'isidro', cedula = 3841270)
+
+
+        Proyecto1 = Proyecto.objects.create(nombre= 'Sistema de informacion 1', descripcion= 'Escrito en java', scrum_master=u1, fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
+        Proyecto2 = Proyecto.objects.create(nombre= 'Sistema de informacion 2', descripcion= 'Escrito en python', scrum_master=u1, fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
+        Proyecto3 = Proyecto.objects.create(nombre= 'Sistema de informacion 3', descripcion= 'Escrito en c++', scrum_master=u1, fecha_inicio='2015-05-15', fecha_fin='2015-05-17', activo=True )
+
+        Sprint.objects.create(nombre='Sprint 1', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto1)
+        Sprint.objects.create(nombre='Sprint 2', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto2)
+        Sprint.objects.create(nombre='Sprint 3', descripcion= 'Nada', fecha_inicio= '2015-05-15', fecha_fin='2015-06-15', duracion=30, proyecto=Proyecto3)
 
         print('Creacion de Sprints ejecutada correctamente.')
 
-    '''def modificacion(self):
+    def test_modificacion(self):
         """
-        Se modifica el nombre de cada uno de los proyectos creados
+        Se modifica el nombre de un sprint creado previamente
         :return:Nada
         """
-        Proyecto1 = Proyecto.objects.update(nombre='Sistema de informacion 3')
-        Proyecto2 = Proyecto.objects.update(nombre='Sistema de informacion 2')
-        Proyecto3 = Proyecto.objects.update(nombre='Sistema de informacion 1')
+        S1= Sprint.objects.get(nombre='Sprint 1')
+        S1.nombre = 'Sprint1'
+        S1.save()
 
+        print('Modificacion de Sprints ejecutada correctamente.')
 
-    def eliminacion(self):
+    def test_eliminacion(self):
         """
-        Se eliminan los 3 proyectos creados.
+        Se elimina un sprint creado previamente
         :return:Nada
         """
-        Proyecto1 = Proyecto.objects.delete()
-        Proyecto2 = Proyecto.objects.delete()
-        Proyecto3 = Proyecto.objects.delete()'''
+        S2 = Sprint.objects.get(nombre= 'Sprint 2')
+        S2.delete()
+
+        print('Eliminacion de Sprints ejecutada correctamente.')
+
+    def test_activacion(self):
+        """
+        Se activa un sprint creado previamente
+        :return:nada
+        """
+        S3 = Sprint.objects.get(nombre='Sprint 3')
+        S3.estado = 'A'
+        S3.save()
+
+        print('Activacion de Sprints ejecutada correctamente.')
+

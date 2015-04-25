@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from adm_proyectos.models import Proyecto
+from adm_historias.models import Historia
 
 class Sprint(models.Model):
     """
@@ -13,6 +14,7 @@ class Sprint(models.Model):
     proyecto: proyecto al cual pertenece el sprint
     activo: estado del sprint
     estado: Estado interno del sprint P o A
+    historias: Aquellas historias de usuario que son asignadas al sprint
     """
 
     estados_posibles= (
@@ -27,6 +29,7 @@ class Sprint(models.Model):
     proyecto = models.ForeignKey(Proyecto)
     activo = models.BooleanField(default=True)
     estado = models.CharField(max_length=1, choices= estados_posibles, default='P')
+    historias = models.ManyToManyField(Historia, related_name='historias')
 
 def __unicode__(self):
     return self.nombre

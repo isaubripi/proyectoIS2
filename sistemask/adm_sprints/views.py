@@ -5,6 +5,7 @@ from adm_usuarios.models import Usuario
 from adm_roles.models import Rol
 from sistemask.views import LoginView
 from adm_sprints.models import Sprint
+from adm_historias.models import Historia
 
 from adm_proyectos.views import LoginRequiredMixin
 
@@ -223,6 +224,14 @@ class ActivarSprint(LoginRequiredMixin, SprintView):
 
     template_name = 'ActivarSprint.html'
     def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de exito en donde cambia el estado de P a A
+                Retorna un mensaje de error en el caso que el usuario no pueda activar un sprint
+        """
 
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -246,3 +255,85 @@ class ActivarSprint(LoginRequiredMixin, SprintView):
         else:
             diccionario['error'] = 'No puedes realizar esta accion'
             return render(request, super(ActivarSprint, self).template_name, diccionario)
+
+
+
+class AsignarHistorias(LoginRequiredMixin, SprintView):
+    """
+    Permite asignar historias de usuario a un sprint
+    """
+
+    template_name = 'AsignarHistorias.html'
+    context_object_name = 'lista_sprints'
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de asignacion de historias de usuario, si posee el rol
+                Retorna un mensaje de error en el caso que el usuario no pueda asignar historias a un sprint
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+             return render(request, self.template_name, diccionario)
+
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(AsignarHistorias, self).template_name, diccionario)
+
+
+class AsignarHistoriasConfirm(LoginRequiredMixin, SprintView):
+    """
+    Confirma la asignacion de historias a un sprint especifico
+    """
+
+    template_name = 'AsignarHistoriasConfirm.html'
+    context_object_name = 'lista_sprints'
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de exito para la asignacion de historias
+
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        sprint_detalles = Sprint.objects.get(id=request.POST['sprint'])
+
+        stories = request.POST.getlist('historias[]')
+
+        for i in stories:
+            sprint_detalles.historias.add(Historia.objects.get(nombre=i))
+
+        sprint_detalles.save()
+
+        return render(request, self.template_name, diccionario)

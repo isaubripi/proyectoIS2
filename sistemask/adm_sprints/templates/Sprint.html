@@ -1,9 +1,10 @@
 {% extends 'PlantillaBaseListas.html' %}
 {% block title %}::Menu SPRINTS::{% endblock %}
 {% block TituloMenu %} ADMINISTRACION DE SPRINTS {% endblock %}
-{% block MigasDePan %}>>>Inicio>>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>>Sprint{% endblock %}
+{% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint{% endblock %}
 
 {% block TituloLista %} Lista de Sprints del Proyecto {% endblock %}
+
 {% block content %}
 
 {% endblock %}
@@ -15,6 +16,7 @@
 		<th scope="col" class="rounded">Eliminar</th>
         <th scope="col" class="rounded">Modificar</th>
         <th scope="col" class="rounded">Activar</th>
+        <th scope="col" class="rounded">Asignar Historias</th>
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
@@ -46,6 +48,15 @@
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
                                 <input type="submit" value="Activar" id="submitt">
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action= "/sprint/asignar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Asignar Historias" id="submitt">
                             </form>
                         </td>
 
