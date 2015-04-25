@@ -15,22 +15,21 @@ class FlujoTest(TestCase):
         activo: determina si el flujo esta activo o no en el proyecto.
     '''
 
-    def crear(self):
+    def setUp(self):
         print(':::::::::::Inicia pruebas unitarias de ABM FLUJO:::::::::::')
 
-        flujo1 = Flujo.objects.create(nombre='Flujo Desarrollo 1', descripcion='Flujo Prueba 1', proyecto=Proyecto.objects.create(nombre='Proyecto 1'), activo=True)
-        flujo2 = Flujo.objects.create(nombre='Flujo Desarrollo 2', descripcion='Flujo Prueba 2', proyecto=Proyecto.objects.create(nombre='Proyecto 2'), activo=True)
+        flujo1 = Flujo.objects.create(nombre='Flujo Desarrollo 1', descripcion='Flujo Prueba 1', activo=True)
+        flujo2 = Flujo.objects.create(nombre='Flujo Desarrollo 2', descripcion='Flujo Prueba 2', activo=True)
 
         print('Creacion de Flujos ejecutada correctamente.')
 
-    def modificar(self):
+    def test_modificar(self):
 
         flujo1 = Flujo.objects.update(nombre='Flujo Desarrollo 1.1')
         flujo2 = Flujo.objects.update(nombre='Flujo Desarrollo 2.1')
         print('Modificacion de Flujos ejecutada correctamente.')
 
-    def eliminar(self):
-
-        flujo1 = Flujo.objects.delete()
-        flujo2 = Flujo.objects.delete()
+    def test_eliminar(self):
+        flujo1 = Flujo.objects.get(nombre='Flujo Desarrollo 1')
+        flujo1.delete()
         print('Eliminacion de Flujos ejecutada correctamente.')
