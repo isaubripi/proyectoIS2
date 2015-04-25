@@ -9,6 +9,8 @@
         <th scope="col" class="rounded">Nombre</th>
         <th scope="col" class="rounded"><font color="green">Editar</font></th>
         <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+        <th scope="col" class="rounded"><font color="red">Cargar horas</font></th>
+        <th scope="col" class="rounded"><font color="red">Historial</font></th>
     </tr>
 
 {% endblock %}
@@ -31,6 +33,22 @@
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
                     <input type="submit" value="Eliminar">
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/horas/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Cargar horas">
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/historial/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Historial">
                 </form>
             </td>
         </tr>

@@ -1,25 +1,27 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import Historia
+from .models import Historia, Historial
 from adm_usuarios.models import Usuario
 from adm_proyectos.models import Proyecto
+from adm_proyectos.views import LoginRequiredMixin
+from django.utils import timezone
 
 # Create your views here.
 
 class HistoriaView(TemplateView):
     '''
-
+    Esta clase muestra las historias de un proyecto.
     '''
 
     template_name = 'Historia.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return: request, html y diccionario
         '''
 
         diccionario = {}
@@ -31,23 +33,24 @@ class HistoriaView(TemplateView):
         diccionario['logueado']= Usuario.objects.get(id=request.POST['login'])
         return render(request, self.template_name, diccionario)
 
-class CrearHistoria(HistoriaView):
+class CrearHistoria(LoginRequiredMixin, HistoriaView):
     '''
-
+    Esta clase crea una historia nueva en un proyecto.
     '''
 
     template_name = 'CrearHistoria.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return: request, html y diccionario
         '''
 
         diccionario = {}
+
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
@@ -56,18 +59,18 @@ class CrearHistoria(HistoriaView):
 
 class CrearHistoriaConfirm(CrearHistoria):
     '''
-
+    Esta clase confirma la creacion de una historia en un proyecto.
     '''
 
     template_name = 'CrearHistoriaConfirm.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return:request, html y diccionario
         '''
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -105,25 +108,33 @@ class CrearHistoriaConfirm(CrearHistoria):
                                   descripcion=hu_descripcion, codigo=hu_codigo, #acumulador=hu_acumulador, historial=hu_historial, flujo=hu_flujo, estado=hu_estado,
                                   activo=True)
         #nueva_historia.asignado.add(Usuario.objects.get(nombre=hu_asignado))
-        diccionario['proyecto'] = Proyecto.objects.get(id=hu_proyecto)
         nueva_historia.save()
+        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=hu_nombre),
+                                             nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
+                                             prioridad=hu_prioridad, val_negocio=hu_val_negocio,
+                                             val_tecnico=hu_val_tecnico, size=hu_size,
+                                             descripcion=hu_descripcion, codigo=hu_codigo, activo=True)
+
+        historial.fecha = timezone.now()
+        historial.save()
+        diccionario['proyecto'] = Proyecto.objects.get(id=hu_proyecto)
         return render(request, self.template_name, diccionario)
 
 
-class EditarHistoria(TemplateView):
+class EditarHistoria(LoginRequiredMixin, TemplateView):
     '''
-
+    Esta clase modifica una historia en un proyecto.
     '''
 
     template_name = 'EditarHistoria.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return: request, html y diccionario
         '''
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -137,18 +148,18 @@ class EditarHistoria(TemplateView):
 
 class EditarHistoriaConfirm(EditarHistoria):
     '''
-
+    Esta clase confirma la modificacion de una historia en un proyecto:
     '''
 
     template_name = 'EditarHistoriaConfirm.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return: request, html y diccionario
         '''
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -177,22 +188,30 @@ class EditarHistoriaConfirm(EditarHistoria):
         historia_editada.descripcion = nuevo_descripcion
         historia_editada.save()
 
+        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=nuevo_nombre),
+                                             nombre=nuevo_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto']),
+                                             prioridad=nuevo_prioridad, val_negocio=nuevo_negocio, val_tecnico=nuevo_tecnico, size=nuevo_size,
+                                             descripcion=nuevo_descripcion, codigo=historia_editada.codigo, acumulador=historia_editada.acumulador,
+                                             asignado=historia_editada.asignado, flujo=historia_editada.flujo, estado=historia_editada.estado,
+                                             sprint=historia_editada.sprint, asignado_p=historia_editada.asignado_p, activo=True)
+        historial.fecha = timezone.now()
+        historial.save()
         return render(request, self.template_name, diccionario)
 
-class EliminarHistoria(HistoriaView):
+class EliminarHistoria(LoginRequiredMixin, HistoriaView):
     '''
-
+    Esta clase elimina logicamente una historia de un proyecto. Pone en estado inactivo a la historia.
     '''
 
     template_name = 'EliminarHistoria.html'
 
     def post(self, request, *args, **kwargs):
         '''
-
+        Esta funcion tiene los parametros:
         :param request:
         :param args:
         :param kwargs:
-        :return:
+        :return: request, html y diccionario
         '''
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -203,4 +222,132 @@ class EliminarHistoria(HistoriaView):
         historia_eliminada.activo = False
         historia_eliminada.save()
 
+        historial = Historial.objects.create(id_historia=historia_eliminada, nombre=historia_eliminada.nombre, proyecto=proyecto_actual,
+                                             prioridad=historia_eliminada.prioridad, val_negocio=historia_eliminada.val_negocio,
+                                             val_tecnico=historia_eliminada.val_tecnico, size=historia_eliminada.size,
+                                             descripcion=historia_eliminada.descripcion,
+                                             codigo=historia_eliminada.codigo, acumulador=historia_eliminada.acumulador,
+                                             asignado=historia_eliminada.asignado, flujo=historia_eliminada.flujo,
+                                             estado=historia_eliminada.estado, sprint=historia_eliminada.sprint,
+                                             asignado_p=historia_eliminada.asignado_p, activo=False)
+        historial.fecha = timezone.now()
+        historial.save()
+
         return render(request, self.template_name, diccionario)
+
+
+class VerHistorial(LoginRequiredMixin, HistoriaView):
+    '''
+    Esta clase permite ver el historial de una historia de usuario de un proyecto.
+    '''
+
+    template_name = 'VerHistorial.html'
+
+    def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, html y diccionario
+        '''
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        lista = Historial.objects.filter(id_historia=request.POST['historia'])
+        diccionario['lista'] = lista
+        diccionario['historia_actual'] = historia_actual
+        return render(request, self.template_name, diccionario)
+
+
+class CargarHoras(LoginRequiredMixin, HistoriaView):
+    '''
+    Esta clase permite cargar las horas que se trabajo sobre una historia de usuario en un proyecto.
+    '''
+
+    template_name = 'CargarHoras.html'
+
+    def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, html y diccionario
+        '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        diccionario['historia'] = historia_actual
+        return render(request, self.template_name, diccionario)
+
+class CargarHorasConfirm(CargarHoras):
+    '''
+    Esta clase confirma la carga de horas trabajadas sobre una historia de usuario en proyecto.
+    '''
+
+    template_name = 'CargarHorasConfirm.html'
+
+    def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, html y diccionario
+        '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+
+        historia = Historia.objects.get(id=request.POST['historia'])
+        horas = request.POST['horas']
+
+        historia.acumulador += int(horas)
+
+        historia.save()
+
+        historial = Historial.objects.create(id_historia=historia, nombre=historia.nombre, proyecto=proyecto_actual,
+                                             prioridad=historia.prioridad, val_negocio=historia.val_negocio,
+                                             val_tecnico=historia.val_tecnico, size=historia.size,
+                                             descripcion=historia.descripcion,
+                                             codigo=historia.codigo, acumulador=historia.acumulador,
+                                             asignado=historia.asignado, flujo=historia.flujo,
+                                             estado=historia.estado, sprint=historia.sprint,
+                                             asignado_p=historia.asignado_p, activo=False)
+        historial.fecha = timezone.now()
+        historial.save()
+
+        return render(request, self.template_name, diccionario)
+
+
+class AsignarFlujo(LoginRequiredMixin, HistoriaView):
+    '''
+
+    '''
+
+    template_name = 'AsignarFlujo.html'
+
+    def post(self, request, *args, **kwargs):
+        '''
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual

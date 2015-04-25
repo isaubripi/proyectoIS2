@@ -5,6 +5,8 @@ from django.shortcuts import render
 from adm_usuarios.models import Usuario
 from django.views.generic import TemplateView
 from .models import Rol
+from adm_proyectos.models import Proyecto
+from adm_proyectos.views import LoginRequiredMixin
 
 # Create your views here.
 class RolView(TemplateView):
@@ -23,12 +25,18 @@ class RolView(TemplateView):
         :param kwargs:
         :return: request, el archivo html y la lista de roles activos.
         '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
 
         lista = Rol.objects.filter(activo = True)
-        return render(request, self.template_name, {'lista':lista})
+        diccionario['lista'] = lista
+        return render(request, self.template_name, diccionario)
 
 
-class CrearRol(RolView):
+class CrearRol(LoginRequiredMixin, RolView):
     '''Esta clase crea roles.
     Hereda de RolView.
     template_name es el archivo html de esta clase.
@@ -43,9 +51,14 @@ class CrearRol(RolView):
         :param kwargs:
         :return: request, el archivo html y una lista de usuarios.
         '''
-
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         lista = Usuario.objects.all()
-        return render(request, self.template_name, {'lista_usuarios' : lista})
+        diccionario['lista_usuarios'] = lista
+        return render(request, self.template_name, diccionario)
 
 class CrearRolConfirm(CrearRol):
     '''Esta clase confirma la creacion de un nuevo rol.
@@ -63,7 +76,11 @@ class CrearRolConfirm(CrearRol):
         :return: request y el archivo html.
         Si se introduce un nombre de rol existente lanza el error.
         '''
-
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         rol_nombre= request.POST['nombre_rol']
         if len(Rol.objects.filter(nombre= rol_nombre, activo= True)):
             error = "Nombre del rol ya existe. Intente otro"
@@ -110,10 +127,10 @@ class CrearRolConfirm(CrearRol):
         nuevo_rol.activo= True
 
         nuevo_rol.save()
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)
 
 
-class EditarRol(RolView):
+class EditarRol(LoginRequiredMixin, RolView):
     '''Esta clase edita o modifica un rol existente.
     El rol de Scrum Master no se puede modificar.
     Hereda de RolView
@@ -128,8 +145,12 @@ class EditarRol(RolView):
         :param kwargs:
         :return: request, el archivo html y el diccionario.
         '''
-        diccionario={}
 
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
         rol_actual= Rol.objects.get(id= request.POST['rol'])
 
         if rol_actual.nombre== 'Scrum Master':
@@ -154,7 +175,13 @@ class EditarRolConfirmar(EditarRol):
         :param kwargs:
         :return: request, el archivo html y el diccionario.
         '''
-        diccionario={}
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+
 
         roles= Rol.objects.filter(nombre= request.POST['nombre_rol'])
         nuevo_rol_nombre= request.POST['nombre_nuevo_rol']
@@ -232,7 +259,7 @@ class EditarRolConfirmar(EditarRol):
             rol_actual.save()
         return render(request, self.template_name, diccionario)
 
-class EliminarRol(RolView):
+class EliminarRol(LoginRequiredMixin, RolView):
     '''Esta clase elimina un rol, es decir, pone en estado inactivo el rol.
     El rol de Scrum Master no se puede eliminar.
     Hereda de RolView.
@@ -248,7 +275,13 @@ class EliminarRol(RolView):
         :param kwargs:
         :return: request, el archivo html y el diccionario.
         '''
-        diccionario={}
+
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
 
         rol_actual= Rol.objects.get(id= request.POST['rol'])
 
@@ -276,7 +309,7 @@ class ConsultarRol(RolView):
         return render(request, self.template_name, diccionario)
 
 
-class AsignarDesasignarPermisos(RolView):
+class AsignarDesasignarPermisos(LoginRequiredMixin, RolView):
     '''
     Esta clase asigna/desasigna permisos a un rol.
     Hereda de RolView.
@@ -292,7 +325,13 @@ class AsignarDesasignarPermisos(RolView):
         :param kwargs:
         :return: request, el archivo html y el diccionario.
         '''
-        diccionario={}
+
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
 
         rol_actual= Rol.objects.get(id=request.POST['rol'])
 
@@ -318,7 +357,13 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         :param kwargs:
         :return: request, el archivo html y el diccionario.
         '''
-        diccionario={}
+
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
 
         rol_actual = Rol.objects.get(nombre = request.POST['nombre_rol'], activo=True)
 

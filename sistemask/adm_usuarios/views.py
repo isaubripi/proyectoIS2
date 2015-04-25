@@ -159,10 +159,8 @@ class AsignarRolesConfirm(AsignarRoles):
         lista = Rol.objects.filter(activo=True)
         for rol in lista:
             if 'rol.nombre' in request.POST:
-                nueva_relacion = Usuario.Roles()
-                nueva_relacion.usuario_id = usuario_actual.id
-                nueva_relacion.rol_id = rol.id
-                nueva_relacion.save()
+                usuario_actual.roles.add(rol.nombre)
+                usuario_actual.save()
         return render(request, self.template_name, diccionario)
 
 

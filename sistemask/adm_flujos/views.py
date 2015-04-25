@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from .models import Flujo
 from adm_proyectos.models import Proyecto
 from adm_usuarios.models import Usuario
+from adm_proyectos.views import LoginRequiredMixin
 # Create your views here.
 
 
@@ -26,10 +27,10 @@ class FlujoView(TemplateView):
         :return: request, el arhivo html y el diccionario.
         '''
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
 
         lista = Flujo.objects.filter(activo=True)
@@ -37,7 +38,7 @@ class FlujoView(TemplateView):
         return render(request, self.template_name, diccionario)
 
 
-class CrearFlujo(FlujoView):
+class CrearFlujo(LoginRequiredMixin, FlujoView):
     '''
     Esta clase crea los flujos en el proyecto.
 
@@ -59,10 +60,10 @@ class CrearFlujo(FlujoView):
         :return: request, el archivo html y el diccionario
         '''
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
 
         return render(request, self.template_name, diccionario)
@@ -88,6 +89,11 @@ class CrearFlujoConfirm(CrearFlujo):
         :return: request y el archivo html
         Si se introduce un nombre de flujo que ya existe lanza el error.
         '''
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto_flujo'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
         flujo_nombre= request.POST['nombre_flujo']
         flujo_descripcion= request.POST['descripcion_flujo']
@@ -101,9 +107,9 @@ class CrearFlujoConfirm(CrearFlujo):
 
         nuevo_flujo.save()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)
 
-class EditarFlujo(FlujoView):
+class EditarFlujo(LoginRequiredMixin, FlujoView):
     '''
     Esta clase edita flujos en el proyecto.
 
@@ -123,10 +129,10 @@ class EditarFlujo(FlujoView):
         :return: request, el archivo html y el diccionario.
         '''
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
         flujo_actual = Flujo.objects.get(id= request.POST['flujo'])
         diccionario['flujo']=flujo_actual
@@ -153,6 +159,11 @@ class EditarFlujoConfirm(EditarFlujo):
         :param kwargs:
         :return: request y el archivo html.
         '''
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
         flujo_editado = Flujo.objects.get(nombre= request.POST['nombre_flujo'])
         nuevo_flujo_nombre = request.POST['nombre_nuevo_flujo']
@@ -161,9 +172,9 @@ class EditarFlujoConfirm(EditarFlujo):
         flujo_editado.descripcion = nuevo_flujo_descripcion
         flujo_editado.save()
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, diccionario)
 
-class EliminarFlujo(FlujoView):
+class EliminarFlujo(LoginRequiredMixin, FlujoView):
     '''
     Esta clase elimina flujos en el proyecto.
 
@@ -184,10 +195,10 @@ class EliminarFlujo(FlujoView):
         '''
 
         diccionario={}
-        #usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        #proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
-        #diccionario['logueado']= usuario_logueado
-        #diccionario['proyecto']= proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
         flujo = Flujo.objects.get(id = request.POST['flujo'])
 
@@ -198,7 +209,7 @@ class EliminarFlujo(FlujoView):
         return render(request, self.template_name, diccionario)
 
 
-class Actividades(TemplateView):
+class Actividades(LoginRequiredMixin, TemplateView):
     '''
     Esta clase va a permitir agregar actividades a los flujos en el proyecto.
 
@@ -215,5 +226,11 @@ class Actividades(TemplateView):
         :param kwargs:
         :return: request y el archivo html.
         '''
-        return render(request, self.template_name)
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+
+        return render(request, self.template_name, diccionario)
 

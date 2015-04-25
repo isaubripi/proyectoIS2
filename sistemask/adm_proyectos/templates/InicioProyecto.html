@@ -17,6 +17,7 @@
 {% block Botones %}
     <form action= "/flujo/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Administrar Flujos" id="submitt">
     </form>
     <br>

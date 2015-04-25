@@ -35,7 +35,7 @@
                 <form action= "/eliminar/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name="usuario" value="{{ rol.usuario.id }}">
+                    <input type="hidden" name="usuario" value={{ rol.usuario.id }}>
                     <input type="hidden" name='rol' value={{ rol.id }} >
                     <input type="submit" value="Eliminar">
                 </form>
@@ -85,7 +85,7 @@
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
     </form>
-    <form action="/proyecto/" method="POST"> {% csrf_token %}
+    <form action="/proyecto/ingresar/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="<Atras"><br>

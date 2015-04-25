@@ -1,5 +1,7 @@
 <center><h1>EN CONSTRUCCION</h1>
 <form action="/flujo/" method="post"> {% csrf_token %}
+    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+    <input type="hidden" name='login' value={{ logueado.id }} >
     <input type="submit" value="Atras">
 </form>
 </center>
