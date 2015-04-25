@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Historia
 from adm_proyectos.models import Proyecto
+from adm_usuarios.models import Usuario
 
 # Create your tests here.
 
@@ -15,22 +16,29 @@ class HistoriaTest(TestCase):
         activo: determina si la historia esta activo o no en el proyecto.
     '''
 
-    def crear(self):
+    def setUp(self):
         print(':::::::::::Inicia pruebas unitarias de ABM HISTORIAS DE USUARIO:::::::::::')
 
-        historia1 = Historia.objects.create(nombre='Historia 1', descripcion='Historia Prueba 1', proyecto=Proyecto.objects.create(nombre='Proyecto 1'), activo=True)
-        historia2 = Historia.objects.create(nombre='Historia 2', descripcion='Historia Prueba 2', proyecto=Proyecto.objects.create(nombre='Proyecto 2'), activo=True)
+        u1 = Usuario.objects.create(username= 'ruben',nombre = 'Ruben', apellido = 'Medina', password = 'ruben', cedula = 12345)
+
+
+        historia1 = Historia.objects.create(nombre='Historia 1', descripcion='Historia Prueba 1', activo=True)
+        historia2 = Historia.objects.create(nombre='Historia 2', descripcion='Historia Prueba 2', activo=True)
 
         print('Creacion de Historias ejecutada correctamente.')
 
-    def modificar(self):
+    def test_modificar(self):
+
 
         historia1 = Historia.objects.update(nombre='Historia 1.1')
         historia2 = Historia.objects.update(nombre='Historia 2.1')
         print('Modificacion de Historia ejecutada correctamente.')
 
-    def eliminar(self):
+    def test_eliminar(self):
 
-        historia1 = Historia.objects.delete()
-        historia2 = Historia.objects.delete()
+        historia1 = Historia.objects.get(nombre='Historia 1')
+        historia2 = Historia.objects.get(nombre='Historia 1')
+
+        historia1.delete()
+        historia2.delete()
         print('Eliminacion de Historias ejecutada correctamente.')
