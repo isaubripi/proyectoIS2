@@ -30,6 +30,7 @@ class Sprint(models.Model):
     activo = models.BooleanField(default=True)
     estado = models.CharField(max_length=1, choices= estados_posibles, default='P')
     historias = models.ManyToManyField(Historia, related_name='historias')
+    asignado_h = models.BooleanField(default=False)
 
 def __unicode__(self):
     return self.nombre

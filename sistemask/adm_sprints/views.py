@@ -132,13 +132,13 @@ class EliminarSprint(LoginRequiredMixin, SprintView):
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado, activo= True)):
-            if sprint_actual.estado=='P':
+            if sprint_actual.estado=='P' and sprint_actual.asignado_h == False:
                 sprint_actual.activo= False
                 sprint_actual.save()
                 del diccionario[self.context_object_name]  #No hace falta enviar la lista de proyectos
                 return render(request, self.template_name, diccionario)
             else:
-                diccionario['error']= 'Sprint Activado - No se puede eliminar'
+                diccionario['error']= 'Sprint Activado o con Historias de Usuario asignadas- No se puede eliminar'
         else:
             diccionario['error']= 'No puedes realizar esta accion'
         return render(request, super(EliminarSprint,self).template_name, diccionario)
@@ -283,7 +283,7 @@ class AsignarHistorias(LoginRequiredMixin, SprintView):
 
         proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
-        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p=False)
 
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
@@ -328,11 +328,17 @@ class AsignarHistoriasConfirm(LoginRequiredMixin, SprintView):
         diccionario['sprint']=sprint_actual
 
         sprint_detalles = Sprint.objects.get(id=request.POST['sprint'])
-
+        sprint_detalles.asignado_h = True
         stories = request.POST.getlist('historias[]')
+
+        id_sprint = request.POST['sprint']
 
         for i in stories:
             sprint_detalles.historias.add(Historia.objects.get(nombre=i))
+            Historia_asignada = Historia.objects.get(nombre=i)
+            Historia_asignada.sprint = id_sprint
+            Historia_asignada.asignado_p = True
+            Historia_asignada.save()
 
         sprint_detalles.save()
 
