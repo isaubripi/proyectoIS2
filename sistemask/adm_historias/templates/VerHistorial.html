@@ -1,0 +1,73 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Historial Historia::{% endblock %}
+{% block TituloMenu %} HISTORIAL HISTORIA {% endblock %}
+{% block TituloOperacion %} Historial historia {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>HISTORIA: {{ historia_actual.nombre }}</h3></center>
+
+    {% for historial in lista %}
+
+        <tr>
+            <td><h6>ID: {{ historial.id_historia }}</h6></td>
+
+            <td><h6>Nombre: {{ historial.nombre }}</h6></td>
+
+            <td><h6>Proyecto: {{ historial.proyecto.nombre }}</h6></td>
+            <td><h6>Prioridad: {{ historial.prioridad }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Valor Negocio: {{ historial.val_negocio }}</h6></td>
+            <td><h6>Valor Tecnico: {{ historial.val_tecnico }}</h6></td>
+            <td><h6>Size: {{ historial.size }}</h6></td>
+            <td><h6>Descripcion: {{ historial.descripcion }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Codigo: {{ historial.codigo }}</h6></td>
+            <td><h6>Acumulador: {{ historial.acumulador }}</h6></td>
+            <td><h6>Asignado: {{ historial.asignado }}</h6></td>
+            <td><h6>Flujo: {{ historial.flujo }}</h6></td>
+            <td><h6>Estado: {{ historial.estado }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Sprint: {{ historial.sprint }}<br>----------------------------------------------------------</h6></td>
+            <td><h6>Asignado a Sprint: {{ historial.asignado_p }}<br>----------------------------------------------------------</h6></td>
+            <td><h6>Activo: {{ historial.activo }}<br>----------------------------------------------------------</h6></td>
+            <td><h6>Fecha: {{ historial.fecha }}<br>----------------------------------------------------------</h6></td>
+        </tr>
+
+    {% endfor %}
+{%endblock%}
+
+{% block MostrarDatos %}
+    {% for historial in lista %}
+        <tr>
+            <td>ID: {{ historial.id_historia }}</td>
+
+            <td>Nombre: {{ historial.nombre }}</td>
+
+            <td>Proyecto: {{ historial.proyecto.nombre }}</td>
+            <td>Prioridad: {{ historial.prioridad }}</td>
+            <td>Valor Negocio: {{ historial.val_negocio }}</td>
+            <td>Valor Tecnico: {{ historial.val_tecnico }}</td>
+            <td>Size: {{ historial.size }}</td>
+            <td>Descripcion: {{ historial.descripcion }}</td>
+            <td>Codigo: {{ historial.codigo }}</td>
+            <td>Acumulador: {{ historial.acumulador }}</td>
+            <td>Asignado: {{ historial.asignado }}</td>
+            <td>Flujo: {{ historial.flujo }}</td>
+            <td>Estado: {{ historial.estado }}</td>
+            <td>Sprint: {{ historial.sprint }}</td>
+            <td>Asignado a Sprint: {{ historial.asignado_p }}</td>
+            <td>Activo: {{ historial.activo }}</td>
+            <td>Fecha: {{ historial.fecha }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block Botones%}
+    <form action="/historia/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="<Atras"></center>
+    </form>
+{% endblock %}

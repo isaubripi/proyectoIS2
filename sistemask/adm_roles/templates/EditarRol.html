@@ -72,13 +72,13 @@
                 <input type="checkbox" name="eliminar_flujo"{% if rol.eliminar_flujo %} checked {% endif %}>Eliminar flujo
                 <input type="checkbox" name="ver_tabla"{% if rol.ver_tabla %} checked {% endif %}>Ver tabla
             </p>!-->
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='rol' value={{ rol.id }}>
         <input type="submit" value="Actualizar">
     </form>
     <form action="/inicio/rol/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="<Atras">
     </form>

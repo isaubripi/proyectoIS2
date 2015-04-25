@@ -5,7 +5,7 @@
 {% block DatosOperacion %}
     <form action="/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
-            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_rol"required /></dd></dl>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_rol" required /></dd></dl>
             <!--<dl>
                 <dt><label>Usuario:</label></dt>
                 <dd>
@@ -78,12 +78,14 @@
                 <input type="checkbox" name="eliminar_flujo">Eliminar flujo
                 <input type="checkbox" name="ver_tabla">Ver tabla
             </p>!-->
+            <input type="hidden" name="proyecto" value={{ proyecto.id }} >
+            <input type="hidden" name="login" value={{ logueado.id }} >
             <input type="hidden" name="activo" value="true">
         <input type="submit" value="Crear">
     </form>
     <form action="/inicio/rol/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
-        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="proyecto" value={{ proyecto.id }} >
+        <input type="hidden" name="login" value={{ logueado.id }} >
         <input type="submit" value="<Atras">
     </form>
 {% endblock %}

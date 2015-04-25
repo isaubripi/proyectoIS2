@@ -15,13 +15,13 @@
                 <input type="hidden" name="descripcion_flujo" value="{{ flujo.descripcion }}"/></dd>
                 <input type="text" name="descripcion_nuevo_flujo" value="{{ flujo.descripcion }}" required/></dd>
             </dl>
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='rol' value={{ rol.id }}>
         <input type="submit" value="Actualizar">
     </form>
     <form action="/flujo/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value="{{ proyecto.id }}" >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="<Atras">
     </form>

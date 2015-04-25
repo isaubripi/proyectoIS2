@@ -11,6 +11,7 @@ class Historia(models.Model):
     Esta clase define el modelo de historia de usuario.
     Los campos de este modelo son:
         nombre: nombre de la historia
+        proyecto: indica el proyecto en que esta la historia
         prioridad: indica la prioridad de la historia
         val_negocio: indica el valor de negocio de la historia
         val_tecnico: inidica el valor tecnico de la historia
@@ -18,12 +19,12 @@ class Historia(models.Model):
         descripcion: una descripcion de la historia
         codigo: es el codigo de la historia
         acumulador: indica las horas trabajadas sobre la historia
-        historial: registra un historial de la historia
         asignado: indica el usuario encargado de trabajar sobre la historia
         flujo: indica el flujo en que esta la historia
         estado: indica el estado en la actividad de un flujo en que esta la historia
         archivo: registra un archivo referente a la historia
         sprint: indica el sprint en que esta la historia
+        asignado_p: indica si la historia esta asignada a un sprint o no
         activo: indica si la historia esta eliminada (False) o no (True)
 
     '''
@@ -37,14 +38,61 @@ class Historia(models.Model):
     descripcion = models.CharField(max_length=100)
     codigo = models.CharField(max_length=5)
     acumulador = models.IntegerField(default=0)
-    historial = models.CharField(max_length=200)
     asignado = models.ForeignKey(Usuario, null=True)
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
     #archivo = models.FilePathField
-    #sprint = models.ForeignKey(Sprint, null=True)
+    sprint = models.CharField(max_length=20)
+    asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
 
+
+    def __unicode__(self):
+        return self.nombre
+
+
+
+class Historial(models.Model):
+    '''
+    Esta clase define el modelo de historial de historia de usuario.
+    Los campos de este modelo son:
+        id_historia: es el identificador de la historia (clave foranea)
+        nombre: nombre de la historia
+        proyecto: indica el proyecto en que esta la historia
+        prioridad: indica la prioridad de la historia
+        val_negocio: indica el valor de negocio de la historia
+        val_tecnico: inidica el valor tecnico de la historia
+        size: indica el tiempo estimado en horas en terminar la historia
+        descripcion: una descripcion de la historia
+        codigo: es el codigo de la historia
+        acumulador: indica las horas trabajadas sobre la historia
+        asignado: indica el usuario encargado de trabajar sobre la historia
+        flujo: indica el flujo en que esta la historia
+        estado: indica el estado en la actividad de un flujo en que esta la historia
+        archivo: registra un archivo referente a la historia
+        sprint: indica el sprint en que esta la historia
+        asignado_p: indica si la historia esta asignada a un sprint o no
+        activo: indica si la historia esta eliminada (False) o no (True)
+        fecha: indica la fecha y la hora en que se crea una nueva version de la historia
+    '''
+    id_historia = models.ForeignKey(Historia)
+    nombre = models.CharField(max_length=20)
+    proyecto = models.ForeignKey(Proyecto, null=True)
+    prioridad = models.IntegerField(default=0)
+    val_negocio = models.IntegerField(default=0)
+    val_tecnico = models.IntegerField(default=0)
+    size = models.IntegerField(default=0)
+    descripcion = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=5)
+    acumulador = models.IntegerField(default=0)
+    asignado = models.ForeignKey(Usuario, null=True)
+    flujo = models.ForeignKey(Flujo, null=True)
+    estado = models.CharField(max_length=5)
+    #archivo = models.FilePathField
+    sprint = models.CharField(max_length=20)
+    asignado_p = models.BooleanField(default=False)
+    activo = models.BooleanField(default=False)
+    fecha = models.DateTimeField(null=True)
 
     def __unicode__(self):
         return self.nombre

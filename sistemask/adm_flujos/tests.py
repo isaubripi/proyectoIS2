@@ -16,16 +16,21 @@ class FlujoTest(TestCase):
     '''
 
     def crear(self):
+        print(':::::::::::Inicia pruebas unitarias de ABM FLUJO:::::::::::')
 
         flujo1 = Flujo.objects.create(nombre='Flujo Desarrollo 1', descripcion='Flujo Prueba 1', proyecto=Proyecto.objects.create(nombre='Proyecto 1'), activo=True)
         flujo2 = Flujo.objects.create(nombre='Flujo Desarrollo 2', descripcion='Flujo Prueba 2', proyecto=Proyecto.objects.create(nombre='Proyecto 2'), activo=True)
+
+        print('Creacion de Flujos ejecutada correctamente.')
 
     def modificar(self):
 
         flujo1 = Flujo.objects.update(nombre='Flujo Desarrollo 1.1')
         flujo2 = Flujo.objects.update(nombre='Flujo Desarrollo 2.1')
+        print('Modificacion de Flujos ejecutada correctamente.')
 
     def eliminar(self):
 
         flujo1 = Flujo.objects.delete()
         flujo2 = Flujo.objects.delete()
+        print('Eliminacion de Flujos ejecutada correctamente.')
