@@ -1,0 +1,15 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Eliminar Actividad::{% endblock %}
+{% block TituloMenu %} ELIMINAR ACTIVIDAD {% endblock %}
+{% block TituloOperacion %} Actividad Eliminada {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>La actividad pasó a modo &lt;&lt;&lt;INACTIVO&gt;&gt;&gt;</h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/actividad/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+        <center><input type="submit" value="Aceptar" id="submitt"></center>
+    </form>
+{% endblock %}

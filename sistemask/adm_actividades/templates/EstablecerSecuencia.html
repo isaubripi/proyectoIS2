@@ -1,0 +1,37 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Establecer Secuencia::{% endblock %}
+{% block TituloMenu %} ESTABLECER SECUENCIA {% endblock %}
+{% block TituloOperacion %} Seleccione una Posicion {% endblock %}
+{% block DatosOperacion %}
+    <form action="/actividad/secuencia/confirmar/"method="post">{% csrf_token %}
+        <fieldset>
+            <dl>
+                <dt><label>Orden:</label></dt>
+                <dd>
+                    <select  name="secuencia_actividad"id="submitt" required>
+                        <option value="">Seleccione una Posicion</option>
+                        {% for numero in actividades %}
+                            <option value={{ numero }}>{{ numero }} </option>
+                        {% endfor %}
+                    </select>
+                </dd>
+            </dl>
+
+        </fieldset>
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='actividad' value={{ actividad.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+        <input type="submit" value="Guardar" id="submitt">
+
+    </form>
+    <form action="/actividad/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+{% endblock %}
+{% block Botones%}
+{% endblock %}

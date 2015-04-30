@@ -1,0 +1,70 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Actividades:: {% endblock %}
+{% block TituloMenu %} ADMINISTRACION DE ACTIVIDADES DEL FLUJO {% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE ACTIVIDADES</font></h1></b></div>
+<h5>Proyecto: {{ proyecto.nombre }}</h5>
+<h2>Lista de Actividades del Flujo: {{ flujo.nombre }}</h2>
+    <tr>
+        <th scope="col" class="rounded">Orden</th>
+        <th scope="col" class="rounded">Nombre</th>
+        <th scope="col" class="rounded"><font color="green">Editar</font></th>
+        <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+        <th scope="col" class="rounded"><font color="black">Establecer Secuencia</font></th>
+    </tr>
+
+{% endblock %}
+{% block MostrarDatos%}
+    {% for actividad in lista_actividades %}
+        <tr>
+            <td>{{ actividad.secuencia }}</td>
+            <td>{{ actividad.nombre }}</td>
+
+            <td>
+                <form action= "/actividad/editar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='flujo' value={{ flujo.id }} >
+                    <input type="hidden" name='actividad' value={{ actividad.id }} >
+                    <input type="submit" value="Modificar">
+                </form>
+            </td>
+            <td>
+                <form action= "/actividad/eliminar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='flujo' value={{ flujo.id }} >
+                    <input type="hidden" name='actividad' value={{ actividad.id }} >
+                    <input type="hidden" name='sprint' value={{ sprint.id }} >
+                    <input type="submit" value="Eliminar">
+                </form>
+            </td>
+
+            <td>
+                <form action= "/actividad/secuencia/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='flujo' value={{ flujo.id }} >
+                    <input type="hidden" name='actividad' value={{ actividad.id }} >
+                    <input type="submit" value="Establecer Secuencia">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+
+{% block Botones%}
+    <form action="/actividad/crear/" method="POST">{% csrf_token %}
+        <input type="submit" value="Crear nueva actividad">
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+    </form>
+    <form action="/flujo/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}

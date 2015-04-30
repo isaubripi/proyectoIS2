@@ -1,0 +1,16 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Actividad::{% endblock %}
+{% block TituloMenu %} CREAR ACTIVIDAD {% endblock %}
+{% block TituloOperacion %} Actividad Creada {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>La actividad se cre&oacute exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/actividad/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}
