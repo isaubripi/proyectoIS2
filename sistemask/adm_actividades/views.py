@@ -43,7 +43,7 @@ class ActividadView(TemplateView):
         id_flujo = request.POST['flujo']
         diccionario['flujo']=flujo_actual
         proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
-        diccionario[self.context_object_name]= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=id_flujo)
+        diccionario[self.context_object_name]= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=id_flujo).order_by('secuencia')
 
 
         diccionario['logueado']= Usuario.objects.get(id=request.POST['login'])
@@ -109,7 +109,7 @@ class CrearActividadConfirm(CrearActividad):
         new_nombre= request.POST['nombre_actividad']
         id_flujo = request.POST['flujo']
         diccionario['flujo']=Flujo.objects.get(id=request.POST['flujo'])
-        existe= Actividad.objects.filter(nombre= new_nombre, estado=True, proyecto=proyecto_actual)
+        existe= Actividad.objects.filter(nombre= new_nombre, estado=True, proyecto=proyecto_actual, flujo=id_flujo)
         if existe:
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             diccionario['error']= 'Nombre de Actividad ya existe'
@@ -126,11 +126,13 @@ class CrearActividadConfirm(CrearActividad):
             nueva_actividad.secuencia = 0
             nueva_actividad.save()
 
+            lista = []
             #se agrega la actividad a el flujo
 
             flujo_actual = Flujo.objects.get(id=id_flujo)
             flujo_actual.actividades.add(nueva_actividad)
             flujo_actual.nro_actividades = flujo_actual.nro_actividades + 1
+
             flujo_actual.save()
 
             diccionario['actividad']=nueva_actividad
@@ -326,6 +328,31 @@ class EstablecerSecuenciaConfirm(ActividadView):
         actividad_actual = Actividad.objects.get(id=request.POST['actividad'])
         actividad_actual.secuencia = request.POST['secuencia_actividad']
         actividad_actual.save()
+
+        #ordenar la lista de actividades
+
+        actividades_actuales = Actividad.objects.filter(estado=True, proyecto=proyecto_actual, flujo=id_flujo)
+        lista_actividades = []
+
+        for i in actividades_actuales:
+            lista_actividades.append(i)
+
+        # se quitan las actividades desordenadas
+        for j in actividades_actuales:
+            flujo_actual.actividades.remove(j)
+
+        flujo_actual.save()
+
+        # se agregan actividades ordenadas
+
+        lista_actividades.sort(key=lambda x:x.secuencia, reverse=False)
+        newlist = sorted(lista_actividades, key=lambda x: x.secuencia, reverse=False)
+
+
+        for k in newlist:
+            flujo_actual.actividades.add(k)
+
+        flujo_actual.save()
 
         return render(request, self.template_name, diccionario)
 

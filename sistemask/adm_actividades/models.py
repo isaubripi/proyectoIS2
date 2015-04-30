@@ -17,7 +17,7 @@ class Actividad(models.Model):
     nombre = models.CharField(max_length=50)
     proyecto = models.ForeignKey(Proyecto, null=True)
     descripcion = models.CharField(max_length=200)
-    flujo = models.CharField(max_length=10)
+    flujo = models.PositiveIntegerField(max_length=10)
     secuencia = models.PositiveIntegerField(max_length=5)
     estado = models.BooleanField(default=False)
     asignado_h = models.BooleanField(default=False)
