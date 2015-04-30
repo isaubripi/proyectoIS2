@@ -1,5 +1,6 @@
 from django.db import models
 from adm_proyectos.models import Proyecto
+from adm_actividades.models import Actividad
 
 #prueba
 
@@ -20,7 +21,8 @@ class Flujo(models.Model):
     proyecto = models.ForeignKey(Proyecto, null=True)
     descripcion = models.CharField(max_length=100)
     activo = models.BooleanField(default=False)
-    #actividades = models.ManyToManyField(Actividad)
+    actividades = models.ManyToManyField(Actividad, related_name='actividades')
+    nro_actividades = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return self.nombre

@@ -4,6 +4,8 @@ from .models import Flujo
 from adm_proyectos.models import Proyecto
 from adm_usuarios.models import Usuario
 from adm_proyectos.views import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 
@@ -18,6 +20,8 @@ class FlujoView(TemplateView):
     '''
 
     template_name = 'Flujo.html'
+
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         '''
         Esta funcion tiene los parametros:
@@ -33,7 +37,7 @@ class FlujoView(TemplateView):
         diccionario['proyecto']= proyecto_actual
 
 
-        lista = Flujo.objects.filter(activo=True)
+        lista = Flujo.objects.filter(activo=True, proyecto=proyecto_actual)
         diccionario['lista']=lista
         return render(request, self.template_name, diccionario)
 
@@ -99,12 +103,12 @@ class CrearFlujoConfirm(CrearFlujo):
         flujo_descripcion= request.POST['descripcion_flujo']
         flujo_proyecto= request.POST['proyecto_flujo']
 
-        if len(Flujo.objects.filter(nombre= flujo_nombre, activo= True)):
+        if len(Flujo.objects.filter(nombre= flujo_nombre, activo= True, proyecto=proyecto_actual)):
             error = "Nombre del flujo ya existe. Intente otro nombre"
             return render(request, super(CrearFlujoConfirm, self).template_name, {'error':error})
         nuevo_flujo = Flujo(nombre= flujo_nombre, descripcion= flujo_descripcion, activo=True)
 
-
+        nuevo_flujo.proyecto = proyecto_actual
         nuevo_flujo.save()
 
         return render(request, self.template_name, diccionario)

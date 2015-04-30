@@ -36,7 +36,7 @@
             </td>
 
             <td>
-                <form action= "/flujo/actividades/" method="post"> {% csrf_token %}
+                <form action= "/actividad/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
