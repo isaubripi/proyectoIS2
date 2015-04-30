@@ -1,0 +1,62 @@
+
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %} ::Administracion de Historias:: {% endblock %}
+{% block TituloMenu %} ASIGNACION DE HISTORIAS DE USUARIO {% endblock %}
+{% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>>>Historia:<h5>{{historia.nombre}}</h5>{% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+<h2>Seleccione un Usuario y un Flujo para la Historia</h2>
+
+{% endblock %}
+
+{% block DatosOperacion %}
+<form action="/sprint/asignarUF/paso2/" method="POST" class="niceform">{% csrf_token %}
+<fieldset>
+
+                <dl>
+                    <dt><label>Usuarios miembros:</label></dt>
+                    <dd>
+                        <select  name="usuario" id="submitt" required>
+                            <option value="">Seleccione un usuario</option>
+                            {% for usuario in lista_usuarios %}
+                                <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                            {% endfor %}
+                        </select>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><label>Flujos del proyecto:</label></dt>
+                    <dd>
+                        <select  name="flujo" id="submitt" required>
+                            <option value="">Seleccione un flujo</option>
+                            {% for flujo in lista_flujos %}
+                                <option value={{ flujo.nombre }}>{{ flujo.nombre }} </option>
+                            {% endfor %}
+                        </select>
+                    </dd>
+                </dl>
+
+</fieldset>
+
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='historia' value={{ historia.id }} >
+        <input type="submit" value="Listo">
+</form>
+
+<form action= "/sprint/asignarUF/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='sprint' value={{ sprint.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+
+                    <input type="submit" value="<Atras" id="submitt">
+    </form>
+
+{% endblock %}
+
+{% block Botones %}
+{% endblock %}

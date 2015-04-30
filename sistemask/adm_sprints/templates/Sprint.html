@@ -17,6 +17,8 @@
         <th scope="col" class="rounded">Modificar</th>
         <th scope="col" class="rounded">Activar</th>
         <th scope="col" class="rounded">Asignar Historias</th>
+        <th scope="col" class="rounded">Desasignar Historias</th>
+        <th scope="col" class="rounded">Ver Informacion</th>
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
@@ -60,6 +62,23 @@
                             </form>
                         </td>
 
+                        <td>
+                            <form action= "/sprint/desasignar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Desasignar Historias" id="submitt">
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action= "/sprint/informacion/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Ver Informacion" id="submitt">
+                            </form>
+                        </td>
                     </tr>
 
     {% endfor %}

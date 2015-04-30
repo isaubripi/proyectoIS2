@@ -1,0 +1,17 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Asignar Usuario y Flujo::{% endblock %}
+{% block TituloMenu %} ASIGNAR USUARIO Y FLUJO{% endblock %}
+{% block TituloOperacion %} Usuario y Flujo asignados {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>El usuario y el flujo se asignaron exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/sprint/asignarUF/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+
+
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

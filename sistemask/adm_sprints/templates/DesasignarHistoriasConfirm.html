@@ -1,9 +1,9 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Asignar Historias::{% endblock %}
-{% block TituloMenu %} ASIGNAR HISTORIAS{% endblock %}
-{% block TituloOperacion %} Historias Asignadas {% endblock %}
+{% block title %}::Desasignar Historias::{% endblock %}
+{% block TituloMenu %} DESASIGNAR HISTORIAS{% endblock %}
+{% block TituloOperacion %} Historias Desasignadas {% endblock %}
 {% block DatosOperacion %}
-    <div align="center"><h3>Las historias se asignaron exitosamente. </h3></div>
+    <div align="center"><h3>Las historias se desasignaron exitosamente. </h3></div>
 {% endblock %}
 {% block Botones %}
     <form action="/sprint/" method="POST"> {% csrf_token %}

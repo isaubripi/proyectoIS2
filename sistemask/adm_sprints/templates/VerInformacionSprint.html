@@ -1,0 +1,38 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Informacion Sprint::{% endblock %}
+{% block TituloMenu %} INFORMACION SPRINT {% endblock %}
+{% block MigasDePan %}>>>Inicio>>Proyecto>>Sprint:
+
+
+<h3 style="color:#FFFFFF"> Nombre: <h5>{{ sprint.nombre }}</h5> </h3>
+<h3 style="color:#FFFFFF"> Pertenece al proyecto: <h5>{{ sprint.proyecto.nombre }}</h5></h3>
+<h3 style="color:#FFFFFF"> Descripcion: <h5>{{ sprint.descripcion }}</h5> </h3>
+<h3 style="color:#FFFFFF"> Fecha de Inicio: <h5>{{ sprint.fecha_inicio }}</h5> </h3>
+<h3 style="color:#FFFFFF"> Fecha de Fin: <h5>{{ sprint.fecha_fin }} </h5></h3>
+<h3 style="color:#FFFFFF"> Duracion: <h5>{{ sprint.duracion }} dias </h5></h3>
+<h3 style="color:#FFFFFF"> Estado: <h5>{{ sprint.estado }} (A:Activado, P:Planeado)</h5></h3>
+<h3 style="color:#FFFFFF"> HISTORIAS ASIGNADAS: </h3>
+{% for historia in historias_sprint %}
+    <td> * {{ historia.nombre }}</td></br>
+
+{% endfor %}
+
+<h3 style="color:#FFFFFF">USUARIOS ASIGNADOS AL SPRINT</h3>
+{% for usuario in usuarios %}
+    <td s> * {{ usuario }}</td></br>
+
+{% endfor %}
+<h3 style="color:#FFFFFF"> Capacidad Productiva: <h5>{{ capacidad }} horas reloj </h5></h3>
+
+
+{% endblock %}
+
+
+{% block Botones %}
+ <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+ </form>
+
+{% endblock %}

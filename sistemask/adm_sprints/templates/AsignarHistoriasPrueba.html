@@ -1,0 +1,77 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Historias:: {% endblock %}
+{% block TituloMenu %} ASIGNACION DE HISTORIAS DE USUARIO {% endblock %}
+{% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>{% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+<h2>Lista de Historias del Proyecto</h2>
+
+    <tr>
+		<th scope="col" class="rounded">Seleccionar</th>
+        <th scope="col" class="rounded">Historia</th>
+        <th scope="col" class="rounded">Usuario</th>
+        <th scope="col" class="rounded">Flujo</th>
+    </tr>
+
+
+{% endblock %}
+
+{% block DatosOperacion %}
+<fieldset>
+{% block MostrarDatos%}
+    {% for historia in historias %}
+
+
+
+
+            <tr>
+
+                <td><input type="checkbox" name="historias[]" value = {{ historia.nombre }}{% if historia.asignado_p %} checked {% endif %}></td>
+                <td>{{ historia.nombre }}</td>
+
+                <td>
+                <dd>
+                    <select  name="usuario[]" id="submitt" required>
+                        <option value="">Seleccione un usuario</option>
+                        {% for usuario in lista_usuarios %}
+                            <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                        {% endfor %}
+                    </select>
+                </dd>
+                </td>
+
+                <td>
+
+                <dd>
+                    <select  name="flujo[]" id="submitt" required>
+                        <option value="">Seleccione un flujo</option>
+                        {% for flujo in lista_flujos %}
+                            <option value={{ flujo.nombre }}>{{ flujo.nombre }} </option>
+                        {% endfor %}
+                    </select>
+                </dd>
+                </td>
+            </tr>
+
+    {% endfor %}
+
+{% endblock %}
+</fieldset>
+{% endblock %}
+
+
+{% block Botones%}
+
+    <form action="/sprint/asignar/confirmar/">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="submit" value="Asignar Historias al Sprint">
+    </form>
+    <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}

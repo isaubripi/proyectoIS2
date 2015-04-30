@@ -1,22 +1,22 @@
 {% extends 'PlantillaBaseListas.html' %}
 {% block title %} ::Administracion de Historias:: {% endblock %}
-{% block TituloMenu %} ASIGNACION DE HISTORIAS DE USUARIO {% endblock %}
+{% block TituloMenu %} DESASIGNACION DE HISTORIAS DE USUARIO {% endblock %}
 {% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>{% endblock %}
 
 {% block Columnas %}
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
-<h2>Lista de Historias del Proyecto</h2>
+<h2>Lista de Historias del Sprint</h2>
 
 
 {% endblock %}
 {% block MostrarDatos %}
 {% block DatosOperacion %}
-    <form action="/sprint/asignar/confirmar/" method="post" class="niceform">{% csrf_token %}
+    <form action="/sprint/desasignar/confirmar/" method="post" class="niceform">{% csrf_token %}
         <fieldset>
 
 
             <dl>
-                <dt><label>Historias del Proyecto:</label></dt>
+                <dt><label>Historias asignadas dentro del Sprint:</label></dt>
                 <dd>
                     <select multiple name="historias[]" id="submitt" required>
                         <option value="" disabled>Seleccionar historia/s</option>
@@ -34,16 +34,9 @@
         <input type="hidden" name='proyecto' value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='sprint' value={{ sprint.id }} >
-        <input type="submit" value="Asignar Historias al Sprint">
+        <input type="submit" value="Desasignar Historias del Sprint">
     </form>
 
-    <form action="/sprint/asignarUF/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
-        <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name='sprint' value={{ sprint.id }} >
-
-        <input type="submit" value="Asignar Usuario y Flujo a Historias">
-    </form>
     <form action="/sprint/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
@@ -52,5 +45,3 @@
 
 {% endblock %}
 {% endblock %}
-
-

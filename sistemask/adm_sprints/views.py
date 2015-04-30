@@ -6,14 +6,18 @@ from adm_roles.models import Rol
 from sistemask.views import LoginView
 from adm_sprints.models import Sprint
 from adm_historias.models import Historia
+from adm_flujos.models import Flujo
 
 from adm_proyectos.views import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class SprintView(TemplateView):
 
     template_name = 'Sprint.html'
     context_object_name = 'lista_sprints'
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         """
 
@@ -91,7 +95,7 @@ class CrearSprintConfirm(CrearSprint):
         existe= Sprint.objects.filter(nombre= new_nombre)
         if existe:
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
-            diccionario['error']= 'Nombre de proyecto ya existe'
+            diccionario['error']= 'Nombre de sprint ya existe'
             return render(request, super(CrearSprintConfirm, self).template_name, diccionario)
         else:
             #Creamos el sprint
@@ -201,8 +205,8 @@ class ModificarSprintConfirm(ModificarSprint):
         modificacion= Sprint.objects.get(id= request.POST['sprint'])
         modificacion_nombre= request.POST['nombre_sprint']
 
-        existe= Sprint.objects.filter(nombre= modificacion_nombre)
-        if existe:
+        existe= Sprint.objects.filter(nombre= modificacion_nombre, activo=True)
+        if len(existe) and existe[0]!=modificacion:
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             diccionario['error']= 'Nombre de sprint ya existe'
             return render(request, super(ModificarSprintConfirm, self).template_name, diccionario)
@@ -283,10 +287,15 @@ class AsignarHistorias(LoginRequiredMixin, SprintView):
 
         proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
-        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p=False)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p = False, asignado = Usuario.objects.all, flujo=Flujo.objects.all)
 
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
+
+        equipo_scrum = proyecto_actual.scrum_team
+        diccionario['lista_usuarios'] = Usuario.objects.filter(estado = True)
+
+        diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
@@ -296,7 +305,7 @@ class AsignarHistorias(LoginRequiredMixin, SprintView):
              return render(request, super(AsignarHistorias, self).template_name, diccionario)
 
 
-class AsignarHistoriasConfirm(LoginRequiredMixin, SprintView):
+class AsignarHistoriasConfirm(AsignarHistorias):
     """
     Confirma la asignacion de historias a un sprint especifico
     """
@@ -334,12 +343,321 @@ class AsignarHistoriasConfirm(LoginRequiredMixin, SprintView):
         id_sprint = request.POST['sprint']
 
         for i in stories:
-            sprint_detalles.historias.add(Historia.objects.get(nombre=i))
-            Historia_asignada = Historia.objects.get(nombre=i)
-            Historia_asignada.sprint = id_sprint
-            Historia_asignada.asignado_p = True
-            Historia_asignada.save()
+
+            H = Historia.objects.get(nombre=i)
+
+            if H.asignado_p == False:
+
+                sprint_detalles.historias.add(Historia.objects.get(nombre=i))
+                Historia_asignada = Historia.objects.get(nombre=i)
+                Historia_asignada.sprint = id_sprint
+                Historia_asignada.asignado_p = True
+                Historia_asignada.save()
+            else:
+                diccionario['error']= 'Una de las historias no tiene asignados Usuario y Flujo, no se puede agregar al Sprint'
+                return render(request, super(AsignarHistoriasConfirm, self).template_name, diccionario)
+
 
         sprint_detalles.save()
 
         return render(request, self.template_name, diccionario)
+
+
+class AsignarUsuarioFlujo(AsignarHistorias):
+
+    template_name = 'AsignarUsuarioFlujo.html'
+    context_object_name = 'lista_sprints'
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de asignacion de historias de usuario, si posee el rol
+                Retorna un mensaje de error en el caso que el usuario no pueda asignar historias a un sprint
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        equipo_scrum = proyecto_actual.scrum_team
+        diccionario['lista_usuarios'] = Usuario.objects.filter(estado = True)
+
+        diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+             return render(request, self.template_name, diccionario)
+
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(AsignarUsuarioFlujo, self).template_name, diccionario)
+
+class AsignarUsuarioFlujo1(AsignarHistorias):
+
+    template_name = 'AsignarUsuarioFlujo1.html'
+    context_object_name = 'lista_sprints'
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de asignacion de historias de usuario, si posee el rol
+                Retorna un mensaje de error en el caso que el usuario no pueda asignar historias a un sprint
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+
+        Historia_actual = Historia.objects.get(id = request.POST['historia'])
+
+        diccionario['historia'] = Historia_actual
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        equipo_scrum = proyecto_actual.scrum_team
+        diccionario['lista_usuarios'] = Usuario.objects.filter(estado = True)
+
+        diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+             return render(request, self.template_name, diccionario)
+
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(AsignarUsuarioFlujo1, self).template_name, diccionario)
+
+
+class AsignarUsuarioFlujo2(AsignarUsuarioFlujo1):
+
+    template_name = 'AsignarUsuarioFlujoConfirm.html'
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de asignacion de historias de usuario, si posee el rol
+                Retorna un mensaje de error en el caso que el usuario no pueda asignar historias a un sprint
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+
+        Historia_actual = Historia.objects.get(id = request.POST['historia'])
+
+        diccionario['historia'] = Historia_actual
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+
+        diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
+
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+            Usuario_asignado = Usuario.objects.get(username = request.POST['usuario'])
+            Flujo_asignado = Flujo.objects.get(nombre = request.POST['flujo'])
+
+            Historia_actual.asignado = Usuario_asignado
+            Historia_actual.flujo = Flujo_asignado
+            Historia_actual.save()
+
+            return render(request, self.template_name, diccionario)
+
+        #else:
+             #diccionario['error'] = 'No puedes realizar esta accion'
+             #return render(request, super(AsignarUsuarioFlujo2, self).template_name, diccionario)
+
+class DesasignarHistorias(LoginRequiredMixin, SprintView):
+    """
+    Permite asignar historias de usuario a un sprint
+    """
+
+    template_name = 'DesasignarHistorias.html'
+    context_object_name = 'lista_sprints'
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de asignacion de historias de usuario, si posee el rol
+                Retorna un mensaje de error en el caso que el usuario no pueda desasignar historias de un sprint
+
+                Esta funcion es la encargada de presentar al usuario aquellas historias de usuario
+                que ya fueron asignadas con anterioridad, dandole la posibilidad de que el mismo
+                pueda elegir aquellas historias que ya no perteneceran al sprint actual.
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+
+        id_sprint = request.POST['sprint']
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p = True, asignado = Usuario.objects.all, flujo=Flujo.objects.all, sprint=id_sprint)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        equipo_scrum = proyecto_actual.scrum_team
+        diccionario['lista_usuarios'] = Usuario.objects.filter(estado = True)
+
+        diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+             return render(request, self.template_name, diccionario)
+
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(DesasignarHistorias, self).template_name, diccionario)
+
+
+class DesasignarHistoriasConfirm(DesasignarHistorias):
+    """
+    Confirma la asignacion de historias a un sprint especifico
+    """
+
+    template_name = 'AsignarHistoriasConfirm.html'
+    context_object_name = 'lista_sprints'
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la interfaz de exito para la desasignacion de historias
+
+
+        Se quitan de la lista del sprint, aquellas historias de usuario que se desean
+        agreagar en algun otro sprint.
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        sprint_detalles = Sprint.objects.get(id=request.POST['sprint'])
+        sprint_detalles.asignado_h = True
+        stories = request.POST.getlist('historias[]')
+
+        id_sprint = request.POST['sprint']
+
+        for i in stories:
+
+            H = Historia.objects.get(nombre=i)
+
+            if H.asignado_p == True:
+
+                sprint_detalles.historias.remove(Historia.objects.get(nombre=i))
+                Historia_desasignada = Historia.objects.get(nombre=i)
+                Historia_desasignada.sprint = ''
+                Historia_desasignada.asignado_p = False
+                Historia_desasignada.save()
+            else:
+                diccionario['error']= 'Una de las historias no tiene asignados Usuario y Flujo, no se puede agregar al Sprint'
+                return render(request, super(AsignarHistoriasConfirm, self).template_name, diccionario)
+
+
+        sprint_detalles.save()
+
+        return render(request, self.template_name, diccionario)
+
+class VerInformacionSprint(LoginRequiredMixin, SprintView):
+
+    template_name = 'VerInformacionSprint.html'
+    context_object_name = 'lista_sprints'
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un informe con todos los datos del sprint
+
+
+        Esta funcion muestra todos los datos relacionados a un sprint en particular
+
+        """
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
+
+        id_sprint = request.POST['sprint']
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        Historias_sprint = Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True)
+        diccionario['historias_sprint']=Historias_sprint
+
+        usuarios_sprint = []
+        for i in Historias_sprint:
+            nombre = i.asignado
+            usuarios_sprint.append(nombre.username)
+
+        usuarios_sprint=list(set(usuarios_sprint))
+
+        #calcular la capacidad productiva del sprint 8 hs de trabajo por dia, 5 veces a la semana, 20 dias al mes
+        elementos = len(usuarios_sprint)
+        capacidad_productiva = 160*elementos
+
+        diccionario['capacidad'] = capacidad_productiva
+        diccionario['usuarios']=usuarios_sprint
+
+
+        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+             return render(request, self.template_name, diccionario)
+
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(VerInformacionSprint, self).template_name, diccionario)
