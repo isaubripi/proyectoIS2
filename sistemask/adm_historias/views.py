@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import Historia, Historial
+from .models import Historia, Historial, Registro
 from adm_usuarios.models import Usuario
 from adm_proyectos.models import Proyecto
 from adm_proyectos.views import LoginRequiredMixin
@@ -73,8 +73,10 @@ class CrearHistoriaConfirm(CrearHistoria):
         :return:request, html y diccionario
         '''
         diccionario = {}
-        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
-        diccionario['logueado']= usuario_logueado
+        usuario_logueado = Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto_historia'])
+        diccionario['logueado'] = usuario_logueado
+        diccionario['proyecto'] = proyecto_actual
 
 
         hu_nombre = request.POST['nombre_historia']
@@ -94,13 +96,15 @@ class CrearHistoriaConfirm(CrearHistoria):
         #sprint = models.ForeignKey(Sprint, null=True)
 
 
-        if len(Historia.objects.filter(nombre=hu_nombre, activo=True)):
+        if len(Historia.objects.filter(nombre=hu_nombre, proyecto=hu_proyecto, activo=True)):
             error_nombre = 'Nombre de historia ya exite. Intente otro'
-            return render(request, super(CrearHistoriaConfirm, self).template_name, {'error':error_nombre})
+            diccionario['error'] = error_nombre
+            return render(request, super(CrearHistoriaConfirm, self).template_name, diccionario)
 
-        if len(Historia.objects.filter(codigo=hu_codigo , activo=True)):
+        if len(Historia.objects.filter(codigo=hu_codigo, proyecto=hu_proyecto, activo=True)):
             error_codigo = 'Codigo de historia ya existe. Intente otro'
-            return render(request, super(CrearHistoriaConfirm, self).template_name, {'error':error_codigo})
+            diccionario['error'] = error_codigo
+            return render(request, super(CrearHistoriaConfirm, self).template_name, diccionario)
 
         nueva_historia = Historia(nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
                                   prioridad=hu_prioridad,
@@ -109,7 +113,7 @@ class CrearHistoriaConfirm(CrearHistoria):
                                   activo=True)
         #nueva_historia.asignado.add(Usuario.objects.get(nombre=hu_asignado))
         nueva_historia.save()
-        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=hu_nombre),
+        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=hu_nombre, activo=True ),
                                              nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
                                              prioridad=hu_prioridad, val_negocio=hu_val_negocio,
                                              val_tecnico=hu_val_tecnico, size=hu_size,
@@ -170,9 +174,12 @@ class EditarHistoriaConfirm(EditarHistoria):
         historia_editada = Historia.objects.get(id=request.POST['historia'])
         nuevo_nombre = request.POST['nuevo_nombre']
 
-        """if len(Historia.objects.filter(nombre=nuevo_nombre, activo=True)):
+        existe = Historia.objects.filter(nombre=nuevo_nombre, activo=True)
+
+        if len(existe) and existe[0] != historia_editada:
             error_nombre = 'Nombre de historia ya existe. Intente otro'
-            return render(request, super(EditarHistoriaConfirm, self).template_name, {'error':error_nombre})"""
+            diccionario['error'] = error_nombre
+            return render(request, super(EditarHistoriaConfirm, self).template_name, diccionario)
 
         nuevo_prioridad = request.POST['nuevo_prioridad']
         nuevo_negocio = request.POST['nuevo_negocio']
@@ -188,7 +195,7 @@ class EditarHistoriaConfirm(EditarHistoria):
         historia_editada.descripcion = nuevo_descripcion
         historia_editada.save()
 
-        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=nuevo_nombre),
+        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=nuevo_nombre, activo=True),
                                              nombre=nuevo_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto']),
                                              prioridad=nuevo_prioridad, val_negocio=nuevo_negocio, val_tecnico=nuevo_tecnico, size=nuevo_size,
                                              descripcion=nuevo_descripcion, codigo=historia_editada.codigo, acumulador=historia_editada.acumulador,
@@ -316,6 +323,26 @@ class CargarHorasConfirm(CargarHoras):
 
         historia.save()
 
+        registros = Registro.objects.filter(id_historia=historia, activo=True)
+        ord = 1
+        for i in registros:
+            ord += 1
+
+        nombre_tarea = request.POST['nombre_tarea']
+        descripcion_tarea = request.POST['descripcion_tarea']
+        diccionario['descripcion_tarea'] = descripcion_tarea
+
+        for registro in registros:
+            if  nombre_tarea == registro.nombre:
+                diccionario['error'] = "Nombre de tarea ya existe. Intente otro."
+                return render(request, super(CargarHorasConfirm, self).template_name, diccionario)
+
+
+        registro_nuevo = Registro.objects.create(id_historia=historia, orden=ord, nombre=nombre_tarea,
+                                                 proyecto=proyecto_actual, descripcion=descripcion_tarea,
+                                                 horas=int(horas), fecha=timezone.now(), activo=True)
+        registro_nuevo.save()
+
         historial = Historial.objects.create(id_historia=historia, nombre=historia.nombre, proyecto=proyecto_actual,
                                              prioridad=historia.prioridad, val_negocio=historia.val_negocio,
                                              val_tecnico=historia.val_tecnico, size=historia.size,
@@ -329,13 +356,12 @@ class CargarHorasConfirm(CargarHoras):
 
         return render(request, self.template_name, diccionario)
 
-
-class AsignarFlujo(LoginRequiredMixin, HistoriaView):
+class VerDetalles(LoginRequiredMixin, HistoriaView):
     '''
 
     '''
 
-    template_name = 'AsignarFlujo.html'
+    template_name = 'VerDetalles.html'
 
     def post(self, request, *args, **kwargs):
         '''
@@ -347,7 +373,44 @@ class AsignarFlujo(LoginRequiredMixin, HistoriaView):
         '''
 
         diccionario = {}
+
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
-        proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
         diccionario['proyecto'] = proyecto_actual
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        diccionario['historia'] = historia_actual
+        return render(request, self.template_name, diccionario)
+
+
+class VerTareas(LoginRequiredMixin, HistoriaView):
+    '''
+
+    '''
+
+    template_name = 'VerTareas.html'
+
+    def post(self, request, *args, **kwargs):
+        '''
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        diccionario['historia'] = historia_actual
+
+        lista = Registro.objects.filter(id_historia=historia_actual, activo=True)
+        diccionario['registros'] = lista
+
+        return render(request, self.template_name, diccionario)
+
+

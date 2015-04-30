@@ -11,6 +11,8 @@
         <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
         <th scope="col" class="rounded"><font color="red">Cargar horas</font></th>
         <th scope="col" class="rounded"><font color="red">Historial</font></th>
+        <th scope="col" class="rounded"><font color="red">Detalles</font></th>
+        <th scope="col" class="rounded"><font color="red">Tareas</font></th>
     </tr>
 
 {% endblock %}
@@ -49,6 +51,22 @@
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
                     <input type="submit" value="Historial">
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/detalles/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Ver">
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/tareas/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="submit" value="Ver">
                 </form>
             </td>
         </tr>

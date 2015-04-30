@@ -1,0 +1,38 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Detalles Historia::{% endblock %}
+{% block TituloMenu %} DETALLES HISTORIA {% endblock %}
+{% block TituloOperacion %} Detalles historia {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>HISTORIA: {{ historia_actual.nombre }}</h3></center>
+        <tr>
+            <td><h6>Proyecto: {{ historia.proyecto.nombre }}</h6></td>
+            <td><h6>Prioridad: {{ historia.prioridad }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Valor Negocio: {{ historia.val_negocio }}</h6></td>
+            <td><h6>Valor Técnico: {{ historia.val_tecnico }}</h6></td>
+            <td><h6>Size: {{ historia.size }}</h6></td>
+            <td><h6>Descripcion: {{ historia.descripcion }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Codigo: {{ historia.codigo }}</h6></td>
+            <td><h6>Acumulador: {{ historia.acumulador }}</h6></td>
+            <td><h6>Asignado: {{ historia.asignado }}</h6></td>
+            <td><h6>Flujo: {{ historia.flujo }}</h6></td>
+            <td><h6>Estado: {{ historia.estado }}</h6></td>
+        </tr>
+        <tr>
+            <td><h6>Sprint: {{ historia.sprint }}<br></h6></td>
+            <td><h6>Asignado a Sprint: {{ historia.asignado_p }}<br></h6></td>
+        </tr>
+
+{%endblock%}
+
+
+{% block Botones%}
+    <form action="/historia/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="<Atras"></center>
+    </form>
+{% endblock %}

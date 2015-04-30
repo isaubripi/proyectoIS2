@@ -2,6 +2,7 @@ from django.db import models
 from adm_usuarios.models import Usuario
 from adm_flujos.models import Flujo
 from adm_proyectos.models import Proyecto
+from adm_actividades.models import Actividad
 
 # Create your models here.
 
@@ -41,7 +42,8 @@ class Historia(models.Model):
     asignado = models.ForeignKey(Usuario, null=True)
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
-    #archivo = models.FilePathField
+    archivo = models.FileField(upload_to=generate_filename)
+    actividad = models.ForeignKey(Actividad, null=True)
     sprint = models.CharField(max_length=20)
     asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
@@ -88,11 +90,35 @@ class Historial(models.Model):
     asignado = models.ForeignKey(Usuario, null=True)
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
+    actividad = models.CharField(max_length=20)
     #archivo = models.FilePathField
     sprint = models.CharField(max_length=20)
     asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
     fecha = models.DateTimeField(null=True)
+
+    def __unicode__(self):
+        return self.nombre
+
+
+class Registro(models.Model):
+    '''
+    Esta clase define el modelo de registro de tareas de una historia de usuario.
+    Las informaciones a registrar son:
+        id_historia: indica el id de la historia cuyas tareas se registran
+        orden: indica el numero ordinal de la tarea realizada
+        nombre: indica el nombre de la tarea realizada
+        descripcion: breve descripcion de la tarea realizada
+        horas: numero de horas trabajadas en realizar la tarea
+    '''
+    id_historia = models.ForeignKey(Historia)
+    orden = models.IntegerField(default=0)
+    nombre = models.CharField(max_length=20)
+    proyecto = models.ForeignKey(Proyecto, null=True)
+    descripcion = models.CharField(max_length=200)
+    horas = models.IntegerField(default=0)
+    fecha = models.DateTimeField(null=True)
+    activo = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.nombre
