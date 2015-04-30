@@ -8,6 +8,8 @@ from adm_proyectos.models import Proyecto
 from django.views.generic import TemplateView
 
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from adm_proyectos.views import LoginRequiredMixin
 # Create your views here.
@@ -15,6 +17,8 @@ from adm_proyectos.views import LoginRequiredMixin
 class UsuarioView(ProyectoView):
     template_name = 'Usuario.html'
     context_object_name = 'lista_usuarios'
+
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
