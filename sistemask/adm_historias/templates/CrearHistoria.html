@@ -6,6 +6,7 @@
     <form action="/historia/crear/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
             <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_historia" required /></dd></dl>
+            <dl><dt><label>Codigo:</label></dt><dd><input type="text" name="codigo_historia" required /></dd></dl>
             <dl><dt><label>Prioridad:</label></dt><dd><select name="prioridad_historia"required>
                                                             <option value="1">1</option>
                                                             <option value="2">2</option>
@@ -40,10 +41,9 @@
                                                             <option value="9">9</option>
                                                             <option value="10">10</option></select></dd></dl>
             <dl><dt><label>Size:</label></dt><dd><input type="text" name="size_historia"required /></dd></dl>
-            <dl><dt><label>Codigo:</label></dt><dd><input type="text" name="codigo_historia" aria-label="Escriba las iniciales"/></dd></dl>
             <!--<dl><dt><label>Acumulador:</label></dt><dd><input type="text" name="acumulador_historia" value="0" disabled /></dd></dl>!-->
             <!--<dl><dt><label>Historial:</label></dt><dd><input type="text" name="historial_historia" value="1-Creacion historia" required /></dd></dl>!-->
-            <dl><dt><label>Descripcion:</label></dt><dd><input type="text" name="descripcion_historia" required /></dd></dl>
+            <dl><dt><label>Descripcion:</label></dt><dd><textarea name="descripcion_historia" rows="10" cols="50" required ></textarea></dd></dl>
 
             <input type="hidden" name='proyecto_historia' value={{ proyecto.id }}>
             <input type="hidden" name='login' value={{ logueado.id }}>

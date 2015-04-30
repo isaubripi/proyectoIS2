@@ -1,0 +1,28 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Tareas Historia::{% endblock %}
+{% block TituloMenu %} TAREAS HISTORIA {% endblock %}
+{% block TituloOperacion %} Tareas historia {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>HISTORIA: {{ historia.nombre }}</h3></center>
+    {% for registro in registros %}
+        <tr>
+            <td><h4>Nombre: {{ registro.nombre }}</h4></td>
+            <td><h4>Numero: {{ registro.orden }}</h4></td>
+            <td><h4>Descripcion: {{ registro.descripcion }}</h4></td>
+        </tr>
+        <tr>
+            <td><h4>Horas Empleadas: {{ registro.horas }}</h4><br>----------------------------------------------------------</td>
+            <td><h4>Fecha: {{ registro.fecha }}</h4><br>----------------------------------------------------------------------</td>
+        </tr>
+    {% endfor %}
+
+{% endblock %}
+
+
+{% block Botones %}
+    <form action="/historia/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="<Atras"></center>
+    </form>
+{% endblock %}

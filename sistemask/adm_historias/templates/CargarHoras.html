@@ -1,19 +1,30 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Actualizar Historia::{% endblock %}
-{% block TituloMenu %} ACTUALIZAR HISTORIA {% endblock %}
-{% block TituloOperacion %} Formulario Historia {% endblock %}
+{% block title %}::Cargar Tarea Historia::{% endblock %}
+{% block TituloMenu %} CARGAR TAREA HISTORIA {% endblock %}
+{% block TituloOperacion %} Formulario Cargar Tarea Historia {% endblock %}
 {% block DatosOperacion %}
-    <h1> <font color = 'green'>ACTUALIZAR HISTORIA</font></h1>
+    <h1> <font color = 'green'>CARGAR TAREA HISTORIA</font></h1>
     <form action="/historia/horas/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
             <dl><dt><label>Nombre: {{ historia.nombre }}</label></dt><dd>
                 <input type="hidden" name="nombre_historia" value={{ historia.nombre }}/></dd>
             </dl>
 
-            <dl><dt><label>Horas trabajadas:</label></dt><dd>
-                <input type="hidden" name="horas" value={{ historia.acumulador }}/></dd>
-                <input type="number" name="horas" min="1" value="1" /></dd>
+            <dl><dt><label>Tarea:</label></dt>
+                <dd><input type="text" name="nombre_tarea" required /></dd>
             </dl>
+
+            <dl><dt><label>Horas trabajadas:</label></dt>
+                <dd>
+                    <input type="hidden" name="horas" value={{ historia.acumulador }}/>
+                    <input type="number" name="horas" min="1" value="1" />
+                </dd>
+            </dl>
+
+            <dl><dt><label>Descripcion:</label></dt><dd>
+                <textarea name="descripcion_tarea" placeholder="Describa la tarea brevemente" rows="10" cols="50" required > {{ descripcion_tarea }}</textarea></dd>
+            </dl>
+
             <!--<dl><dt><label>Prioridad:</label></dt><dd>
                 <input type="hidden" name="prioridad_historia" value={{ historia.prioridad }}/></dd>
                 <input type="number" name="nuevo_prioridad" min="1" max="10" value={{ historia.prioridad }} /></dd>
@@ -41,7 +52,7 @@
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='historia' value={{ historia.id }}>
-        <input type="submit" value="Actualizar">
+        <input type="submit" value="Cargar horas">
     </form>
     <form action="/historia/" method="POST">{% csrf_token %}
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
