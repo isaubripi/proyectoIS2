@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'adm_flujos',
     'adm_sprints',
     'adm_historias',
+    'adm_actividades',
 )
 
 MIDDLEWARE_CLASSES = (

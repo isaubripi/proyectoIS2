@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 
+
 from django.contrib import admin
 admin.autodiscover()
 
@@ -22,14 +23,11 @@ urlpatterns = patterns('',
     #url(r'^', include('adm_usuarios.urls')),
     url(r'^', include('adm_roles.urls')),
     url(r'^salir/', 'sistemask.views.cerrar', name = "cerrar"),
-    #url(r'^', include('adm_proyectos.urls')),
-
-
-    #url(r'^ingresar/$','sistemask.views.ingresar'),
 
     url(r'^', include('adm_flujos.urls')),
     url(r'^sprint/', include('adm_sprints.urls')),
     url(r'^historia/', include('adm_historias.urls')),
+    url(r'^actividad/', include('adm_actividades.urls')),
 
 )
 
