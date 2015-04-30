@@ -1,0 +1,102 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Tabla Kanban::{% endblock %}
+{% block TituloMenu %} TABLA KANBAN {% endblock %}
+{% block MigasDePan %}>>>Proyecto: <h5>{{ proyecto.nombre }}</h5> >>>Kanban {% endblock %}
+{% block TituloLista %} {% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block Columnas %}
+    <tr>
+
+    </tr>
+{% endblock %}
+{% block MostrarDatos%}
+
+    {% for flujo in flujos %}
+    <table border=2 width="1500" BGCOLOR="White" height="300" align="center">
+            <caption style="color:#0000FF;font-size:20pt;font-style:verdana">{{ flujo.nombre}}</caption>
+
+            <tr>
+
+
+                    {%  for actividad in actividades_flujo %}
+                            {% ifequal actividad.flujo flujo.id %}
+
+                            <th align="center" valign="top" width="20" height="10" colspan="3">{{ actividad.nombre }}</th>
+                            {% endifequal %}
+                    {% endfor %}
+            </tr>
+            <tr>
+                {% for actividad in flujo.actividades.all %}
+                    {% ifequal actividad.flujo flujo.id %}
+                        <td align="center" valign="top">To Do </td>
+                        <td align="center" valign="top">Doing </td>
+                        <td align="center" valign="top">Done </td>
+                    {% endifequal %}
+                {% endfor %}
+
+
+            </tr>
+
+
+            {% for actividad in actividades_flujo %}
+
+                {% for historia in historias %}
+
+                    {% ifequal historia.actividad actividad.nombre %}
+
+                    <td>
+                        {% for historia in historias %}
+                            {% ifequal historia.flujo flujo %}
+                                {% ifequal historia.estado 'To Do' %}
+                                <h5> {{ historia.nombre }}</h5>
+                                <br>
+                                {% endifequal %}
+                            {% endifequal %}
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        {% for historia in historias %}
+                            {% ifequal historia.flujo flujo %}
+                                {% ifequal historia.estado 'Doing' %}
+                                <h5> {{ historia.nombre }}</h5>
+                                <br>
+                                {% endifequal %}
+                            {% endifequal %}
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        {% for historia in historias %}
+                            {% ifequal historia.flujo flujo %}
+                                {% ifequal historia.estado 'Done' %}
+                                <h5> {{ historia.nombre }}</h5>
+                                <br>
+                                {% endifequal %}
+                            {% endifequal %}
+                        {% endfor %}
+                    </td>
+
+                    {% endifequal %}
+                {% endfor %}
+        {% endfor %}
+
+    </table>
+    <br>
+    <br>
+    {% endfor %}
+
+
+        {% endblock %}
+{% block Botones %}
+
+    <form action="/proyecto/ingresar/" method="post">{% csrf_token %}
+        <input type="hidden" name='codigo' value={{ logueado.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+
+{% endblock %}

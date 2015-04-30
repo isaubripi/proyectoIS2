@@ -7,6 +7,9 @@ from sistemask.views import LoginView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from .models import Cliente
+from adm_flujos.models import Flujo
+from adm_actividades.models import Actividad
+from adm_historias.models import Historia
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -30,6 +33,7 @@ class ProyectoView(TemplateView):
     """
     template_name = 'Proyecto.html'
     context_object_name = 'lista_proyectos'
+
 
     def post(self, request, *args, **kwargs):
         """
@@ -352,7 +356,7 @@ class ModificarProyectoConfirm(ModificarProyecto):
         modificacion_nombre= request.POST['nombre_proyecto']
 
         existe= Proyecto.objects.filter(nombre= modificacion_nombre)
-        if existe:
+        if len(existe) and existe[0]!=modificacion:
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             diccionario['error']= 'Nombre de proyecto ya existe'
             return render(request, super(ModificarProyectoConfirm, self).template_name, diccionario)
@@ -369,3 +373,36 @@ class ModificarProyectoConfirm(ModificarProyecto):
             modificacion.save()
             return render(request, self.template_name, diccionario)
 
+
+class Generarkanban(LoginRequiredMixin, ProyectoView):
+    template_name = 'Generarkanban.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el nombre del proyecto sea unico y luego actualiza los datos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el nombre del proyecto sea repetido.
+                Retorna la pagina de modificacion exitosa del proyecto
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_flujos = Flujo.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['flujos']=lista_flujos
+        diccionario['historias']=lista_historias
+
+        for i in lista_flujos:
+            actividades = Actividad.objects.filter(proyecto=proyecto_actual, estado=True, flujo=i.id).order_by('secuencia')
+
+
+        diccionario['actividades_flujo']=actividades
+
+
+
+        return render(request, self.template_name, diccionario)

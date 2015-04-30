@@ -39,6 +39,11 @@
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Administrar Historias" id="submitt">
     </form>
+    <form action= "/proyecto/kanban/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Ver Tabla Kanban" id="submitt">
+    </form>
     <br>
     <form action= "/proyecto/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
