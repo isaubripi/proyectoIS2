@@ -7,89 +7,98 @@
 
 {% endblock %}
 {% block Columnas %}
-    <tr>
 
-    </tr>
 {% endblock %}
 {% block MostrarDatos%}
 
-    {% for flujo in flujos %}
+{% for flujo in flujos %}
     <table border=2 width="1500" BGCOLOR="White" height="300" align="center">
             <caption style="color:#0000FF;font-size:20pt;font-style:verdana">{{ flujo.nombre}}</caption>
 
-            <tr>
+
+                <tr>
+                {%  for actividad in actividades_flujo %}
+
+                        {% ifequal actividad.flujo flujo.id %}
 
 
-                    {%  for actividad in actividades_flujo %}
-                            {% ifequal actividad.flujo flujo.id %}
+                        <th align="center" valign="top" width="20" height="10" colspan="3">{{ actividad.nombre }}</th>
+                        {% endifequal %}
 
-                            <th align="center" valign="top" width="20" height="10" colspan="3">{{ actividad.nombre }}</th>
-                            {% endifequal %}
-                    {% endfor %}
-            </tr>
-            <tr>
-                {% for actividad in flujo.actividades.all %}
+
+                {% endfor %}
+                </tr>
+
+                <tr>
+                {% for actividad in actividades_flujo %}
                     {% ifequal actividad.flujo flujo.id %}
+
                         <td align="center" valign="top">To Do </td>
                         <td align="center" valign="top">Doing </td>
                         <td align="center" valign="top">Done </td>
+
                     {% endifequal %}
                 {% endfor %}
-
-
-            </tr>
+                </tr>
 
 
             {% for actividad in actividades_flujo %}
 
                 {% for historia in historias %}
 
-                    {% ifequal historia.actividad actividad.nombre %}
+                    {% ifequal historia.flujo flujo %}
 
-                    <td>
-                        {% for historia in historias %}
-                            {% ifequal historia.flujo flujo %}
-                                {% ifequal historia.estado 'To Do' %}
-                                <h5> {{ historia.nombre }}</h5>
-                                <br>
-                                {% endifequal %}
-                            {% endifequal %}
-                        {% endfor %}
-                    </td>
+                        {% ifequal historia.actividad actividad %}
 
-                    <td>
-                        {% for historia in historias %}
-                            {% ifequal historia.flujo flujo %}
-                                {% ifequal historia.estado 'Doing' %}
-                                <h5> {{ historia.nombre }}</h5>
-                                <br>
-                                {% endifequal %}
-                            {% endifequal %}
-                        {% endfor %}
-                    </td>
 
-                    <td>
-                        {% for historia in historias %}
-                            {% ifequal historia.flujo flujo %}
-                                {% ifequal historia.estado 'Done' %}
-                                <h5> {{ historia.nombre }}</h5>
-                                <br>
+
+
+                                {% ifequal historia.estado "To Do" %}
+                                    <td>
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+                                    </td>
                                 {% endifequal %}
-                            {% endifequal %}
-                        {% endfor %}
-                    </td>
+
+                                {% ifequal historia.estado "Doing" %}
+                                    <td>
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+                                    </td>
+                                {% endifequal %}
+
+                                {% ifequal historia.estado "Done" %}
+                                <td >
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+                                </td>
+                                {% endifequal %}
+
+
+
+
+                        {% endifequal %}
 
                     {% endifequal %}
+
+
                 {% endfor %}
-        {% endfor %}
+
+
+
+            {% endfor %}
+
 
     </table>
     <br>
     <br>
-    {% endfor %}
 
 
-        {% endblock %}
+
+{% endfor %}
+
+
+{% endblock %}
 {% block Botones %}
 
     <form action="/proyecto/ingresar/" method="post">{% csrf_token %}

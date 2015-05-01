@@ -378,13 +378,19 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
     template_name = 'Generarkanban.html'
     def post(self, request, *args, **kwargs):
         """
-        Realiza la verifiacion de que el nombre del proyecto sea unico y luego actualiza los datos.
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra la tabla kanban
+        que pertenece al proyecto actual.
+
+        Para la tabla se llevan la lista de flujos del proyecto actual
+        luego apartir de la lista de flujos, se obtienen la lista de actividades del
+        flujo y se van mostrando secuencialmente como fueron ordenadas.
 
         :param request: Peticion web
         :param args: Para mapear los argumentos posicionales a al tupla
         :param kwargs: Diccionario para mapear los argumentos de palabra clave
-        :return: Retorna un mensaje de error, en el caso de que el nombre del proyecto sea repetido.
-                Retorna la pagina de modificacion exitosa del proyecto
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver la tabla
+                Retorna la pagina donde se puede observar la tabla kanban del proyecto
+
         """
         diccionario = {}
         proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
@@ -397,8 +403,9 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
         diccionario['flujos']=lista_flujos
         diccionario['historias']=lista_historias
 
+        actividades=[]
         for i in lista_flujos:
-            actividades = Actividad.objects.filter(proyecto=proyecto_actual, estado=True, flujo=i.id).order_by('secuencia')
+            actividades = Actividad.objects.filter(proyecto=proyecto_actual, estado=True).order_by('secuencia')
 
 
         diccionario['actividades_flujo']=actividades
