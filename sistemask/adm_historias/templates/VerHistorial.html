@@ -8,7 +8,7 @@
     {% for historial in lista %}
 
         <tr>
-            <td><h6 style="color:#ffffff;">ID: {{ historial.id_historia }}</h6></td>
+            <td><h6>ID: {{ historial.id_historia }}</h6></td>
 
             <td><h6>Nombre: {{ historial.nombre }}</h6></td>
 
@@ -29,6 +29,7 @@
             <td><h6>Estado: {{ historial.estado }}</h6></td>
         </tr>
         <tr>
+            <td><h6>Actividad: {{ historial.actividad }}<br>----------------------------------------------------------</h6></td>
             <td><h6>Sprint: {{ historial.sprint }}<br>----------------------------------------------------------</h6></td>
             <td><h6>Asignado a Sprint: {{ historial.asignado_p }}<br>----------------------------------------------------------</h6></td>
             <td><h6>Activo: {{ historial.activo }}<br>----------------------------------------------------------</h6></td>
