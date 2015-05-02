@@ -104,8 +104,8 @@ class CrearFlujoConfirm(CrearFlujo):
         flujo_proyecto= request.POST['proyecto_flujo']
 
         if len(Flujo.objects.filter(nombre= flujo_nombre, activo= True, proyecto=proyecto_actual)):
-            error = "Nombre del flujo ya existe. Intente otro nombre"
-            return render(request, super(CrearFlujoConfirm, self).template_name, {'error':error})
+            diccionario['error'] = "Nombre del flujo ya existe. Intente otro nombre"
+            return render(request, super(CrearFlujoConfirm, self).template_name, diccionario)
         nuevo_flujo = Flujo(nombre= flujo_nombre, descripcion= flujo_descripcion, activo=True)
 
         nuevo_flujo.proyecto = proyecto_actual
@@ -172,11 +172,20 @@ class EditarFlujoConfirm(EditarFlujo):
         flujo_editado = Flujo.objects.get(nombre= request.POST['nombre_flujo'])
         nuevo_flujo_nombre = request.POST['nombre_nuevo_flujo']
         nuevo_flujo_descripcion = request.POST['descripcion_nuevo_flujo']
-        flujo_editado.nombre = nuevo_flujo_nombre
-        flujo_editado.descripcion = nuevo_flujo_descripcion
-        flujo_editado.save()
 
-        return render(request, self.template_name, diccionario)
+        existe= Flujo.objects.filter(nombre= nuevo_flujo_nombre, activo=True, proyecto=proyecto_actual)
+
+        if len(existe) and existe[0]!= flujo_editado:
+            diccionario['error']= 'Nombre de Flujo ya existe'
+            return render(request, super(EditarFlujoConfirm, self).template_name, diccionario)
+
+        else:
+
+            flujo_editado.nombre = nuevo_flujo_nombre
+            flujo_editado.descripcion = nuevo_flujo_descripcion
+            flujo_editado.save()
+
+            return render(request, self.template_name, diccionario)
 
 class EliminarFlujo(LoginRequiredMixin, FlujoView):
     '''
