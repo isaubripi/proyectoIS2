@@ -154,9 +154,9 @@ class EditarRol(LoginRequiredMixin, RolView):
         rol_actual= Rol.objects.get(id= request.POST['rol'])
 
         if rol_actual.nombre== 'Scrum Master':
-            error = 'Rol: Scrum Master - No se puede modificar'
+            diccionario['error']= 'Rol: Scrum Master - No se puede modificar'
 
-            return render(request, super(EditarRol, self).template_name, {'error':error})
+            return render(request, super(EditarRol, self).template_name, diccionario)
         diccionario['rol']= rol_actual
         return render(request, self.template_name, diccionario)
 
