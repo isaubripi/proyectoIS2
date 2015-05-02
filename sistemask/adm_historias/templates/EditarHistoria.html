@@ -33,7 +33,7 @@
 
             <dl><dt><label>Descripcion:</label></dt><dd>
                 <input type="hidden" name="descripcion_historia" value={{ historia.descripcion }} /></dd>
-                <input type="text" name="nuevo_descripcion" value={{ historia.descripcion }} /></dd>
+                <textarea name="nuevo_descripcion" rows="10" cols="50" required >{{ historia.descripcion }}</textarea></dd>
             </dl>
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >

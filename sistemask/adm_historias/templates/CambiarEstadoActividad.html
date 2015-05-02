@@ -1,0 +1,52 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Cambiar Estado de Historia::{% endblock %}
+{% block TituloMenu %} CAMBIAR  ESTADO DE HISTORIA {% endblock %}
+{% block TituloOperacion %} Formulario Cambiar Estado de Historia {% endblock %}
+{% block DatosOperacion %}
+    <h1> <font color = 'green'>CAMBIAR ESTADO DE HISTORIA</font></h1>
+    <form action="/historia/actividadestado/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre: {{ historia.nombre }}</label></dt><dd>
+                <input type="hidden" name="nombre_historia" value={{ historia.nombre }}/></dd>
+            </dl>
+
+            <dl><dt><label>Estado actual: {{ historia.estado }}</label></dt>
+
+                {% ifequal historia.estado 'To Do' %}
+                <dd><select name="estado">
+                            <option value="To Do">To Do</option>
+                            <option value="Doing">Doing</option>
+                            <option value="Done" disabled>Done</option></dd>
+                {% endifequal %}
+                {% ifequal historia.estado "Doing" %}
+                <dd><select name="estado">
+                            <option value="To Do" disabled>To Do</option>
+                            <option value="Doing">Doing</option>
+                            <option value="Done">Done</option></dd>
+                {% endifequal %}
+                {% ifequal historia.estado "Done" %}
+                <dd><select name="estado">
+                            <option value="To Do">To Do</option>
+                            <option value="Doing" disabled>Doing</option>
+                            <option value="Done">Done</option></dd>
+                {% endifequal %}
+            </dl>
+
+            <!--<dl><dt><label>Actividad actual: {{ historia.actividad.nombre }}</label></dt>
+                <dd>
+                    <select name="actividad">
+                    </select>
+                </dd>
+            </dl>!-->
+
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='historia' value={{ historia.id }}>
+        <input type="submit" value="Cambiar estado">
+    </form>
+    <form action="/historia/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}

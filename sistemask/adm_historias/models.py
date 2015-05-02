@@ -42,7 +42,7 @@ class Historia(models.Model):
     asignado = models.ForeignKey(Usuario, null=True)
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
-    archivo = models.FileField(upload_to=generate_filename)
+    #archivo = models.FileField(upload_to=generate_filename)
     actividad = models.ForeignKey(Actividad, null=True)
     sprint = models.CharField(max_length=20)
     asignado_p = models.BooleanField(default=False)
