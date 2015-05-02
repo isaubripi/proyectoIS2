@@ -41,8 +41,55 @@
                 {% endfor %}
                 </tr>
 
+                <tr>
+                {% for actividad in actividades_flujo %}
+                    {% ifequal actividad.flujo flujo.id %}
+                        {% for historia in historias %}
+                            {% ifequal historia.actividad actividad %}
 
-            {% for actividad in actividades_flujo %}
+                                {% ifequal historia.estado 'To do' %}
+
+                                    <td>
+                                    <td></td>
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+
+                                    </td>
+                                {% endifequal %}
+
+                                {% ifequal historia.estado "Doing" %}
+
+                                    <td>
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+
+                                    </td>
+                                {% endifequal %}
+
+                                {% ifequal historia.estado "Done" %}
+
+                                <td >
+                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                    <tr></tr>
+
+                                </td>
+                                {% endifequal %}
+
+                            {% endifequal %}
+
+                        {% endfor %}
+
+
+                        {% endifequal %}
+
+                {% endfor %}
+
+
+                </tr>
+
+
+
+        <!--{% for actividad in actividades_flujo %}
 
                 {% for historia in historias %}
 
@@ -83,10 +130,10 @@
 
 
                 {% endfor %}
-
-
-
-            {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            {% endfor %}-->
 
 
     </table>

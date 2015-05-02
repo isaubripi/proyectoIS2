@@ -8,7 +8,9 @@
 <h3> Scrum Master: {{ proyecto.scrum_master }} </h3>
 <h3> Equipo Scrum: </h3>
 {% for usuario in proyecto.scrum_team.all %}
-    <td> * {{ usuario }}</td></br>
+    {% ifequal usuario.estado True %}
+        <td> * {{ usuario }}</td></br>
+    {% endifequal %}
 {% endfor %}
 <h3> Cliente: {{ proyecto.cliente.username }} </h3>
 {% endblock %}
