@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from .views import ActividadView, CrearActividad, CrearActividadConfirm, EliminarActividad, ModificarActividad, ModificarActividadConfirm, EstablecerSecuencia, EstablecerSecuenciaConfirm
+from .views import ActividadView, CrearActividad, CrearActividadConfirm, EliminarActividad, ModificarActividad, ModificarActividadConfirm, EstablecerSecuencia, EstablecerSecuenciaConfirm, RestablecerSecuencia
 
 
 urlpatterns= patterns('',
@@ -11,4 +11,5 @@ urlpatterns= patterns('',
     url(r'^editar/confirmar/$',ModificarActividadConfirm.as_view(), name='modificar_actividad_confirm'),
     url(r'^secuencia/$',EstablecerSecuencia.as_view(), name='establecer_secuencia' ),
     url(r'^secuencia/confirmar/$',EstablecerSecuenciaConfirm.as_view(), name='establecer_secuencia_confirm' ),
+    url(r'^restablecer/$',RestablecerSecuencia.as_view(), name='establecer_secuencia' ),
     )

@@ -6,7 +6,7 @@
     <form action="/actividad/secuencia/confirmar/"method="post">{% csrf_token %}
         <fieldset>
             <dl>
-                <dt><label>Orden:</label></dt>
+                <dt><label><h5> Proyecto: {{ proyecto.nombre }}</h5> <h5> Flujo: {{ flujo.nombre }}</h5> <h5>Actividad: {{ actividad.nombre }}</h5> Orden:</label></dt>
                 <dd>
                     <select  name="secuencia_actividad"id="submitt" required>
                         <option value="">Seleccione una Posicion</option>

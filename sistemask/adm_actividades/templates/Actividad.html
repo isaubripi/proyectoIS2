@@ -61,7 +61,14 @@
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='flujo' value={{ flujo.id }} >
-    </form>
+    </form><br>
+    <form action= "/actividad/restablecer/" method="post"> {% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='flujo' value={{ flujo.id }} >
+        <input type="hidden" name='actividad' value={{ actividad.id }} >
+        <input type="submit" value="Restablecer Secuencia">
+    </form><br>
     <form action="/flujo/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >

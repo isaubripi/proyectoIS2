@@ -268,13 +268,14 @@ class EstablecerSecuencia(LoginRequiredMixin, ActividadView):
     template_name = 'EstablecerSecuencia.html'
     def post(self, request, *args, **kwargs):
         """
-        Realiza la verificacion de que el nombre de la actividad sea unico y luego actualiza los datos.
+        Muestra la interfaz para elegir un numero de secuencia para la activdad
+        el numero maximo de esta lista es la cantidad de actividades del flujo
 
         :param request: Peticion web
         :param args: Para mapear los argumentos posicionales a al tupla
         :param kwargs: Diccionario para mapear los argumentos de palabra clave
-        :return: Retorna un mensaje de error, en el caso de que el nombre del sprint sea repetido.
-                Retorna la pagina de modificacion exitosa del sprint
+        :return: Retorna la interfaz con los numeros de orden disponibles para cada actividad
+
         """
         diccionario= {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -307,13 +308,14 @@ class EstablecerSecuenciaConfirm(ActividadView):
     template_name = 'EstablecerSecuenciaConfirm.html'
     def post(self, request, *args, **kwargs):
         """
-        Realiza la verificacion de que el nombre de la actividad sea unico y luego actualiza los datos.
+        Establece la secuencia o el orden en que se realizaran las actividades de un flujo..
+        del 1 a N, donde N es la ultima actividad del flujo
 
         :param request: Peticion web
         :param args: Para mapear los argumentos posicionales a al tupla
         :param kwargs: Diccionario para mapear los argumentos de palabra clave
-        :return: Retorna un mensaje de error, en el caso de que el nombre del sprint sea repetido.
-                Retorna la pagina de modificacion exitosa del sprint
+        :return:Retorna la pagina de establecimiento exitoso de la secuencia
+
         """
         diccionario= {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -356,4 +358,33 @@ class EstablecerSecuenciaConfirm(ActividadView):
 
         return render(request, self.template_name, diccionario)
 
+class RestablecerSecuencia(ActividadView):
+    template_name ='Restablecer.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Restablece la secuencia de las actividades, para poder establecer un nuevo orden.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el nombre del sprint sea repetido.
+                Retorna la pagina de modificacion exitosa del sprint
+        """
+        diccionario= {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+        flujo_actual= Flujo.objects.get(id=request.POST['flujo'])
+        diccionario['flujo']= flujo_actual
+        id_flujo = request.POST['flujo']
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+
+        actividades_actuales = Actividad.objects.filter(proyecto=proyecto_actual, flujo=id_flujo, estado=True)
+
+        for i in actividades_actuales:
+            i.secuencia = 0
+            i.save()
+
+        return render(request, self.template_name, diccionario)
 
