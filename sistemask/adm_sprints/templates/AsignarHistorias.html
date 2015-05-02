@@ -16,7 +16,7 @@
 
 
             <dl>
-                <dt><label>Historias del Proyecto:</label></dt>
+                <dt><label><h5>Estan disponibles aquellas historias que ya tienen asignados un Usuario y un Flujo</h5>Historias del Proyecto:</label></dt>
                 <dd>
                     <select multiple name="historias[]" id="submitt" required>
                         <option value="" disabled>Seleccionar historia/s</option>
@@ -35,7 +35,7 @@
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='sprint' value={{ sprint.id }} >
         <input type="submit" value="Asignar Historias al Sprint">
-    </form>
+    </form><br>
 
     <form action="/sprint/asignarUF/" method="POST">{% csrf_token %}
         <input type="hidden" name='proyecto' value={{ proyecto.id }}>
@@ -43,7 +43,7 @@
         <input type="hidden" name='sprint' value={{ sprint.id }} >
 
         <input type="submit" value="Asignar Usuario y Flujo a Historias">
-    </form>
+    </form><br>
     <form action="/sprint/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >

@@ -19,8 +19,10 @@
                     <dd>
                         <select  name="usuario" id="submitt" required>
                             <option value="">Seleccione un usuario</option>
-                            {% for usuario in lista_usuarios %}
+                            {% for usuario in proyecto.scrum_team.all %}
+                                {% ifequal usuario.estado True %}
                                 <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                                {% endifequal %}
                             {% endfor %}
                         </select>
                     </dd>

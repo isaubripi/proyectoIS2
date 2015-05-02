@@ -390,8 +390,9 @@ class AsignarUsuarioFlujo(AsignarHistorias):
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
 
+        equipo_scrum = []
         equipo_scrum = proyecto_actual.scrum_team
-        diccionario['lista_usuarios'] = Usuario.objects.filter(estado = True)
+        diccionario['lista_usuarios'] = equipo_scrum
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
 
