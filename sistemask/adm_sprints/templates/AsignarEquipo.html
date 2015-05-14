@@ -1,17 +1,18 @@
 {% extends 'PlantillaBaseListas.html' %}
-{% block title %} ::Administracion de Historias:: {% endblock %}
-{% block TituloMenu %} ASIGNACION DE HISTORIAS DE USUARIO {% endblock %}
+{% block title %} ::Administracion de Sprints:: {% endblock %}
+{% block TituloMenu %} ASIGNACION DE HORAS DE TRABAJO EN SPRINT {% endblock %}
 {% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>{% endblock %}
 
 {% block Columnas %}
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
-<h2>Lista de Historias del Proyecto</h2>
+<h2>Lista del Scrum Team del Proyecto</h2>
+
+<h4>Paso 1 : Asigne las horas que trabajara cada miembro del Scrum Team</h4>
 
 
     <tr>
-		<th scope="col" class="rounded">Historia</th>
-        <th scope="col" class="rounded">Usuario</th>
-        <th scope="col" class="rounded">Flujo</th>
+		<th scope="col" class="rounded">Usuario</th>
+        <th scope="col" class="rounded">Horas de trabajo</th>
     </tr>
 {% endblock %}
 
@@ -19,25 +20,31 @@
 
 {% block MostrarDatos%}
 
-    {% for historia in historias %}
+    {% for usuario in proyecto.scrum_team.all %}
+        {% ifequal usuario.estado True %}
 
             <tr>
 
-                <td>{{ historia.nombre }} </td>
-                <td>{{ historia.asignado }}</td>
-                <td>{{ historia.flujo }} </td>
+                <td>{{ usuario.nombre }} </td>
+
+                {% for equipo in sprint.equipo.all %}
+                    {% ifequal usuario.id equipo.usuario.id %}
+                        <td align="center">{{ equipo.horas_sprint }}</td>
+                    {% endifequal %}
+                {% endfor %}
             <td>
-                <form action= "/sprint/asignarUF/paso1/" method="post"> {% csrf_token %}
+                <form action= "/sprint/equipo/horas/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='sprint' value={{ sprint.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
+                    <input type="hidden" name='user' value={{ usuario.id }} >
 
                     <input type="submit" value="Asignar" id="submitt">
                 </form>
             </td>
             </tr>
-
+        {% endifequal %}
     {% endfor %}
 {% endblock %}
 
@@ -50,10 +57,7 @@
                     <input type="hidden" name='sprint' value={{ sprint.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
 
+
                     <input type="submit" value="<Atras" id="submitt">
                 </form>
 {% endblock %}
-
-
-
-

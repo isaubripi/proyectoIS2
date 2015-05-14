@@ -1,0 +1,15 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Administracion de Sprints::{% endblock %}
+{% block TituloMenu %} ASIGNAR USUARIO A SPRINT {% endblock %}
+{% block TituloOperacion %} Usuario Asignado a Sprint {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>El Usuario se asigno exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/sprint/equipo/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

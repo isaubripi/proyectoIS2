@@ -15,13 +15,13 @@
 <fieldset>
 
                 <dl>
-                    <dt><label>Usuarios miembros:</label></dt>
+                    <dt><label>Equipo de Trabajo:</label></dt>
                     <dd>
                         <select  name="usuario" id="submitt" required>
                             <option value="">Seleccione un usuario</option>
-                            {% for usuario in proyecto.scrum_team.all %}
-                                {% ifequal usuario.estado True %}
-                                <option value={{ usuario.username }}>{{ usuario.username }} </option>
+                            {% for equipo in sprint.equipo.all %}
+                                {% ifequal equipo.usuario.estado True %}
+                                <option value={{ equipo.usuario.username }}>{{ equipo.usuario.username }} </option>
                                 {% endifequal %}
                             {% endfor %}
                         </select>

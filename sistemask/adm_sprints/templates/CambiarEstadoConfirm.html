@@ -1,9 +1,9 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Activar Sprint::{% endblock %}
-{% block TituloMenu %} ACTIVAR SPRINT {% endblock %}
-{% block TituloOperacion %} Sprint Activado {% endblock %}
+{% block title %}::Cambiar Estado Sprint::{% endblock %}
+{% block TituloMenu %} CAMBIAR ESTADO SPRINT {% endblock %}
+{% block TituloOperacion %} Sprint Establecido{% endblock %}
 {% block DatosOperacion %}
-    <div align="center"><h3>El sprint se activo exitosamente. </h3></div>
+    <div align="center"><h3>El sprint se establecio exitosamente. </h3></div>
 {% endblock %}
 {% block Botones %}
     <form action="/sprint/" method="POST"> {% csrf_token %}

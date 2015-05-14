@@ -1,0 +1,53 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Administracion de Sprints::{% endblock %}
+{% block TituloMenu %} CAMBIAR ESTADO {% endblock %}
+{% block MigasDePan %}>>>Inicio >>> Proyecto: <h4> {{ proyecto.nombre }} </h4>>> Sprint: <h4>{{ sprint.nombre }}</h4>{% endblock %}
+{% block TituloLista %} Estados Posibles del Sprint {% endblock %}
+{% block content %}
+
+{% endblock %}
+
+{% block MostrarDatos%}
+<form action="/sprint/estado/confirmar/" method="POST" class="niceform">{% csrf_token %}
+<fieldset>
+
+                <dl>
+                    <h4>Estado Actual: {{ sprint.estado }}</h4>
+                    <dt><label>Estados del Sprint:</label></dt>
+                    <dd>
+                        <select  name="estado_sprint" id="submitt" required>
+
+                                <option value="Futuro">Futuro</option>
+                                <option value="En Ejecucion">En Ejecucion</option>
+                                <option value="Ejecutado">Ejecutado</option>
+
+                        </select>
+                    </dd>
+                </dl>
+
+</fieldset>
+
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='historia' value={{ historia.id }} >
+        <input type="hidden" name='usuario' value={{ usuario.id }} >
+        <input type="submit" value="Cambiar estado del Sprint">
+</form>
+
+
+    </form>
+
+{% endblock %}
+
+{% block Botones %}
+
+    <br>
+    <form action="/sprint/" method="post">{% csrf_token %}
+        <input type="hidden" name='codigo' value={{ logueado.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Sprints:: {% endblock %}
+{% block TituloMenu %} ASIGNACION DE HORAS DE TRABAJO EN SPRINT {% endblock %}
+{% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>>>Usuario:<h5>{{usuario.nombre}}</h5>{% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE SPRINTS</font></h1></b></div>
+<h4>Paso 2 : Introduzca la cantidad de horas que trabajara el usuario por dia</h4>
+
+{% endblock %}
+
+{% block MostrarDatos%}
+<form action="/sprint/equipo/horas/confirmar/" method="POST" class="niceform">{% csrf_token %}
+<fieldset>
+
+                <dl>
+                    <dt><label>Cantidad de horas:</label></dt>
+                    <dd>
+                        <select  name="horas" id="submitt" required>
+
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+
+                        </select>
+                    </dd>
+                </dl>
+
+</fieldset>
+
+        <input type="hidden" name='proyecto' value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <input type="hidden" name='historia' value={{ historia.id }} >
+        <input type="hidden" name='usuario' value={{ usuario.id }} >
+        <input type="submit" value="Asignar Usuario al Sprint">
+</form>
+
+
+    </form>
+
+{% endblock %}
+
+{% block Botones %}
+<form action= "/sprint/equipo/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='sprint' value={{ sprint.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+
+                    <input type="submit" value="<Atras" id="submitt">
+{% endblock %}

@@ -10,15 +10,18 @@
 {% endblock %}
 {% block Columnas %}
     <tr>
-		<th scope="col" class="rounded">Nombre</th>
-		<th scope="col" class="rounded">Duracion</th>
-        <th scope="col" class="rounded">Estado</th>
+		<th scope="col" class="rounded" style="color:#FFFFFF">Nombre</th>
+		<th scope="col" class="rounded" >Duracion</th>
+        <th scope="col" class="rounded" style="color:#FFFFFF">Estado</th>
 		<th scope="col" class="rounded">Eliminar</th>
-        <th scope="col" class="rounded">Modificar</th>
-        <th scope="col" class="rounded">Activar</th>
-        <th scope="col" class="rounded">Asignar Historias</th>
+        <th scope="col" class="rounded" style="color:#FFFFFF">Modificar</th>
+        <th scope="col" class="rounded">Cambiar Estado</th>
+        <th scope="col" class="rounded" style="color:#FFFFFF">Asignar Historias</th>
         <th scope="col" class="rounded">Desasignar Historias</th>
-        <th scope="col" class="rounded">Ver Informacion</th>
+        <th scope="col" class="rounded" style="color:#FFFFFF">Ver Informacion</th>
+        <th scope="col" class="rounded">Equipo de Trabajo</th>
+        <th scope="col" class="rounded" style="color:#FFFFFF">Ver Sprint Backlog</th>
+        <th scope="col" class="rounded">Asignar Usuario - Flujo</th>
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
@@ -45,11 +48,11 @@
                             </form>
                         </td>
                         <td>
-                            <form action= "/sprint/activar/" method="post"> {% csrf_token %}
+                            <form action= "/sprint/estado/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Activar" id="submitt">
+                                <input type="submit" value="Cambiar Estado" id="submitt">
                             </form>
                         </td>
 
@@ -77,6 +80,33 @@
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
                                 <input type="submit" value="Ver Informacion" id="submitt">
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action= "/sprint/equipo/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Equipo de Trabajo" id="submitt">
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action= "/sprint/sprintbacklog/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Ver Sprint Backlog" id="submitt">
+                            </form>
+                        </td>
+
+                        <td>
+                            <form action= "/sprint/asignarUF/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id}} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='sprint' value={{ sprint.id }} >
+                                <input type="submit" value="Asignar Usuario y Flujo" id="submitt">
                             </form>
                         </td>
                     </tr>

@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
-from .views import SprintView, CrearSprint, CrearSprintConfirm, EliminarSprint, ModificarSprint, ModificarSprintConfirm, ActivarSprint, AsignarHistorias, AsignarHistoriasConfirm, AsignarUsuarioFlujo, AsignarUsuarioFlujo1, AsignarUsuarioFlujo2, DesasignarHistorias, DesasignarHistoriasConfirm, VerInformacionSprint
+from .views import SprintView, CrearSprint, CrearSprintConfirm, EliminarSprint, ModificarSprint, ModificarSprintConfirm, AsignarHistorias, AsignarHistoriasConfirm, AsignarUsuarioFlujo, AsignarUsuarioFlujo1, AsignarUsuarioFlujo2, DesasignarHistorias, DesasignarHistoriasConfirm, VerInformacionSprint, AsignarEquipo, AsignarHoras, AsignarEquipoConfirm, Sprintbacklog, CambiarEstado, CambiarEstadoConfirm
+
 
 urlpatterns= patterns('',
     url(r'^$', SprintView.as_view(), name="sprint"),
@@ -8,7 +9,8 @@ urlpatterns= patterns('',
     url(r'^eliminar/$', EliminarSprint.as_view(), name="eliminar_sprint"),
     url(r'^modificar/$', ModificarSprint.as_view(), name= "modificar_sprint"),
     url(r'^modificar/confirmar/$', ModificarSprintConfirm.as_view(), name= "modificar_sprint"),
-    url(r'^activar/$', ActivarSprint.as_view(), name= "activar_sprint"),
+    url(r'^estado/$', CambiarEstado.as_view(), name= "cambiar_estado"),
+    url(r'^estado/confirmar/$', CambiarEstadoConfirm.as_view(), name= "cambiar_estado_confirm"),
     url(r'^asignar/$', AsignarHistorias.as_view(), name="asignar_historias"),
     url(r'^asignar/confirmar/$', AsignarHistoriasConfirm.as_view(), name="asignar_historias_confirm"),
     url(r'^asignarUF/$', AsignarUsuarioFlujo.as_view(), name="asignar_usuario_flujo"),
@@ -17,4 +19,8 @@ urlpatterns= patterns('',
     url(r'^desasignar/$', DesasignarHistorias.as_view(), name="desasignar_historias"),
     url(r'^desasignar/confirmar/$', DesasignarHistoriasConfirm.as_view(), name="desasignar_historias"),
     url(r'^informacion/$', VerInformacionSprint.as_view(), name="informacion"),
+    url(r'^equipo/$', AsignarEquipo.as_view(), name="asignar_equipo"),
+    url(r'^equipo/horas/$', AsignarHoras.as_view(), name="asignar_equipo"),
+    url(r'^equipo/horas/confirmar/$', AsignarEquipoConfirm.as_view(), name="asignar_equipo"),
+    url(r'^sprintbacklog/$', Sprintbacklog.as_view(), name="sprintbacklog"),
 )

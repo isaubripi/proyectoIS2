@@ -10,7 +10,7 @@
 <h3 style="color:#FFFFFF"> Fecha de Inicio: <h5>{{ sprint.fecha_inicio }}</h5> </h3>
 <h3 style="color:#FFFFFF"> Fecha de Fin: <h5>{{ sprint.fecha_fin }} </h5></h3>
 <h3 style="color:#FFFFFF"> Duracion: <h5>{{ sprint.duracion }} dias </h5></h3>
-<h3 style="color:#FFFFFF"> Estado: <h5>{{ sprint.estado }} (A:Activado, P:Planeado)</h5></h3>
+<h3 style="color:#FFFFFF"> Estado: <h5>{{ sprint.estado }} </h5></h3>
 <h3 style="color:#FFFFFF"> HISTORIAS ASIGNADAS: </h3>
 {% for historia in historias_sprint %}
     <td> * {{ historia.nombre }}</td></br>
@@ -19,11 +19,12 @@
 
 <h3 style="color:#FFFFFF">USUARIOS ASIGNADOS AL SPRINT:</h3>
 {% for usuario in usuarios %}
-    <td s> * {{ usuario }}</td></br>
+    <td s> * {{ usuario.usuario }}..... trabaja {{ usuario.horas_sprint }} hora/s por dia</td></br>
 
 {% endfor %}
 <h3 style="color:#FFFFFF"> Capacidad Productiva: <h5>{{ capacidad }} horas reloj </h5></h3>
-
+<h3 style="color:#FFFFFF"> Horas Estimadas de Trabajo: <h5>{{ horas_trabajo }} horas reloj </h5></h3>
+<h3 style="color:#FFFFFF"> Saldo en horas de Trabajo: <h5>{{ saldo }} horas reloj </h5></h3>
 
 {% endblock %}
 

@@ -3,6 +3,17 @@ from django.db import models
 # Create your models here.
 from adm_proyectos.models import Proyecto
 from adm_historias.models import Historia
+from adm_usuarios.models import Usuario
+
+class Equipo(models.Model):
+    """
+    usuario: aquel usuario que es parte de un sprint
+    horas_sprint: cantidad de horas por dia que un usuario trabajara dentro del sprint
+    """
+    usuario=models.ForeignKey(Usuario)
+    horas_sprint=models.PositiveIntegerField(null=True)
+
+
 
 class Sprint(models.Model):
     """
@@ -17,10 +28,6 @@ class Sprint(models.Model):
     historias: Aquellas historias de usuario que son asignadas al sprint
     """
 
-    estados_posibles= (
-        ('P','Planificado'),
-        ('A','Activado'),)
-
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=200)
     fecha_inicio = models.DateField(null=True)
@@ -28,10 +35,14 @@ class Sprint(models.Model):
     duracion = models.PositiveIntegerField(null=True)
     proyecto = models.ForeignKey(Proyecto)
     activo = models.BooleanField(default=True)
-    estado = models.CharField(max_length=1, choices= estados_posibles, default='P')
+    estado = models.CharField(max_length=15, default='Futuro')
     historias = models.ManyToManyField(Historia, related_name='historias')
     asignado_h = models.BooleanField(default=False)
+    equipo = models.ManyToManyField(Equipo, default=False)
 
 def __unicode__(self):
     return self.nombre
+
+
+
 
