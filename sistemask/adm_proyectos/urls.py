@@ -1,7 +1,7 @@
 __author__ = 'isidro'
 
 from django.conf.urls import patterns, include, url
-from .views import ProyectoView, EliminarProyecto, CrearProyecto, CrearProyectoConfirm, InicializarProyecto, InicializarProyectoConfirm, Ingresar, ModificarProyecto, ModificarProyectoConfirm, Generarkanban
+from .views import ProyectoView, EliminarProyecto, CrearProyecto, CrearProyectoConfirm, InicializarProyecto, InicializarProyectoConfirm, Ingresar, ModificarProyecto, ModificarProyectoConfirm, Generarkanban, ProductBacklog, ProductBacklogPri, ProductBacklogNeg, ProductBacklogTec
 
 urlpatterns= patterns('',
     url(r'^$', ProyectoView.as_view(), name="proyecto"),
@@ -18,6 +18,10 @@ urlpatterns= patterns('',
     url(r'^modificar/confirmar/$', ModificarProyectoConfirm.as_view(), name= "modificar_proyecto"),
      #Usuarios
     url(r'^kanban/$',Generarkanban.as_view(), name='ver_kanban' ),
+    url(r'^productbacklog/$',ProductBacklog.as_view(), name='ver_productbacklog' ),
+    url(r'^productbacklogPri/$',ProductBacklogPri.as_view(), name='ver_productbacklog' ),
+    url(r'^productbacklogNeg/$',ProductBacklogNeg.as_view(), name='ver_productbacklog' ),
+    url(r'^productbacklogTec/$',ProductBacklogTec.as_view(), name='ver_productbacklog' ),
     url(r'^usuario/', include('adm_usuarios.urls')),
 
 )

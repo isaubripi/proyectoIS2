@@ -413,3 +413,119 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
 
 
         return render(request, self.template_name, diccionario)
+
+class ProductBacklog(LoginRequiredMixin, ProyectoView):
+    template_name = 'ProductBacklog.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
+        que pertenece al proyecto actual.
+
+        Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
+        dando las opciones de realizar distintos tipos de filtros sobre ellos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['historias']=lista_historias
+
+
+        return render(request, self.template_name, diccionario)
+
+class ProductBacklogPri(LoginRequiredMixin, ProyectoView):
+    template_name = 'ProductBacklog.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
+        que pertenece al proyecto actual.
+
+        Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
+        dando las opciones de realizar distintos tipos de filtros sobre ellos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('prioridad')
+        diccionario['historias']=lista_historias
+
+
+        return render(request, self.template_name, diccionario)
+
+class ProductBacklogNeg(LoginRequiredMixin, ProyectoView):
+    template_name = 'ProductBacklog.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
+        que pertenece al proyecto actual.
+
+        Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
+        dando las opciones de realizar distintos tipos de filtros sobre ellos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('val_negocio')
+        diccionario['historias']=lista_historias
+
+
+        return render(request, self.template_name, diccionario)
+
+class ProductBacklogTec(LoginRequiredMixin, ProyectoView):
+    template_name = 'ProductBacklog.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
+        que pertenece al proyecto actual.
+
+        Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
+        dando las opciones de realizar distintos tipos de filtros sobre ellos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('val_tecnico')
+        diccionario['historias']=lista_historias
+
+
+        return render(request, self.template_name, diccionario)
