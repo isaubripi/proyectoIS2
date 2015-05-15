@@ -2,33 +2,53 @@
 {% block title %}::Menu Inicio Proyecto::{% endblock %}
 {% block TituloMenu %} MENU PROYECTO {% endblock %}
 {% block MigasDePan %}>>>Inicio>>Proyecto
+<table border="2" bgcolor="white" align="center">
+        <td>
+        <h4> Nombre: {{ proyecto.nombre }} </h4>
+        <h4> Descripcion: {{ proyecto.descripcion }} </h4>
+        <h4> Scrum Master: {{ proyecto.scrum_master }} </h4>
+         </td>
+        <td>
+            <h4> Fecha de Inicio: {{ proyecto.fecha_inicio }}</h4>
+            <h4> Fecha de Fin: {{ proyecto.fecha_fin }} </h4>
+        </td>
 
-<h3> Nombre: {{ proyecto.nombre }} </h3>
-<h3> Descripcion: {{ proyecto.descripcion }} </h3>
-<h3> Scrum Master: {{ proyecto.scrum_master }} </h3>
-<h3> Equipo Scrum: </h3>
-{% for usuario in proyecto.scrum_team.all %}
-    {% ifequal usuario.estado True %}
-        <td> * {{ usuario }}</td></br>
-    {% endifequal %}
-{% endfor %}
-<h3> Cliente: {{ proyecto.cliente.username }} </h3>
-{% endblock %}
-{% block TituloLista %} Operaciones disponibles {% endblock %}
+
+        <td>
+        <h4> Equipo Scrum: </h4>
+        {% for usuario in proyecto.scrum_team.all %}
+            {% ifequal usuario.estado True %}
+                 * {{ usuario }}</br>
+            {% endifequal %}
+        {% endfor %}
+        </td>
+        <td>
+        <h4> Cliente: {{ proyecto.cliente.username }} </h4>
+        </td>
+        </table>
+        {% endblock %}
+
+{% block TituloLista %} <h2 align="center" style="font-style:italic"> OPERACIONES DISPONIBLES </h2> {% endblock %}
 
 {% block Botones %}
+<table align="center" border="2" bgcolor="yellow" height="200" width="500">
+    <td align="center">
+
     <form action= "/flujo/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Administrar Flujos" id="submitt">
     </form>
+
     <br>
+
     <form action= "/sprint/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Administrar Sprints" id="submitt">
     </form>
     <br>
+
     <form action= "/inicio/rol/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id }}>
@@ -41,6 +61,10 @@
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Administrar Historias" id="submitt">
     </form>
+    </td>
+
+    <td align="center">
+
     <form action= "/proyecto/kanban/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
@@ -53,13 +77,13 @@
      	<input type="submit" value="Ver Product Backlog" id="submitt">
     </form>
 
-    <br>
+    </td>
+</table>
+ <br>
     <form action= "/proyecto/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="<Atras" id="submitt">
     </form>
-
-
 
 
 {% endblock %}

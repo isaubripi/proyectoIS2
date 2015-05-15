@@ -2,11 +2,12 @@
 {% block title %}::Menu Inicio::{% endblock %}
 {% block TituloMenu %} BIENVENIDO AL SISTEMA SK {% endblock %}
 {% block MigasDePan %}>>>Inicio{% endblock %}
-{% block TituloLista %} Lista de Proyectos {% endblock %}
+{% block TituloLista %} <h1 align="center" style="font-style:italic">Proyectos a los cuales Ud. pertenece </h1>{% endblock %}
 {% block content %}
 
 {% endblock %}
 {% block Columnas %}
+<table border="3" align="center" bgcolor="white">
     <tr>
 		<th scope="col" class="rounded">Nombre</th>
 		<th scope="col" class="rounded">Scrum Master</th>
@@ -17,6 +18,7 @@
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
+
     {% for proyecto in lista_proyectos %}
             {%  for usuario in proyecto.scrum_team.all %}
                 {% ifequal usuario.id logueado.id %}
@@ -55,26 +57,36 @@
                 {% endifequal %}
             {% endfor %}
     {% endfor %}
-{% endblock %}
-{% block Botones %}
+</table>
+    {% endblock %}
 
+{% block Botones %}
+<br>
+<br>
+<table border="3" bgcolor="yellow" align="center">
+    <td align="center">
     <br>
     <form action= "/proyecto/crear/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="Crear Proyecto" id="submitt">
     </form>
     <br>
+     </td>
+    <td>
       <form action= "/proyecto/usuario/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
      	<input type="submit" value="Administrar Usuarios" id="submitt">
     </form>
+    </td>
     <br>
     <br>
     <br>
+    <td>
     <form action="/proyecto/usuario/editar/" method="post">{% csrf_token %}
         <input type="hidden" name='codigo' value={{ logueado.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="submit" value="Modificar mis Datos" id="submitt">
     </form>
-
+    </td>
+</table>
 {% endblock %}
