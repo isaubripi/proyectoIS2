@@ -107,6 +107,13 @@ class CrearSprintConfirm(CrearSprint):
             nuevo_sprint.descripcion= request.POST['descripcion_sprint']
             nuevo_sprint.fecha_inicio = request.POST['fecha_inicio']
             nuevo_sprint.fecha_fin = request.POST['fecha_fin']
+            if nuevo_sprint.fecha_fin < nuevo_sprint.fecha_inicio:
+                diccionario['error']= 'ERROR - Fecha Inicio posterior a Fecha Fin'
+                return render(request, super(CrearSprintConfirm, self).template_name, diccionario)
+            #if nuevo_sprint.fecha_fin > proyecto_actual.fecha_fin and nuevo_sprint.fecha_inicio < proyecto_actual.fecha_inicio:
+             #   diccionario['error']= 'ERROR - Las Fechas de inicio y fin deben contenerse dentro de la duracion del Proyecto'
+            #  return render(request, super(CrearSprintConfirm, self).template_name, diccionario)
+
             nuevo_sprint.duracion = request.POST['duracion']
             new_proyecto= Proyecto.objects.get(id= request.POST['proyecto'])
             nuevo_sprint.proyecto= new_proyecto
@@ -178,8 +185,12 @@ class ModificarSprint(LoginRequiredMixin, SprintView):
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es SM
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
-            del diccionario[self.context_object_name]
-            return render(request, self.template_name, diccionario)
+            diccionario[self.context_object_name]
+            if sprint_actual.estado == 'Futuro':
+                return render(request, self.template_name, diccionario)
+            else:
+                diccionario['error']= 'Sprint En Ejecucion o Ejecutado, no se puede modificar'
+                return render(request, super(ModificarSprint, self).template_name, diccionario)
         else:
             diccionario['error']= 'No puedes realizar esta accion'
             return render(request, super(ModificarSprint, self).template_name, diccionario)
@@ -292,17 +303,32 @@ class CambiarEstadoConfirm(CambiarEstado):
         diccionario['sprint']=sprint_actual
 
         estado_actual = request.POST['estado_sprint']
+        id_sprint = request.POST['sprint']
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+            #si el estado ya se encuentra en futuro y se asigna nuevamente futuro, no pasa nada
             if estado_actual == 'Futuro' and sprint_actual.estado=='Futuro':
                 sprint_actual.estado = 'Futuro'
                 sprint_actual.save()
-            elif estado_actual == 'En Ejecucion' and sprint_actual.asignado_h==True:
+            #si se quiere establecer En ejecucion, posee historias pero ya se encuentra otro en ejecucion
+            elif estado_actual == 'En Ejecucion' and sprint_actual.asignado_h==True and Sprint.objects.filter(activo=True, proyecto=proyecto_actual, estado='En Ejecucion' ):
+                diccionario['error'] = 'El Sprint no se puede ejecutar, ya que otro Sprint se encuentra en Ejecucion'
+                return render(request, super(CambiarEstadoConfirm, self).template_name, diccionario)
 
-                sprint_actual.estado = 'En Ejecucion'
-                sprint_actual.save()
-            elif estado_actual== 'En Ejecucion' and sprint_actual.asignado_h==False:
-                diccionario['error']='El sprint no se puede iniciar, ya que no posee historias asignadas'
+            #si se quiere establer En ejecucion, posee historias y no hay otro en ejecucion
+            elif estado_actual == 'En Ejecucion' \
+                    and sprint_actual.asignado_h==True \
+                    and not Sprint.objects.filter(activo=True, proyecto=proyecto_actual, estado='En Ejecucion' ) \
+                    and len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True))\
+                    and len(Equipo.objects.filter(sprint=id_sprint))\
+                    and len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, asignado = Usuario.objects.all(), flujo=Flujo.objects.all())):
+                    sprint_actual.estado = 'En Ejecucion'
+                    sprint_actual.save()
+            elif estado_actual== 'En Ejecucion'\
+                    or not len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True))\
+                    or not len(Equipo.objects.filter(sprint=id_sprint))\
+                    or not len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, asignado = Usuario.objects.all(), flujo=Flujo.objects.all())):
+                diccionario['error']='El sprint no se puede iniciar, ya que no posee historias asignadas inicializadas o equipo asignado'
                 return render(request, super(CambiarEstadoConfirm, self).template_name, diccionario)
 
             return render(request, self.template_name, diccionario)
@@ -444,10 +470,14 @@ class AsignarUsuarioFlujo(LoginRequiredMixin, SprintView):
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
-            if len(Equipo.objects.filter(sprint = request.POST['sprint'])):
-                return render(request, self.template_name, diccionario)
+            if sprint_actual.estado == 'Futuro':
+                if len(Equipo.objects.filter(sprint = request.POST['sprint'])):
+                    return render(request, self.template_name, diccionario)
+                else:
+                    diccionario['error']='Primero debe asignar el Equipo de Trabajo'
+                    return render(request, super(AsignarUsuarioFlujo, self).template_name, diccionario)
             else:
-                diccionario['error']='Primero debe asignar el Equipo de Trabajo'
+                diccionario['error']='Sprint En Ejecucion o Ejecutado, ya no se pueden asignar Usuario y Flujo'
                 return render(request, super(AsignarUsuarioFlujo, self).template_name, diccionario)
         else:
              diccionario['error'] = 'No puedes realizar esta accion'
@@ -578,7 +608,7 @@ class DesasignarHistorias(LoginRequiredMixin, SprintView):
         id_sprint = request.POST['sprint']
         proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
-        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p = True, asignado = Usuario.objects.all, flujo=Flujo.objects.all, sprint=id_sprint)
+        diccionario['historias']= Historia.objects.filter(activo= True, proyecto= proyecto_actual, asignado_p = True, sprint=id_sprint)
 
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
@@ -589,7 +619,11 @@ class DesasignarHistorias(LoginRequiredMixin, SprintView):
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
-             return render(request, self.template_name, diccionario)
+            if sprint_actual.estado == 'Futuro':
+                return render(request, self.template_name, diccionario)
+            else:
+                diccionario['error'] = 'Sprint En Ejecucion o Ejecutado, no se pueden desasignar Historias'
+                return render(request, super(DesasignarHistorias, self).template_name, diccionario)
 
         else:
              diccionario['error'] = 'No puedes realizar esta accion'
@@ -775,7 +809,11 @@ class AsignarEquipo(LoginRequiredMixin, SprintView):
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
         if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
-             return render(request, self.template_name, diccionario)
+            if sprint_actual.estado == 'Futuro':
+                return render(request, self.template_name, diccionario)
+            else:
+                diccionario['error'] = 'Sprint En Ejecucion o Ejecutado, no se puede asignar Equipo de Trabajo'
+                return render(request, super(AsignarEquipo, self).template_name, diccionario)
 
         else:
              diccionario['error'] = 'No puedes realizar esta accion'

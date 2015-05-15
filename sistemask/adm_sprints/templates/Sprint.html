@@ -28,9 +28,24 @@
     {% for sprint in lista_sprints %}
 
 		    	    <tr>
-                        <td>{{ sprint.nombre }}</td>
-                        <td>{{ sprint.duracion }}</td>
-                        <td>{{ sprint.estado }}</td>
+                        {% ifequal sprint.estado 'En Ejecucion' %}
+                            <td style="color:#D509C8; font-style:oblique">{{ sprint.nombre }}</td>
+                        {% endifequal %}
+                        {% ifnotequal sprint.estado 'En Ejecucion' %}
+                            <td>{{ sprint.nombre }}</td>
+                        {% endifnotequal %}
+                        {% ifequal sprint.estado 'En Ejecucion' %}
+                            <td style="color:#D509C8; font-style:oblique">{{ sprint.duracion }}</td>
+                        {% endifequal %}
+                        {% ifnotequal sprint.estado 'En Ejecucion' %}
+                            <td>{{ sprint.duracion }}</td>
+                        {% endifnotequal %}
+                        {% ifequal sprint.estado 'En Ejecucion' %}
+                            <td style="color:#D509C8; font-style:oblique">{{ sprint.estado }}</td>
+                        {% endifequal %}
+                        {% ifnotequal sprint.estado 'En Ejecucion' %}
+                            <td>{{ sprint.estado }}</td>
+                        {% endifnotequal %}
                         <td>
                             <form action= "/sprint/eliminar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >

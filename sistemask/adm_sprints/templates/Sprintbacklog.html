@@ -15,8 +15,11 @@
 		<th scope="col" class="rounded">Prioridad</th>
 		<th scope="col" class="rounded" >Valor de Negocio</th>
         <th scope="col" class="rounded">Valor Tecnico</th>
-        <th scope="col" class="rounded" >Asignado a Sprint</th>
         <th scope="col" class="rounded">Desarrollador</th>
+        <th scope="col" class="rounded">Estado en el Sprint</th>
+        <th scope="col" class="rounded">Horas Estimadas</th>
+        <th scope="col" class="rounded">Horas Empleadas</th>
+        <th scope="col" class="rounded">Horas Restantes</th>
         <th scope="col" class="rounded" >Pertenece al Flujo</th>
         <th scope="col" class="rounded">Actividad en el Flujo</th>
         <th scope="col" class="rounded" >Estado en el Flujo</th>
@@ -30,8 +33,22 @@
                         <td align="center">{{ historia.prioridad }}</td>
                         <td align="center">{{ historia.val_negocio }}</td>
                         <td align="center">{{ historia.val_tecnico }}</td>
-                        <td align="center">{{ historia.sprint }}</td>
                         <td align="center">{{ historia.asignado }}</td>
+                        <td align="center">{{ historia.estado_sprint }}</td>
+                        <td align="center">{{ historia.size }}</td>
+                        <td align="center">{{ historia.acumulador }}</td>
+                        <td align="center">
+                        <script language="JavaScript">
+                            var valor1;
+                            var valor2;
+
+                            valor1 = {{historia.size}}
+                            valor2 = {{historia.acumulador }}
+                            resta = valor1 - valor2
+
+                            document.write(resta);
+                        </script>
+                        </td>
                         <td align="center">{{ historia.flujo }}</td>
                         <td align="center">{{ historia.actividad }}</td>
                         <td align="center">{{ historia.estado }}</td>
@@ -43,27 +60,7 @@
 </table>
 {% block Botones %}
 
-    <br>
-    <form action= "/proyecto/productbacklogPri/" method="post"> {% csrf_token %}
-        <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-     	<input type="submit" value="Ordenar por Prioridad" id="submitt">
-    </form>
-    <br>
-      <form action= "/proyecto/productbacklogNeg/" method="post"> {% csrf_token %}
-        <input type="hidden" name='login' value={{ logueado.id }} >
-          <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-     	<input type="submit" value="Ordenar por Valor de Negocio" id="submitt">
-    </form>
-    <br>
 
-    <form action="/proyecto/productbacklogTec/" method="post">{% csrf_token %}
-        <input type="hidden" name='codigo' value={{ logueado.id }} >
-        <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-        <input type="submit" value="Ordenar por Valor Tecnico" id="submitt">
-    </form>
-    <br>
     <form action="/sprint/" method="post">{% csrf_token %}
         <input type="hidden" name='codigo' value={{ logueado.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
