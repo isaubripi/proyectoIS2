@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 
 
 from django.contrib import admin
+from django.conf import settings
 admin.autodiscover()
 
 
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^sprint/', include('adm_sprints.urls')),
     url(r'^historia/', include('adm_historias.urls')),
     url(r'^actividad/', include('adm_actividades.urls')),
+    url(r'^historia/tareas/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.MEDIA_ROOT})
 
 )
 

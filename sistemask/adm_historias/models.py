@@ -42,11 +42,12 @@ class Historia(models.Model):
     asignado = models.ForeignKey(Usuario, null=True)
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
-    #archivo = models.FileField(upload_to=generate_filename)
     actividad = models.ForeignKey(Actividad, null=True)
     sprint = models.CharField(max_length=20)
     asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
+    estado_sprint = models.CharField(max_length=30, default='No iniciado')
+
 
 
     def __unicode__(self):
@@ -91,11 +92,11 @@ class Historial(models.Model):
     flujo = models.ForeignKey(Flujo, null=True)
     estado = models.CharField(max_length=5)
     actividad = models.CharField(max_length=20)
-    #archivo = models.FilePathField
     sprint = models.CharField(max_length=20)
     asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
     fecha = models.DateTimeField(null=True)
+    estado_sprint = models.CharField(max_length=30)
 
     def __unicode__(self):
         return self.nombre
@@ -119,6 +120,7 @@ class Registro(models.Model):
     horas = models.IntegerField(default=0)
     fecha = models.DateTimeField(null=True)
     activo = models.BooleanField(default=False)
+    archivo = models.FileField(upload_to='archivo')
 
     def __unicode__(self):
         return self.nombre

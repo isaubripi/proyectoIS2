@@ -71,8 +71,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 	    'NAME':'sistemask',
-	    'USER': 'postgres',
-	    'PASSWORD':'postgres',
+	    'USER': 'ruben',
+	    'PASSWORD':'ruben',
 	    'HOST': '127.0.0.1',
 	    'PORT': '5432',
     }
@@ -92,7 +92,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-
+MEDIA_ROOT = '/home/ruben/PycharmProjects/proyectois2/sistemask/'
+MEDIA_URL = 'http://127.0.0.1:8000/historia/tareas/'
 
 STATIC_URL = '/static/'
 
@@ -102,3 +103,9 @@ TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 LOGIN_URL = '/'
 LOGOUT_URL = '/salir'
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sistemaskmail@gmail.com'
+EMAIL_HOST_PASSWORD = 'sistemask'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
