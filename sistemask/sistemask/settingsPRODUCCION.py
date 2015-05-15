@@ -92,10 +92,10 @@ USE_L10N = True
 USE_TZ = True
 
 
-MEDIA_ROOT = '/home/isidro/proyectois2/sistemask/'
-MEDIA_URL = 'http://127.0.0.1:8000/historia/tareas/'
+MEDIA_ROOT = '/var/www/sistemask/'
+MEDIA_URL = 'http://127.0.0.1:80/historia/tareas/'
 
-STATIC_URL = '/static/'
+STATIC_URL = 'http://sistemask.com/static/'
 
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
@@ -109,3 +109,5 @@ EMAIL_HOST_USER = 'sistemaskmail@gmail.com'
 EMAIL_HOST_PASSWORD = 'sistemask'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+PATH = '/var/www/sistemask'
