@@ -1,0 +1,84 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Administracion de Historias:: {% endblock %}
+{% block TituloMenu %} ADMINISTRACION DE HISTORIAS DEL PROYECTO {% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+<h2>HISTORIA: {{ historia.nombre }}</h2>
+    <tr>
+        <th scope="col" class="rounded">Nombre</th>
+        <th scope="col" class="rounded"><font color="green">Editar</font></th>
+        <th scope="col" class="rounded"><font color="red">Cargar horas</font></th>
+        <th scope="col" class="rounded"><font color="red">Historial</font></th>
+        <th scope="col" class="rounded"><font color="red">Detalles</font></th>
+        <th scope="col" class="rounded"><font color="red">Registro</font></th>
+        <th scope="col" class="rounded"><font color="red">Actividad/Estado</font></th>
+    </tr>
+
+{% endblock %}
+{% block MostrarDatos%}
+
+        <tr>
+            <td>{{ historia.nombre }}</td>
+
+            <td>
+                <form action= "/historia/editar/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Modificar"></center>
+                </form>
+            </td>
+
+            <td>
+                <form action= "/historia/horas/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Cargar horas"></center>
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/historial/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Historial"></center>
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/detalles/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Ver"></center>
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/tareas/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Tareas"></center>
+                </form>
+            </td>
+            <td>
+                <form action= "/historia/actividadestado/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='historia' value={{ historia.id }} >
+                    <center><input type="submit" value="Cambiar"></center>
+                </form>
+            </td>
+        </tr>
+
+{% endblock %}
+
+
+{% block Botones%}
+    <form action="/historia/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}

@@ -22,6 +22,7 @@
             <td><h6>Estado: {{ historia.estado }}</h6></td>
         </tr>
         <tr>
+            <td><h6>Actividad: {{ historia.actividad }}</h6></td>
             <td><h6>Sprint: {{ historia.sprint }}<br></h6></td>
             <td><h6>Asignado a Sprint: {{ historia.asignado_p }}<br></h6></td>
         </tr>
@@ -30,9 +31,10 @@
 
 
 {% block Botones%}
-    <form action="/historia/" method="POST">{% csrf_token %}
+    <form action="/historia/actualizacion/" method="POST">{% csrf_token %}
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="historia" value={{ historia.id }}>
         <center><input type="submit" value="<Atras"></center>
     </form>
 {% endblock %}

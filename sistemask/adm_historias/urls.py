@@ -1,7 +1,7 @@
 __author__ = 'ruben'
 
 from django.conf.urls import patterns, include, url
-from .views import HistoriaView, CrearHistoria, CrearHistoriaConfirm, EditarHistoria, EditarHistoriaConfirm, EliminarHistoria, VerHistorial, CargarHoras, CargarHorasConfirm, VerDetalles, VerTareas, CambiarEstadoActividad, CambiarEstadoActividadConfirm
+from .views import HistoriaView, CrearHistoria, CrearHistoriaConfirm, EditarHistoria, EditarHistoriaConfirm, EliminarHistoria, VerHistorial, CargarHoras, CargarHorasConfirm, VerDetalles, VerTareas, CambiarEstadoActividad, CambiarEstadoActividadConfirm, HistoriaNView
 
 urlpatterns= patterns('',
     url(r'^$', HistoriaView.as_view(), name = 'historia'),
@@ -17,6 +17,7 @@ urlpatterns= patterns('',
     url(r'^tareas/$', VerTareas.as_view(), name = 'tareas'),
     url(r'^actividadestado/$', CambiarEstadoActividad.as_view(), name = 'actividadestado'),
     url(r'^actividadestado/confirmar/$', CambiarEstadoActividadConfirm.as_view(), name = 'actividadestado_confirmar'),
+    url(r'^actualizacion/$', HistoriaNView.as_view(), name = 'actualizacion')
 
 
 

@@ -1,16 +1,26 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Cambiar Estado de Historia::{% endblock %}
-{% block TituloMenu %} CAMBIAR  ESTADO DE HISTORIA {% endblock %}
-{% block TituloOperacion %} Formulario Cambiar Estado de Historia {% endblock %}
+{% block title %}::Cambiar Estado  y Actividadde Historia::{% endblock %}
+{% block TituloMenu %} CAMBIAR  ESTADO Y ACTIVIDAD DE HISTORIA {% endblock %}
+{% block TituloOperacion %} Formulario Cambiar Estado y Actividad de Historia {% endblock %}
 {% block DatosOperacion %}
-    <h1> <font color = 'green'>CAMBIAR ESTADO DE HISTORIA</font></h1>
+    <h1> <font color = 'green'>CAMBIAR ESTADO Y ACTIVIDAD DE HISTORIA</font></h1>
     <form action="/historia/actividadestado/confirmar/" method="POST">{% csrf_token %}
         <fieldset>
             <dl><dt><label>Nombre: {{ historia.nombre }}</label></dt><dd>
                 <input type="hidden" name="nombre_historia" value={{ historia.nombre }}/></dd>
             </dl>
-
-            <dl><dt><label>Estado actual: {{ historia.estado }}</label></dt>
+            <dl>
+                <dt><label>Actividad actual: {{ historia.actividad }}</label></dt>
+                <dt><label>Estado actual: {{ historia.estado }}</label></dt>
+                {% for act in actividades %}
+                    {% if act.secuencia <= secuencia %}
+                        {% if act == historia.actividad %}
+                            <input type="radio" name="actividad" value="{{ act.id }}"checked>{{ act }}<br>
+                        {% else %}
+                            <input type="radio" name="actividad" value="{{ act.id }}">{{ act }}<br>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
 
                 {% ifequal historia.estado 'To Do' %}
                 <dd><select name="estado">
@@ -30,23 +40,19 @@
                             <option value="Doing" disabled>Doing</option>
                             <option value="Done">Done</option></dd>
                 {% endifequal %}
+
             </dl>
 
-            <!--<dl><dt><label>Actividad actual: {{ historia.actividad.nombre }}</label></dt>
-                <dd>
-                    <select name="actividad">
-                    </select>
-                </dd>
-            </dl>!-->
 
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='historia' value={{ historia.id }}>
-        <input type="submit" value="Cambiar estado">
+        <input type="submit" value="Guardar Cambios">
     </form>
-    <form action="/historia/" method="POST">{% csrf_token %}
+    <form action="/historia/actualizacion/" method="POST">{% csrf_token %}
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="historia" value={{ historia.id }}>
         <input type="submit" value="<Atras">
     </form>
 {% endblock %}

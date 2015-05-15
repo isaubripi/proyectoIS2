@@ -1,15 +1,14 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Actividad y Estado de Historia::{% endblock %}
-{% block TituloMenu %} ACTIVIDAD Y ESTADO DE HISTORIA {% endblock %}
+{% block title %}::Actualizar Historia::{% endblock %}
+{% block TituloMenu %} ACTUALIZAR HISTORIA {% endblock %}
 {% block TituloOperacion %} Historia Actualizada {% endblock %}
 {% block DatosOperacion %}
-    <center><h3>El cambio de estado y actividad se guardo exitosamente. </h3></center>
+    <center><h3>Archivo adjuntado exitosamente. </h3></center>
 {% endblock %}
 {% block Botones %}
-    <form action="/historia/actualizacion/" method="POST"> {% csrf_token %}
+    <form action="/historia/horas/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name="historia" value={{ historia.id }}>
         <center><input type="submit" value="Aceptar"></center>
     </form>
 {% endblock %}

@@ -4,78 +4,61 @@
 
 {% block Columnas %}
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
-<h2>Lista de Historias del Proyecto</h2>
+<h2>HISTORIAS DEL PROYECTO "{{ proyecto.nombre }}"</h2>
     <tr>
-        <th scope="col" class="rounded">Nombre</th>
-        <th scope="col" class="rounded"><font color="green">Editar</font></th>
-        <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
-        <th scope="col" class="rounded"><font color="red">Cargar horas</font></th>
-        <th scope="col" class="rounded"><font color="red">Historial</font></th>
-        <th scope="col" class="rounded"><font color="red">Detalles</font></th>
-        <th scope="col" class="rounded"><font color="red">Tareas</font></th>
-        <th scope="col" class="rounded"><font color="red">Actividad/Estado</font></th>
+        <th scope="col" class="rounded"><font color="green">Nombre</font></th>
+        <th scope="col" class="rounded"><font color="green">|Prioridad</font></th>
+        <th scope="col" class="rounded"><font color="green">|ValorNegocio</font></th>
+        <th scope="col" class="rounded"><font color="green">|ValorTecnico</font></th>
+        <th scope="col" class="rounded"><font color="green">|HorasEstimadas</font></th>
+        <th scope="col" class="rounded"><font color="green">|EnSprint</font></th>
+        <th scope="col" class="rounded"><font color="green">|EnFlujo</font></th>
     </tr>
 
 {% endblock %}
 {% block MostrarDatos%}
     {% for historia in lista %}
         <tr>
-            <td>{{ historia.nombre }}</td>
+            <td><center>{{ historia.nombre }}</center></td>
+
 
             <td>
-                <form action= "/historia/editar/" method="post"> {% csrf_token %}
+                <center>{{ historia.prioridad }}</center>
+            </td>
+            <td>
+                <center>{{ historia.val_negocio }}</center>
+            </td>
+            <td>
+                <center>{{ historia.val_tecnico }}</center>
+            </td>
+            <td>
+                <center>{{ historia.size }}</center>
+            </td>
+            <td>{% ifequal historia.sprint "" %}
+                    <center>No</center>
+                {% else %}
+                    <center>{{ historia.sprint }}</center>
+                {% endifequal %}
+            </td>
+            <td>{% ifequal historia.flujo null %}
+                    <center>No</center>
+                {% else %}
+                    <center>{{ historia.flujo.nombre }}</center>
+                {% endifequal %}
+            </td>
+            <td>
+                <form action= "/historia/actualizacion/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Modificar">
+                    <input type="submit" value="Opciones">
                 </form>
             </td>
-            <td>
-                <form action= "/historia/eliminar/" method="post"> {% csrf_token %}
+            <td><form action= "/historia/eliminar/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
                     <input type="submit" value="Eliminar">
-                </form>
-            </td>
-            <td>
-                <form action= "/historia/horas/" method="post"> {% csrf_token %}
-                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-                    <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Cargar horas">
-                </form>
-            </td>
-            <td>
-                <form action= "/historia/historial/" method="post"> {% csrf_token %}
-                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-                    <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Historial">
-                </form>
-            </td>
-            <td>
-                <form action= "/historia/detalles/" method="post"> {% csrf_token %}
-                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-                    <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Ver">
-                </form>
-            </td>
-            <td>
-                <form action= "/historia/tareas/" method="post"> {% csrf_token %}
-                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-                    <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Ver">
-                </form>
-            </td>
-            <td>
-                <form action= "/historia/actividadestado/" method="post"> {% csrf_token %}
-                    <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-                    <input type="hidden" name='login' value={{ logueado.id }} >
-                    <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Cambiar">
                 </form>
             </td>
         </tr>

@@ -8,7 +8,7 @@ class Usuario(models.Model):
     apellido= models.CharField(max_length=50)
     password= models.CharField(max_length=10)
     cedula= models.CharField(max_length=10)
-    email= models.CharField(max_length=20)
+    email= models.CharField(max_length=40)
     estado= models.BooleanField(default=True)
     roles = models.ManyToManyField(Rol)
     def __unicode__(self):
