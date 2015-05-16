@@ -765,7 +765,7 @@ class VerInformacionSprint(LoginRequiredMixin, SprintView):
         diccionario['usuarios']=usuarios_sprint
 
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
 
         else:
@@ -941,9 +941,9 @@ class Sprintbacklog(LoginRequiredMixin, SprintView):
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
 
         else:
              diccionario['error'] = 'No puedes realizar esta accion'
-             return render(request, super(SprintView, self).template_name, diccionario)
+             return render(request, super(Sprintbacklog, self).template_name, diccionario)
