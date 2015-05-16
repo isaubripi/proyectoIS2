@@ -3,6 +3,7 @@ from django.test import TestCase
 from adm_usuarios.models import Usuario
 from adm_sprints.models import Sprint
 from .models import Proyecto
+from adm_sprints.models import Equipo
 
 # Create your tests here.
 class SprintTest(TestCase):
@@ -64,3 +65,30 @@ class SprintTest(TestCase):
 
         print('Activacion de Sprints ejecutada correctamente.')
 
+    def test_equipo(self):
+        """
+        Se asigna equipo a un sprint
+        :return:nada
+        """
+        u1 = Usuario.objects.create(username= 'juan',nombre = 'Isidro', apellido = 'Brizuela', password = 'isidro', cedula = 3841270)
+        S3 = Sprint.objects.get(nombre='Sprint 3')
+        E = Equipo()
+        E.usuario = u1
+        E.horas_sprint = 5
+        E.save()
+        S3.equipo.add(E)
+        S3.save()
+
+        print('Asignacion de equipo a Sprint ejecutada correctamente.')
+
+    def test_estado(self):
+        """
+        Se cambia el estado a un sprint
+        :return:nada
+        """
+
+        S3 = Sprint.objects.get(nombre='Sprint 3')
+        S3.estado = 'En Ejecucio'
+        S3.save()
+
+        print('Cambio de estado a Sprint ejecutado correctamente.')
