@@ -6,13 +6,13 @@
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
 <h2>HISTORIA: {{ historia.nombre }}</h2>
     <tr>
-        <th scope="col" class="rounded">Nombre</th>
-        <th scope="col" class="rounded"><font color="green">Editar</font></th>
-        <th scope="col" class="rounded"><font color="red">Cargar horas</font></th>
-        <th scope="col" class="rounded"><font color="red">Historial</font></th>
-        <th scope="col" class="rounded"><font color="red">Detalles</font></th>
-        <th scope="col" class="rounded"><font color="red">Registro</font></th>
-        <th scope="col" class="rounded"><font color="red">Actividad/Estado</font></th>
+        <th scope="col" class="rounded"><font color="green">Nombre</font></th>
+        <th scope="col" class="rounded"><font color="white">Editar</font></th>
+        <th scope="col" class="rounded"><font color="green">Cargar horas</font></th>
+        <th scope="col" class="rounded"><font color="white">Historial</font></th>
+        <th scope="col" class="rounded"><font color="green">Detalles</font></th>
+        <th scope="col" class="rounded"><font color="white">Registro</font></th>
+        <th scope="col" class="rounded"><font color="green">Actividad/Estado</font></th>
     </tr>
 
 {% endblock %}
@@ -35,7 +35,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" %}
+                    {% if historia.flujo == null and historia.sprint == "" or logueado != historia.asignado or historia.actividad == null %}
                         <center><input type="submit" value="Cargar horas" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cargar Horas"></center>
@@ -71,7 +71,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" or historia.actividad == null %}
+                    {% if historia.flujo == null and historia.sprint == "" %}
                         <center><input type="submit" value="Cambiar" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cambiar"></center>
