@@ -11,18 +11,22 @@
             </dl>
             <dl>
                 <dt><label>Actividad actual: {{ historia.actividad }}</label></dt>
-                <dt><label>Estado actual: {{ historia.estado }}</label></dt>
+                {% if historia.actividad == null %}
+                    <dt><label>Estado actual: To Do</label></dt>
+                {% else %}
+                    <dt><label>Estado actual: {{ historia.estado }}</label></dt>
+                {% endif %}
                 <dt>Cambiar a: <select name="estado">
                             <option value="To Do">To Do</option>
                             <option value="Doing">Doing</option>
                             <option value="Done">Done</option></select></dt>
-                {% if historia.estado == "Done" %}
+                {% if historia.estado == "Done" or historia.actividad == null %}
                     {% for act in actividades %}
                         {% if act.secuencia <= secuencia %}
                             {% if act == historia.actividad %}
-                                <dd><input type="radio" name="actividad" value={{ act.id }} checked>{{ act }}</dd>
+                                <dd><input type="radio" name="actividad" value={{ act.id }} checked required>{{ act }}</dd>
                             {% else %}
-                                <dd><input type="radio" name="actividad" value={{ act.id }}>{{ act }}</dd>
+                                <dd><input type="radio" name="actividad" value={{ act.id }} required>{{ act }}</dd>
                             {% endif %}
                         {% else %}
                             <dd><input type="radio" disabled>{{ act }}</dd>

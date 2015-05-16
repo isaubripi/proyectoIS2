@@ -544,10 +544,15 @@ class CambiarEstadoActividad(LoginRequiredMixin, HistoriaNView):
         historia_actual = Historia.objects.get(id=request.POST['historia'])
         diccionario['historia'] = historia_actual
 
-        secuencia_actividad_siguiente = historia_actual.actividad.secuencia + 1
-        diccionario['secuencia'] = secuencia_actividad_siguiente
+        if historia_actual.actividad == None:
+            secuencia_actividad_siguiente = 1
+            diccionario['secuencia'] = secuencia_actividad_siguiente
 
-        actividades = Actividad.objects.filter(flujo=historia_actual.flujo.id).order_by('secuencia')
+        else:
+            secuencia_actividad_siguiente = historia_actual.actividad.secuencia + 1
+            diccionario['secuencia'] = secuencia_actividad_siguiente
+
+        actividades = Actividad.objects.filter(flujo=historia_actual.flujo.id, estado=True).order_by('secuencia')
         diccionario['actividades'] = actividades
 
         return render(request, self.template_name, diccionario)
@@ -595,34 +600,35 @@ class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
         historial.fecha = timezone.now()
         historial.save()
 
-        email_context = {
-            'titulo': 'Cambio a estado DONE',
-            'usuario': usuario_logueado.nombre,
-            'mensaje': 'La historia de usuario ' + historia.nombre + ' ha sido cambiado a estado DONE. Los detalles de la historia son:\n'
+        if historia.estado == "Done":
+            email_context = {
+                'titulo': 'Cambio a estado DONE',
+                'usuario': usuario_logueado.nombre,
+                'mensaje': 'La historia de usuario ' + historia.nombre + ' ha sido cambiado a estado DONE. Los detalles de la historia son:\n'
                             + '\nHISTORIA: ' + historia.nombre
                             + '\nDESARROLLADOR ASIGNADO: ' + usuario_logueado.nombre
                             + '\nPROYECTO: ' + historia.proyecto.nombre
                             + '\nDESCRIPCION: ' + historia.descripcion
                             + '\nFLUJO: ' + historia.flujo.nombre
                             + '\nACTIVIDAD: ' + nombre_actividad,
-        }
-        # se renderiza el template con el context
-        email_html = render_to_string('email.html', email_context)
+            }
+            # se renderiza el template con el context
+            email_html = render_to_string('email.html', email_context)
 
-        # se quitan las etiquetas html para que quede en texto plano
-        email_text = strip_tags(email_html)
+            # se quitan las etiquetas html para que quede en texto plano
+            email_text = strip_tags(email_html)
 
-        correo = EmailMultiAlternatives(
-            'Cambio a estado DONE',  # Asunto
-            email_text,  # contenido del correo
-            'sistemaskmail@gmail.com',  # quien lo envía
-            [usuario_logueado.email, proyecto_actual.scrum_master.email],  # a quien se envía
-        )
+            correo = EmailMultiAlternatives(
+                'Cambio a estado DONE',  # Asunto
+                email_text,  # contenido del correo
+                'sistemaskmail@gmail.com',  # quien lo envía
+                [usuario_logueado.email, proyecto_actual.scrum_master.email],  # a quien se envía
+            )
 
-        # se especifica que el contenido es html
-        correo.attach(email_html, 'text/html')
-        # se envía el correo
-        correo.send()
+            # se especifica que el contenido es html
+            correo.attach(email_html, 'text/html')
+            # se envía el correo
+            correo.send()
 
 
         return render(request, self.template_name, diccionario)
