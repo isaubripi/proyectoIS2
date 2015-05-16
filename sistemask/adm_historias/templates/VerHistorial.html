@@ -12,8 +12,84 @@
         <center><input type="submit" value="<Atras"></center>
     </form>
 {% endblock %}
+        <tr>
+            <th scope="col" class="rounded"><font color="green">ID</font></th>
+            <th scope="col" class="rounded"><font color="green">Nombre</font></th>
+            <th scope="col" class="rounded"><font color="green">Proyecto</font></th>
+            <th scope="col" class="rounded"><font color="green">Codigo</font></th>
+            <th scope="col" class="rounded"><font color="green">Prioridad</font></th>
+            <th scope="col" class="rounded"><font color="green">ValorNegocio</font></th>
+            <th scope="col" class="rounded"><font color="green">ValorTecnico</font></th>
+            <th scope="col" class="rounded"><font color="green">HorasEstimadas</font></th>
+            <th scope="col" class="rounded"><font color="green">Acumulador</font></th>
+            <th scope="col" class="rounded"><font color="green">Asignado</font></th>
+            <th scope="col" class="rounded"><font color="green">Flujo</font></th>
+            <th scope="col" class="rounded"><font color="green">Estado</font></th>
+            <th scope="col" class="rounded"><font color="green">Actividad</font></th>
+            <th scope="col" class="rounded"><font color="green">Sprint</font></th>
+            <th scope="col" class="rounded"><font color="green">Activo</font></th>
+            <th scope="col" class="rounded"><font color="green">Descripcion</font></th>
+            <th scope="col" class="rounded"><font color="green">Fecha de Modificacion</font></th>
+        </tr>
+{% for historial in lista %}
+        <tr>
+            <td>
+                <center>{{ historial.id_historia.id }}</center>
+            </td>
+            <td>
+                <center>{{ historial.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historial.proyecto.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historial.codigo }}</center>
+            </td>
 
-    {% for historial in lista %}
+            <td>
+                <center>{{ historial.prioridad }}</center>
+            </td>
+            <td>
+                <center>{{ historial.val_negocio }}</center>
+            </td>
+            <td>
+                <center>{{ historial.val_tecnico }}</center>
+            </td>
+            <td>
+                <center>{{ historial.size }}</center>
+            </td>
+
+            <td>
+                <center>{{ historial.acumulador }}</center>
+            </td>
+            <td>
+                <center>{{ historial.asignado.nombre }}</center>
+                </td>
+            <td>
+                <center>{{ historial.flujo.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historial.estado }}</center>
+            </td>
+            <td>
+                <center>{{ historial.actividad.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historial.sprint }}</center>
+            </td>
+            <td>
+                <center>{{ historial.activo }}</center>
+            </td>
+            <td>
+                <center>{{ historial.descripcion }}</center>
+            </td>
+            <td>
+                <center>{{ historial.fecha }}</center>
+            </td>
+        </tr>
+{% endfor %}
+
+    <!--{% for historial in lista %}
 
         <tr>
             <td><h6>ID: {{ historial.id_historia }}</h6></td>
@@ -44,34 +120,8 @@
             <td><h6>Fecha: {{ historial.fecha }}<br>----------------------------------------------------------</h6></td>
         </tr>
 
-    {% endfor %}
+    {% endfor %}!-->
 {%endblock%}
-
-{% block MostrarDatos %}
-    {% for historial in lista %}
-        <tr>
-            <td>ID: {{ historial.id_historia }}</td>
-
-            <td>Nombre: {{ historial.nombre }}</td>
-
-            <td>Proyecto: {{ historial.proyecto.nombre }}</td>
-            <td>Prioridad: {{ historial.prioridad }}</td>
-            <td>Valor Negocio: {{ historial.val_negocio }}</td>
-            <td>Valor Tecnico: {{ historial.val_tecnico }}</td>
-            <td>Size: {{ historial.size }}</td>
-            <td>Descripcion: {{ historial.descripcion }}</td>
-            <td>Codigo: {{ historial.codigo }}</td>
-            <td>Acumulador: {{ historial.acumulador }}</td>
-            <td>Asignado: {{ historial.asignado }}</td>
-            <td>Flujo: {{ historial.flujo }}</td>
-            <td>Estado: {{ historial.estado }}</td>
-            <td>Sprint: {{ historial.sprint }}</td>
-            <td>Asignado a Sprint: {{ historial.asignado_p }}</td>
-            <td>Activo: {{ historial.activo }}</td>
-            <td>Fecha: {{ historial.fecha }}</td>
-        </tr>
-    {% endfor %}
-{% endblock %}
 
 {% block Botones%}
     <form action="/historia/actualizacion/" method="POST">{% csrf_token %}

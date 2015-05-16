@@ -4,7 +4,7 @@
 
 {% block Columnas %}
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
-<h2>HISTORIAS DEL PROYECTO "{{ proyecto.nombre }}"</h2>
+<h2>HISTORIAS DE "{{ proyecto.nombre }}"</h2>
     <tr>
         <th scope="col" class="rounded"><font color="green">Nombre</font></th>
         <th scope="col" class="rounded"><font color="green">|Prioridad</font></th>
@@ -51,14 +51,24 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Opciones">
+                    {% if proyecto.scrum_master == logueado or logueado == historia.asignado %}
+                        <input type="submit" value="Opciones">
+                    {% else %}
+                        <input type="submit" value="Opciones" disabled>
+                    {% endif %}
                 </form>
             </td>
             <td><form action= "/historia/eliminar/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <input type="submit" value="Eliminar">
+                    {% if historia.flujo == null and historia.sprint == "" and logueado == proyecto.scrum_master %}
+                        <input type="submit" value="Eliminar">
+                    {% elif historia.flujo == null and historia.sprint == "" and logueado == historia.asignado %}
+                        <input type="submit" value="Eliminar">
+                    {% else %}
+                        <input type="submit" value="Eliminar" disabled>(Historia asignada o no tienes permisos.)
+                    {% endif %}
                 </form>
             </td>
         </tr>
