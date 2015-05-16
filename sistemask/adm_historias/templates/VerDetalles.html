@@ -3,28 +3,59 @@
 {% block TituloMenu %} DETALLES HISTORIA {% endblock %}
 {% block TituloOperacion %} Detalles historia {% endblock %}
 {% block DatosOperacion %}
-    <center><h3>HISTORIA: {{ historia_actual.nombre }}</h3></center>
+    <center><h3>HISTORIA: {{ historia.nombre }}</h3></center>
+
         <tr>
-            <td><h6>Proyecto: {{ historia.proyecto.nombre }}</h6></td>
-            <td><h6>Prioridad: {{ historia.prioridad }}</h6></td>
+            <th scope="col" class="rounded"><font color="green">Proyecto</font></th>
+            <th scope="col" class="rounded"><font color="green">Prioridad</font></th>
+            <th scope="col" class="rounded"><font color="green">ValorNegocio</font></th>
+            <th scope="col" class="rounded"><font color="green">ValorTecnico</font></th>
+            <th scope="col" class="rounded"><font color="green">HorasEstimadas</font></th>
+            <th scope="col" class="rounded"><font color="green">Codigo</font></th>
+            <th scope="col" class="rounded"><font color="green">Acumulador</font></th>
+            <th scope="col" class="rounded"><font color="green">Asignado</font></th>
+            <th scope="col" class="rounded"><font color="green">Flujo</font></th>
+            <th scope="col" class="rounded"><font color="green">Estado</font></th>
+            <th scope="col" class="rounded"><font color="green">Actividad</font></th>
+            <th scope="col" class="rounded"><font color="green">Sprint</font></th>
         </tr>
         <tr>
-            <td><h6>Valor Negocio: {{ historia.val_negocio }}</h6></td>
-            <td><h6>Valor Técnico: {{ historia.val_tecnico }}</h6></td>
-            <td><h6>Size: {{ historia.size }}</h6></td>
-            <td><h6>Descripcion: {{ historia.descripcion }}</h6></td>
-        </tr>
-        <tr>
-            <td><h6>Codigo: {{ historia.codigo }}</h6></td>
-            <td><h6>Acumulador: {{ historia.acumulador }}</h6></td>
-            <td><h6>Asignado: {{ historia.asignado }}</h6></td>
-            <td><h6>Flujo: {{ historia.flujo }}</h6></td>
-            <td><h6>Estado: {{ historia.estado }}</h6></td>
-        </tr>
-        <tr>
-            <td><h6>Actividad: {{ historia.actividad }}</h6></td>
-            <td><h6>Sprint: {{ historia.sprint }}<br></h6></td>
-            <td><h6>Asignado a Sprint: {{ historia.asignado_p }}<br></h6></td>
+            <td><center>{{ historia.proyecto.nombre }}</center></td>
+
+
+            <td>
+                <center>{{ historia.prioridad }}</center>
+            </td>
+            <td>
+                <center>{{ historia.val_negocio }}</center>
+            </td>
+            <td>
+                <center>{{ historia.val_tecnico }}</center>
+            </td>
+            <td>
+                <center>{{ historia.size }}</center>
+            </td>
+            <td>
+                <center>{{ historia.codigo }}</center>
+            </td>
+            <td>
+                <center>{{ historia.acumulador }}</center>
+            </td>
+            <td>
+                <center>{{ historia.asignado.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historia.flujo.nombre }}</center>
+            </td>
+            <td>
+                <center>{{ historia.estado }}</center>
+            </td>
+            <td>
+                <center>{{ historia.actividad }}</center>
+            </td>
+            <td>
+                <center>{{ historia.sprint }}</center>
+            </td>
         </tr>
 
 {%endblock%}

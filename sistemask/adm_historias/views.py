@@ -10,7 +10,9 @@ from django.utils import timezone
 from django.core.mail.message import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .forms import ArchivoAdjunto
+
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -21,7 +23,7 @@ class HistoriaView(TemplateView):
     '''
 
     template_name = 'Historia.html'
-
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         '''
         Esta funcion tiene los parametros:
@@ -365,12 +367,11 @@ class CargarHorasConfirm(CargarHoras):
         diccionario['proyecto'] = proyecto_actual
 
         historia = Historia.objects.get(id=request.POST['historia'])
-        horas = 0
         horas = request.POST['horas']
 
-        historia.acumulador = historia.acumulador + int(horas)
 
 
+        historia.save()
 
         diccionario['historia'] = historia
 
@@ -383,10 +384,10 @@ class CargarHorasConfirm(CargarHoras):
         descripcion_tarea = request.POST['descripcion_tarea']
         diccionario['descripcion_tarea'] = descripcion_tarea
 
-        for registro in registros:
-            if  nombre_tarea == registro.nombre:
-                diccionario['error'] = "Nombre de tarea ya existe. Intente otro."
-                return render(request, super(CargarHorasConfirm, self).template_name, diccionario)
+        #for registro in registros:
+        #    if  nombre_tarea == registro.nombre:
+        #        diccionario['error'] = "Nombre de tarea ya existe. Intente otro."
+        #        return render(request, super(CargarHorasConfirm, self).template_name, diccionario)
 
 
         registro_nuevo = Registro.objects.create(id_historia=historia, orden=ord, nombre=nombre_tarea,
@@ -396,6 +397,13 @@ class CargarHorasConfirm(CargarHoras):
             registro_nuevo.archivo = request.FILES['adjunto']
 
         registro_nuevo.save()
+        total_horas = 0
+        registros = Registro.objects.filter(id_historia_id=historia.id)
+        ord = 1
+        for i in registros:
+            total_horas += i.horas
+
+        historia.acumulador = total_horas
         historia.save()
 
         historial = Historial.objects.create(id_historia=historia, nombre=historia.nombre, proyecto=proyecto_actual,
@@ -407,6 +415,8 @@ class CargarHorasConfirm(CargarHoras):
                                              estado=historia.estado, sprint=historia.sprint,
                                              asignado_p=historia.asignado_p, activo=False)
         historial.fecha = timezone.now()
+
+
         historial.save()
 
         email_context = {
@@ -420,7 +430,8 @@ class CargarHorasConfirm(CargarHoras):
                             + '\nPROYECTO: ' + proyecto_actual.nombre
                             + '\nDESCRIPCION: ' + descripcion_tarea
                             + '\nHORAS EMPLEADAS: ' + horas
-                            + '\nFLUJO: ' + historia.flujo.nombre,
+                            + '\nFLUJO: ' + historia.flujo.nombre
+                            + '\nACTIVIDAD: ' + historia.actividad.nombre,
         }
         # se renderiza el template con el context
         email_html = render_to_string('email.html', email_context)
@@ -569,6 +580,7 @@ class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
 
         historia.estado = request.POST['estado']
         historia.actividad = Actividad.objects.get(id=request.POST['actividad'])
+        nombre_actividad = Actividad.objects.get(id=request.POST['actividad']).nombre
         historia.save()
         diccionario['historia'] = historia
         historial = Historial.objects.create(id_historia=historia, nombre=historia.nombre, proyecto=proyecto_actual,
@@ -582,6 +594,35 @@ class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
                                              asignado_p=historia.asignado_p, activo=False)
         historial.fecha = timezone.now()
         historial.save()
+
+        email_context = {
+            'titulo': 'Cambio a estado DONE',
+            'usuario': usuario_logueado.nombre,
+            'mensaje': 'La historia de usuario ' + historia.nombre + ' ha sido cambiado a estado DONE. Los detalles de la historia son:\n'
+                            + '\nHISTORIA: ' + historia.nombre
+                            + '\nDESARROLLADOR ASIGNADO: ' + usuario_logueado.nombre
+                            + '\nPROYECTO: ' + historia.proyecto.nombre
+                            + '\nDESCRIPCION: ' + historia.descripcion
+                            + '\nFLUJO: ' + historia.flujo.nombre
+                            + '\nACTIVIDAD: ' + nombre_actividad,
+        }
+        # se renderiza el template con el context
+        email_html = render_to_string('email.html', email_context)
+
+        # se quitan las etiquetas html para que quede en texto plano
+        email_text = strip_tags(email_html)
+
+        correo = EmailMultiAlternatives(
+            'Cambio a estado DONE',  # Asunto
+            email_text,  # contenido del correo
+            'sistemaskmail@gmail.com',  # quien lo envía
+            [usuario_logueado.email, proyecto_actual.scrum_master.email],  # a quien se envía
+        )
+
+        # se especifica que el contenido es html
+        correo.attach(email_html, 'text/html')
+        # se envía el correo
+        correo.send()
 
 
         return render(request, self.template_name, diccionario)

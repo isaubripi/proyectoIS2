@@ -4,16 +4,40 @@
 {% block TituloOperacion %} Tareas historia {% endblock %}
 {% block DatosOperacion %}
     <center><h3>HISTORIA: {{ historia.nombre }}</h3></center>
-{% block Botones0 %}
-    <form action="/historia/actualizacion/" method="POST">{% csrf_token %}
-        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-        <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name="historia" value={{ historia.id }}>
-        <center><input type="submit" value="<Atras"></center>
-    </form>
-{% endblock %}
+
+        <tr>
+            <th scope="col" class="rounded"><font color="green">Numero</font></th>
+            <th scope="col" class="rounded"><font color="green">Nombre</font></th>
+            <th scope="col" class="rounded"><font color="green">Horas Empleadas</font></th>
+            <th scope="col" class="rounded"><font color="green">Fecha</font></th>
+            <th scope="col" class="rounded"><font color="green">Archivo Adjunto</font></th>
+            <th scope="col" class="rounded"><font color="green">Descripcion</font></th>
+
+        </tr>
     {% for registro in registros %}
         <tr>
+            <td><center>{{ registro.orden }}</center></td>
+
+
+            <td>
+                <center>{{ registro.nombre }}</center>
+            </td>
+
+            <td>
+                <center>{{ registro.horas }}</center>
+            </td>
+            <td>
+                <center>{{ registro.fecha }}</center>
+            </td>
+            <td>
+                <center><a href={{ registro.archivo }}> {{ registro.archivo }}</a></center>
+            </td>
+            <td>
+                <center>{{ registro.descripcion }}</center>
+            </td>
+
+        </tr>
+        <!--<tr>
             <td><h4>Nombre: {{ registro.nombre }}</h4></td>
             <td><h4>Numero: {{ registro.orden }}</h4></td>
             <td><h4>Descripcion: {{ registro.descripcion }}</h4></td>
@@ -23,7 +47,7 @@
             <td><h4>Fecha: {{ registro.fecha }}</h4><br>----------------------------------------------------------------------</td>
             <td><h4>Archivo Adjunto: <a href={{ registro.archivo }}> {{ registro.archivo }}</a></h4><br>----------------------------------------------------------------------</td>
 
-        </tr>
+        </tr>!-->
     {% endfor %}
 
 {% endblock %}
