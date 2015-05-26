@@ -22,7 +22,7 @@
                         {% ifequal actividad.flujo flujo.id %}
 
 
-                        <th align="center" valign="top" width="20" height="10" colspan="3">{{ actividad.nombre }}</th>
+                        <th align="center" valign="top" width="20" height="10" colspan="3" bgcolor="pink">{{ actividad.nombre }}</th>
                         {% endifequal %}
 
 
@@ -33,9 +33,9 @@
                 {% for actividad in actividades_flujo %}
                     {% ifequal actividad.flujo flujo.id %}
 
-                        <td align="center" valign="top">To Do </td>
-                        <td align="center" valign="top">Doing </td>
-                        <td align="center" valign="top">Done </td>
+                        <td align="center" valign="top" bgcolor="violet">To Do </td>
+                        <td align="center" valign="top" bgcolor="yellow">Doing </td>
+                        <td align="center" valign="top" bgcolor="skyblue">Done </td>
 
                     {% endifequal %}
                 {% endfor %}
@@ -47,29 +47,61 @@
                         {% for historia in historias %}
                             {% ifequal historia.actividad actividad %}
 
-                                {% ifequal historia.estado 'To do' %}
 
-                                    <td>
-                                    <td></td>
-                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                {% ifequal historia.estado 'To Do' %}
+
+
+                                    <td align="center">
+
+                                    <form action= "/historia/actualizacion/" method="post"> {% csrf_token %}
+                                        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                        <input type="hidden" name='login' value={{ logueado.id }} >
+                                        <input type="hidden" name='historia' value={{ historia.id }} >
+                                        {% if proyecto.scrum_master == logueado or logueado == historia.asignado %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }}>
+                                        {% else %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }} disabled>
+                                        {% endif %}
+                                    </form>
                                     <tr></tr>
 
                                     </td>
+
                                 {% endifequal %}
 
                                 {% ifequal historia.estado "Doing" %}
+                                    <td></td>
+                                    <td align="center">
 
-                                    <td>
-                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                        <form action= "/historia/actualizacion/" method="post"> {% csrf_token %}
+                                        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                        <input type="hidden" name='login' value={{ logueado.id }} >
+                                        <input type="hidden" name='historia' value={{ historia.id }} >
+                                        {% if proyecto.scrum_master == logueado or logueado == historia.asignado %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }}>
+                                        {% else %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }} disabled>
+                                        {% endif %}
+                                    </form>
                                     <tr></tr>
 
                                     </td>
                                 {% endifequal %}
 
                                 {% ifequal historia.estado "Done" %}
+                                <td><td></td></td>
 
-                                <td >
-                                    <h5 style="color:#F41616"> {{ historia.nombre }}</h5>
+                                <td align="center" >
+                                    <form action= "/historia/actualizacion/" method="post"> {% csrf_token %}
+                                        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                        <input type="hidden" name='login' value={{ logueado.id }} >
+                                        <input type="hidden" name='historia' value={{ historia.id }} >
+                                        {% if proyecto.scrum_master == logueado or logueado == historia.asignado %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }}>
+                                        {% else %}
+                                            <input style="color:#F51414" type="submit" value={{ historia.nombre }} disabled>
+                                        {% endif %}
+                                    </form>
                                     <tr></tr>
 
                                 </td>
@@ -77,10 +109,15 @@
 
                             {% endifequal %}
 
+
                         {% endfor %}
 
+                        {% ifnotequal actividad.secuencia flujo.nro_actividades %}
+                            <td><td><td></td></td></td>
+                        {% endifnotequal %}
 
                         {% endifequal %}
+
 
                 {% endfor %}
 
