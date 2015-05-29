@@ -3,6 +3,7 @@ from adm_usuarios.models import Usuario
 from adm_flujos.models import Flujo
 from adm_proyectos.models import Proyecto
 from adm_actividades.models import Actividad
+from adm_sprints.models import Sprint
 
 # Create your models here.
 
@@ -47,6 +48,8 @@ class Historia(models.Model):
     asignado_p = models.BooleanField(default=False)
     activo = models.BooleanField(default=False)
     estado_sprint = models.CharField(max_length=30, default='No iniciado')
+    estado_scrum = models.CharField(max_length=30, default='Pendiente')
+    horas_sprint = models.IntegerField(default=0)
 
 
 
@@ -97,6 +100,8 @@ class Historial(models.Model):
     activo = models.BooleanField(default=False)
     fecha = models.DateTimeField(null=True)
     estado_sprint = models.CharField(max_length=30)
+    estado_scrum = models.CharField(max_length=30, default='Pendiente')
+    horas_sprint = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.nombre
@@ -109,8 +114,10 @@ class Registro(models.Model):
         id_historia: indica el id de la historia cuyas tareas se registran
         orden: indica el numero ordinal de la tarea realizada
         nombre: indica el nombre de la tarea realizada
+        proyecto: indica el proyecto al que pertenece la tarea que se carga
         descripcion: breve descripcion de la tarea realizada
         horas: numero de horas trabajadas en realizar la tarea
+        archivo: contiene el archivo que se adjunta en la carga de tareas
     '''
     id_historia = models.ForeignKey(Historia)
     orden = models.IntegerField(default=0)
@@ -121,6 +128,9 @@ class Registro(models.Model):
     fecha = models.DateTimeField(null=True)
     activo = models.BooleanField(default=False)
     archivo = models.FileField(upload_to='archivo')
+    adjunto = models.BinaryField()
+    fecha1 = models.DateField(null=True)
+    sprint = models.ForeignKey(Sprint, null=True)
 
     def __unicode__(self):
         return self.nombre
