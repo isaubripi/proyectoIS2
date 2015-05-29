@@ -87,43 +87,6 @@ class CrearRolConfirm(CrearRol):
             return render(request, super(CrearRolConfirm, self).template_name, {'error':error})
         nuevo_rol = Rol(nombre= rol_nombre)
 
-
-        nuevo_rol.save()
-        #Completamos los permisos
-        """if 'crear_proyecto' in request.POST: nuevo_rol.crear_proyecto= True
-        if 'modificar_proyecto' in request.POST: nuevo_rol.modificar_proyecto= True
-        if 'eliminar_proyecto' in request.POST: nuevo_rol.eliminar_proyecto= True
-        if 'cerrar_proyecto' in request.POST: nuevo_rol.cerrar_proyecto= True
-        if 'crear_usuario' in request.POST: nuevo_rol.crear_usuario= True
-        if 'modificar_usuario' in request.POST: nuevo_rol.modificar_usuario= True
-        if 'eliminar_usuario' in request.POST: nuevo_rol.eliminar_usuario= True
-        if 'agregar_rol' in request.POST: nuevo_rol.agregar_rol= True
-        if 'modificar_rol' in request.POST: nuevo_rol.modificar_rol= True
-        if 'eliminar_rol' in request.POST: nuevo_rol.eliminar_rol= True
-        if 'generar_resumen_clientes' in request.POST: nuevo_rol.generar_resumen_clientes= True
-        if 'generar_burndown' in request.POST: nuevo_rol.generar_burndown= True
-        if 'asignar_usuario_inicial' in request.POST: nuevo_rol.asignar_usuario_inicial= True
-        if 'asignar_permisos_roles' in request.POST: nuevo_rol.asignar_permisos_roles= True
-        if 'asignar_roles_usuario' in request.POST: nuevo_rol.asignar_roles_usuario= True
-        if 'asignar_usuarios_proyecto' in request.POST: nuevo_rol.asignar_usuarios_proyecto= True
-        if 'listar_usuarios' in request.POST: nuevo_rol.listar_usuarios= True
-        if 'listar_proyectos' in request.POST: nuevo_rol.listar_proyectos= True
-        if 'agregar_sprint' in request.POST: nuevo_rol.agregar_sprint= True
-        if 'modificar_sprint' in request.POST: nuevo_rol.modificar_sprint= True
-        if 'eliminar_sprint' in request.POST: nuevo_rol.eliminar_sprint= True
-        if 'activar_sprint' in request.POST: nuevo_rol.activar_sprint= True
-        if 'agregar_historia' in request.POST: nuevo_rol.agregar_historia= True
-        if 'modificar_historia' in request.POST: nuevo_rol.modificar_historia= True
-        if 'eliminar_historia' in request.POST: nuevo_rol.eliminar_historia= True
-        if 'adjuntar_archivos' in request.POST: nuevo_rol.adjuntar_archivos= True
-        if 'cargar_horas' in request.POST: nuevo_rol.cargar_horas= True
-        if 'actualizar_estado' in request.POST: nuevo_rol.actualizar_estado= True
-        if 'ver_historial' in request.POST: nuevo_rol.ver_historial= True
-        if 'validar_historia' in request.POST: nuevo_rol.validar_historia= True
-        if 'crear_flujo' in request.POST: nuevo_rol.crear_flujo= True
-        if 'modificar_flujo' in request.POST: nuevo_rol.modificar_flujo= True
-        if 'eliminar_flujo' in request.POST: nuevo_rol.eliminar_flujo= True
-        if 'ver_tabla' in request.POST: nuevo_rol.ver_tabla= True"""
         nuevo_rol.activo= True
 
         nuevo_rol.save()
@@ -185,77 +148,8 @@ class EditarRolConfirmar(EditarRol):
 
         roles= Rol.objects.filter(nombre= request.POST['nombre_rol'])
         nuevo_rol_nombre= request.POST['nombre_nuevo_rol']
-        #Actualizamos los permisos
         for rol_actual in roles:
             rol_actual.nombre= nuevo_rol_nombre
-            """if 'crear_proyecto' in request.POST: rol_actual.crear_proyecto= True
-            else: rol_actual.crear_proyecto= False
-            if 'modificar_proyecto' in request.POST: rol_actual.modificar_proyecto= True
-            else: rol_actual.modificar_proyecto= False
-            if 'eliminar_proyecto' in request.POST: rol_actual.eliminar_proyecto= True
-            else: rol_actual.eliminar_proyecto= False
-            if 'cerrar_proyecto' in request.POST: rol_actual.cerrar_proyecto= True
-            else: rol_actual.cerrar_proyecto= False
-            if 'crear_usuario' in request.POST: rol_actual.crear_usuario= True
-            else: rol_actual.crear_usuario= False
-            if 'modificar_usuario' in request.POST: rol_actual.modificar_usuario= True
-            else: rol_actual.modificar_usuario= False
-            if 'eliminar_usuario' in request.POST: rol_actual.eliminar_usuario= True
-            else: rol_actual.eliminar_usuario= False
-            if 'agregar_rol' in request.POST: rol_actual.agregar_rol= True
-            else: rol_actual.agregar_rol= False
-            if 'modificar_rol' in request.POST: rol_actual.modificar_rol= True
-            else: rol_actual.modificar_rol= False
-            if 'eliminar_rol' in request.POST: rol_actual.eliminar_rol= True
-            else: rol_actual.eliminar_rol= False
-            if 'generar_resumen_clientes' in request.POST: rol_actual.generar_resumen_clientes= True
-            else: rol_actual.generar_resumen_clientes= False
-            if 'generar_burndown' in request.POST: rol_actual.generar_burndown= True
-            else: rol_actual.generar_burndown= False
-            if 'asignar_usuario_inicial' in request.POST: rol_actual.asignar_usuario_inicial= True
-            else: rol_actual.asignar_usuario_inicial= False
-            if 'asignar_permisos_roles' in request.POST: rol_actual.asignar_permisos_roles= True
-            else: rol_actual.asignar_permisos_roles= False
-            if 'asignar_roles_usuario' in request.POST: rol_actual.asignar_roles_usuario= True
-            else: rol_actual.asignar_roles_usuario= False
-            if 'asignar_usuarios_proyecto' in request.POST: rol_actual.asignar_usuarios_proyecto= True
-            else: rol_actual.asignar_usuarios_proyecto= False
-            if 'listar_usuarios' in request.POST: rol_actual.listar_usuarios= True
-            else: rol_actual.listar_usuarios= False
-            if 'listar_proyectos' in request.POST: rol_actual.listar_proyectos= True
-            else: rol_actual.listar_proyectos= False
-            if 'agregar_sprint' in request.POST: rol_actual.agregar_sprint= True
-            else: rol_actual.agregar_sprint= False
-            if 'modificar_sprint' in request.POST: rol_actual.modificar_sprint= True
-            else: rol_actual.modificar_sprint= False
-            if 'eliminar_sprint' in request.POST: rol_actual.eliminar_sprint= True
-            else: rol_actual.eliminar_sprint= False
-            if 'activar_sprint' in request.POST: rol_actual.activar_sprint= True
-            else: rol_actual.activar_sprint= False
-            if 'agregar_historia' in request.POST: rol_actual.agregar_historia= True
-            else: rol_actual.agregar_historia= False
-            if 'modificar_historia' in request.POST: rol_actual.modificar_historia= True
-            else: rol_actual.modificar_historia= False
-            if 'eliminar_historia' in request.POST: rol_actual.eliminar_historia= True
-            else: rol_actual.eliminar_historia= False
-            if 'adjuntar_archivos' in request.POST: rol_actual.adjuntar_archivos= True
-            else: rol_actual.adjuntar_archivos= False
-            if 'cargar_horas' in request.POST: rol_actual.cargar_horas= True
-            else: rol_actual.cargar_horas= False
-            if 'actualizar_estado' in request.POST: rol_actual.actualizar_estado= True
-            else: rol_actual.actualizar_estado= False
-            if 'ver_historial' in request.POST: rol_actual.ver_historial= True
-            else: rol_actual.ver_historial= False
-            if 'validar_historia' in request.POST: rol_actual.validar_historia= True
-            else: rol_actual.validar_historia= False
-            if 'crear_flujo' in request.POST: rol_actual.crear_flujo= True
-            else: rol_actual.crear_flujo= False
-            if 'modificar_flujo' in request.POST: rol_actual.modificar_flujo= True
-            else: rol_actual.modificar_flujo= False
-            if 'eliminar_flujo' in request.POST: rol_actual.eliminar_flujo= True
-            else: rol_actual.eliminar_flujo= False
-            if 'ver_tabla' in request.POST: rol_actual.ver_tabla= True
-            else: rol_actual.ver_tabla= False"""
             rol_actual.save()
         return render(request, self.template_name, diccionario)
 
@@ -375,22 +269,30 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         else: rol_actual.eliminar_proyecto= False
         if 'cerrar_proyecto' in request.POST: rol_actual.cerrar_proyecto= True
         else: rol_actual.cerrar_proyecto= False
+        if 'inicializar_proyecto' in request.POST: rol_actual.inicializar_proyecto= True
+        else: rol_actual.inicializar_proyecto= False
+        if 'ingresar_proyecto' in request.POST: rol_actual.ingresar_proyecto= True
+        else: rol_actual.ingresar_proyecto= False
+
         if 'crear_usuario' in request.POST: rol_actual.crear_usuario= True
         else: rol_actual.crear_usuario= False
         if 'modificar_usuario' in request.POST: rol_actual.modificar_usuario= True
         else: rol_actual.modificar_usuario= False
         if 'eliminar_usuario' in request.POST: rol_actual.eliminar_usuario= True
         else: rol_actual.eliminar_usuario= False
+
         if 'agregar_rol' in request.POST: rol_actual.agregar_rol= True
         else: rol_actual.agregar_rol= False
         if 'modificar_rol' in request.POST: rol_actual.modificar_rol= True
         else: rol_actual.modificar_rol= False
         if 'eliminar_rol' in request.POST: rol_actual.eliminar_rol= True
         else: rol_actual.eliminar_rol= False
-        if 'generar_resumen_clientes' in request.POST: rol_actual.generar_resumen_clientes= True
-        else: rol_actual.generar_resumen_clientes= False
-        if 'generar_burndown' in request.POST: rol_actual.generar_burndown= True
+
+        if 'generar_reporte' in request.POST: rol_actual.generar_reporte= True
+        else: rol_actual.generar_reporte= False
+        if 'crear_burndown' in request.POST: rol_actual.generar_burndown= True
         else: rol_actual.generar_burndown= False
+
         if 'asignar_usuario_inicial' in request.POST: rol_actual.asignar_usuario_inicial= True
         else: rol_actual.asignar_usuario_inicial= False
         if 'asignar_permisos_roles' in request.POST: rol_actual.asignar_permisos_roles= True
@@ -399,10 +301,11 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         else: rol_actual.asignar_roles_usuario= False
         if 'asignar_usuarios_proyecto' in request.POST: rol_actual.asignar_usuarios_proyecto= True
         else: rol_actual.asignar_usuarios_proyecto= False
-        if 'listar_usuarios' in request.POST: rol_actual.listar_usuarios= True
-        else: rol_actual.listar_usuarios= False
-        if 'listar_proyectos' in request.POST: rol_actual.listar_proyectos= True
-        else: rol_actual.listar_proyectos= False
+        if 'asignar_usuarios_flujo' in request.POST: rol_actual.asignar_usuarios_flujo= True
+        else: rol_actual.asignar_usuarios_flujo= False
+        if 'asignar_equipo' in request.POST: rol_actual.asignar_equipo= True
+        else: rol_actual.asignar_equipo= False
+
         if 'agregar_sprint' in request.POST: rol_actual.agregar_sprint= True
         else: rol_actual.agregar_sprint= False
         if 'modificar_sprint' in request.POST: rol_actual.modificar_sprint= True
@@ -411,22 +314,36 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         else: rol_actual.eliminar_sprint= False
         if 'activar_sprint' in request.POST: rol_actual.activar_sprint= True
         else: rol_actual.activar_sprint= False
+        if 'ver_sprintbacklog' in request.POST: rol_actual.ver_sprintbacklog= True
+        else: rol_actual.ver_sprintbacklog= False
+
         if 'agregar_historia' in request.POST: rol_actual.agregar_historia= True
         else: rol_actual.agregar_historia= False
         if 'modificar_historia' in request.POST: rol_actual.modificar_historia= True
         else: rol_actual.modificar_historia= False
         if 'eliminar_historia' in request.POST: rol_actual.eliminar_historia= True
         else: rol_actual.eliminar_historia= False
-        if 'adjuntar_archivos' in request.POST: rol_actual.adjuntar_archivos= True
-        else: rol_actual.adjuntar_archivos= False
         if 'cargar_horas' in request.POST: rol_actual.cargar_horas= True
         else: rol_actual.cargar_horas= False
-        if 'actualizar_estado' in request.POST: rol_actual.actualizar_estado= True
-        else: rol_actual.actualizar_estado= False
+        if 'cambiar_actividad_estado' in request.POST: rol_actual.cambiar_actividad_estado= True
+        else: rol_actual.cambiar_actividad_estado= False
         if 'ver_historial' in request.POST: rol_actual.ver_historial= True
         else: rol_actual.ver_historial= False
-        if 'validar_historia' in request.POST: rol_actual.validar_historia= True
-        else: rol_actual.validar_historia= False
+        if 'ver_detalles' in request.POST: rol_actual.ver_detalles= True
+        else: rol_actual.ver_detalles= False
+        if 'cancelar_historia' in request.POST: rol_actual.cancelar_historia= True
+        else: rol_actual.cancelar_historia= False
+        if 'asignar_historia' in request.POST: rol_actual.asignar_historia= True
+        else: rol_actual.asignar_historia= False
+        if 'desasignar_historia' in request.POST: rol_actual.desasignar_historia= True
+        else: rol_actual.desasignar_historia= False
+        if 'release_historia' in request.POST: rol_actual.release_historia= True
+        else: rol_actual.release_historia= False
+        if 'finalizar_historia' in request.POST: rol_actual.finalizar_historia= True
+        else: rol_actual.finalizar_historia= False
+        if 'horas_sprint' in request.POST: rol_actual.horas_sprint=True
+        else: rol_actual.horas_sprint= False
+
         if 'crear_flujo' in request.POST: rol_actual.crear_flujo= True
         else: rol_actual.crear_flujo= False
         if 'modificar_flujo' in request.POST: rol_actual.modificar_flujo= True
@@ -435,6 +352,18 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         else: rol_actual.eliminar_flujo= False
         if 'ver_tabla' in request.POST: rol_actual.ver_tabla= True
         else: rol_actual.ver_tabla= False
+
+        if 'crear_actividad' in request.POST: rol_actual.crear_actividad= True
+        else: rol_actual.crear_actividad= False
+        if 'modificar_actividad' in request.POST: rol_actual.modificar_actividad= True
+        else: rol_actual.modificar_actividad= False
+        if 'eliminar_actividad' in request.POST: rol_actual.eliminar_actividad= True
+        else: rol_actual.eliminar_actividad= False
+        if 'establecer_secuencia' in request.POST: rol_actual.establecer_secuencia= True
+        else: rol_actual.establecer_secuencia= False
+        if 'restablecer_secuencia' in request.POST: rol_actual.restablecer_secuencia= True
+        else: rol_actual.restablecer_secuencia= False
+
         rol_actual.save()
 
         return render(request, self.template_name, diccionario)
@@ -510,29 +439,36 @@ class AsignarRolConfirm(RolView):
 
         nuevo_rol= Rol(
             nombre= rol_actual.nombre,
+
             usuario= usuario_rol,
             crear_proyecto= rol_actual.crear_proyecto,
             modificar_proyecto= rol_actual.modificar_proyecto,
             eliminar_proyecto= rol_actual.eliminar_proyecto,
             cerrar_proyecto= rol_actual.cerrar_proyecto,
+            inicializar_proyecto= rol_actual.inicializar_proyecto,
+            ingresar_proyecto= rol_actual.ingresar_proyecto,
+
             crear_usuario= rol_actual.crear_usuario,
             modificar_usuario= rol_actual.modificar_usuario,
             eliminar_usuario= rol_actual.eliminar_usuario,
+
             agregar_rol= rol_actual.agregar_rol,
             modificar_rol= rol_actual.modificar_rol,
             eliminar_rol= rol_actual.eliminar_rol,
+
             generar_resumen_clientes= rol_actual.generar_resumen_clientes,
             generar_burndown= rol_actual.generar_burndown,
+
             asignar_usuario_inicial= rol_actual.asignar_usuario_inicial,
             asignar_permisos_roles= rol_actual.asignar_permisos_roles,
             asignar_roles_usuario= rol_actual.asignar_roles_usuario,
             asignar_usuarios_proyecto= rol_actual.asignar_usuarios_proyecto,
-            listar_usuarios= rol_actual.listar_usuarios,
-            listar_proyectos= rol_actual.listar_proyectos,
+
             agregar_sprint= rol_actual.agregar_sprint,
             modificar_sprint= rol_actual.modificar_sprint,
             eliminar_sprint= rol_actual.eliminar_sprint,
             activar_sprint= rol_actual.activar_sprint,
+
             agregar_historia= rol_actual.agregar_historia,
             modificar_historia= rol_actual.modificar_historia,
             eliminar_historia= rol_actual.eliminar_historia,
@@ -541,6 +477,7 @@ class AsignarRolConfirm(RolView):
             actualizar_estado= rol_actual.actualizar_estado,
             ver_historial= rol_actual.ver_historial,
             validar_historia= rol_actual.validar_historia,
+
             crear_flujo= rol_actual.crear_flujo,
             modificar_flujo= rol_actual.modificar_flujo,
             eliminar_flujo= rol_actual.eliminar_flujo,

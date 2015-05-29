@@ -4,14 +4,16 @@
 {% block TituloOperacion %} Tareas historia {% endblock %}
 {% block DatosOperacion %}
     <center><h3>HISTORIA: {{ historia.nombre }}</h3></center>
-
+<table border="1" bgcolor="white" align="center">
         <tr>
             <th scope="col" class="rounded"><font color="green">Numero</font></th>
-            <th scope="col" class="rounded"><font color="white">Nombre</font></th>
+            <th scope="col" class="rounded"><font color="green">Nombre</font></th>
             <th scope="col" class="rounded"><font color="green">Horas Empleadas</font></th>
-            <th scope="col" class="rounded"><font color="white">Fecha</font></th>
-            <th scope="col" class="rounded"><font color="green">Archivo Adjunto</font></th>
-            <th scope="col" class="rounded"><font color="white">Descripcion</font></th>
+            <th scope="col" class="rounded"><font color="green">Fecha</font></th>
+            <!---<th scope="col" class="rounded"><font color="green">Archivo Adjunto</font></th>!-->
+            <th scope="col" class="rounded"><font color="green">Descripcion</font></th>
+            <th scope="col" class="rounded"><font color="green">Archivo</font></th>
+
 
         </tr>
 
@@ -30,14 +32,21 @@
             <td>
                 <center>{{ registro.fecha }}</center>
             </td>
-            <td>
+            <!--<td>
                 <center><a href={{ registro.archivo }}> {{ registro.archivo }}</a></center>
-            </td>
+            </td>!-->
             <td>
                 <center>{{ registro.descripcion }}</center>
             </td>
+            <td>
+                <center><a href="data:application/octect-stream;base64, {{ registro.adjunto }}">Adjunto </a></center>
+            </td>
+            <!--<td>
+                <center><a href="Base64.decode( {{ registro.adjunto }})">Adjunto </a></center>
+            </td>!-->
 
         </tr>
+
         <!--<tr>
             <td><h4>Nombre: {{ registro.nombre }}</h4></td>
             <td><h4>Numero: {{ registro.orden }}</h4></td>
@@ -50,6 +59,7 @@
 
         </tr>!-->
     {% endfor %}
+    </table>
 
 {% endblock %}
 

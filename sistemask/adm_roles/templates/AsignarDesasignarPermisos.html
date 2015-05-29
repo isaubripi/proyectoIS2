@@ -17,6 +17,8 @@
                 <input type="checkbox" name="modificar_proyecto" {% if rol.modificar_proyecto %} checked {% endif %}>Modificar proyecto
                 <input type="checkbox" name="eliminar_proyecto" {% if rol.eliminar_proyecto %} checked {% endif %}>Eliminar proyecto
                 <input type="checkbox" name="cerrar_proyecto" {% if rol.cerrar_proyecto %} checked {% endif %}>Cerrar proyecto
+                <input type="checkbox" name="inicializar_proyecto" {% if rol.inicializar_proyecto %} checked {% endif %}>Inicializar proyecto
+                <input type="checkbox" name="ingresar_proyecto" {% if rol.ingresar_proyecto %} checked {% endif %}>Ingresar a proyecto
             </p>
             <p><h3>Permisos de Administración de Usuarios</h3></p>
             <p>
@@ -32,8 +34,8 @@
             </p>
             <p><h3>Permisos de Generar resumen de clientes y burndownchart</h3></p>
             <p>
-                <input type="checkbox" name="generar_resumen_clientes"{% if rol.generar_resumen_clientes %} checked {% endif %}>Generar resumen de clientes
-                <input type="checkbox" name="crear_burndown"{% if rol.crear_burndown %} checked {% endif %}>Crear burndown
+                <input type="checkbox" name="generar_reporte"{% if rol.generar_reporte %} checked {% endif %}>Generar reporte de proyecto
+                <input type="checkbox" name="crear_burndown"{% if rol.crear_burndown %} checked {% endif %}>Crear burndownchart
             </p>
             <p><h3>Permisos de Asignación</h3></p>
             <p>
@@ -41,11 +43,8 @@
                 <input type="checkbox" name="asignar_permisos_roles"{% if rol.asignar_permisos_roles %} checked {% endif %}>Asignar permisos a roles
                 <input type="checkbox" name="asignar_roles_usuario"{% if rol.asignar_roles_usuario %} checked {% endif %}>Asignar roles a usuario
                 <input type="checkbox" name="asignar_usuarios_proyecto"{% if rol.asignar_usuarios_proyecto %} checked {% endif %}>Asignar usuarios a proyecto
-            </p>
-            <p><h3>Permisos de Listar</h3></p>
-            <p>
-                <input type="checkbox" name="listar_usuarios"{% if rol.listar_usuarios %} checked {% endif %}>Listar usuarios
-                <input type="checkbox" name="listar_proyectos"{% if rol.listar_proyectos %} checked {% endif %}>Listar proyectos
+                <input type="checkbox" name="asignar_usuarios_flujo"{% if rol.asignar_usuarios_flujo %} checked {% endif %}>Asignar usuarios a flujo
+                <input type="checkbox" name="asignar_equipo"{% if rol.asignar_equipo %} checked {% endif %}>Asignar equipo
             </p>
             <p><h3>Permisos de Administración de Sprints</h3></p>
             <p>
@@ -53,17 +52,24 @@
                 <input type="checkbox" name="modificar_sprint"{% if rol.modificar_sprint %} checked {% endif %}>Modificar sprint
                 <input type="checkbox" name="eliminar_sprint"{% if rol.eliminar_sprint %} checked {% endif %}>Eliminar sprint
                 <input type="checkbox" name="activar_sprint"{% if rol.activar_sprint %} checked {% endif %}>Activar sprint
+                <input type="checkbox" name="ver_sprintbacklog"{% if rol.ver_sprintbacklog %} checked {% endif %}>Ver sprintbacklog
             </p>
             <p><h3>Permisos de Administración de User Stories</h3></p>
             <p>
                 <input type="checkbox" name="agregar_historia"{% if rol.agregar_historia %} checked {% endif %}>Agregar historia
                 <input type="checkbox" name="modificar_historia"{% if rol.modificar_historia %} checked {% endif %}>Modificar historia
                 <input type="checkbox" name="eliminar_historia"{% if rol.eliminar_historia %} checked {% endif %}>Eliminar historia
-                <input type="checkbox" name="adjuntar_archivos"{% if rol.adjuntar_archivos %} checked {% endif %}>Adjuntar archivos<br>
                 <input type="checkbox" name="cargar_horas"{% if rol.cargar_horas %} checked {% endif %}>Cargar horas trabajadas
-                <input type="checkbox" name="actualizar_estado"{% if rol.actualizar_estado %} checked {% endif %}>Actualizar estado
+                <input type="checkbox" name="cambiar_actividad_estado"{% if rol.cambiar_actividad_estado %} checked {% endif %}>Cambiar actividad y estado
                 <input type="checkbox" name="ver_historial"{% if rol.ver_historial %} checked {% endif %}>Ver historial
-                <input type="checkbox" name="validar_historia"{% if rol.validar_historia %} checked {% endif %}>Validar historia
+                <input type="checkbox" name="ver_detalles"{% if rol.ver_detalles %} checked {% endif %}>Ver detalles
+                <input type="checkbox" name="cancelar_historia"{% if rol.cancelar_historia %} checked {% endif %}>Cancelar historia
+                <input type="checkbox" name="asignar_historia"{% if rol.asignar_historia %} checked {% endif %}>Asignar historia
+                <input type="checkbox" name="desasignar_historia"{% if rol.desasignar_historia %} checked {% endif %}>Desasignar historia
+                <input type="checkbox" name="release_historia"{% if rol.release_historia %} checked {% endif %}>Release historia
+                <input type="checkbox" name="finalizar_historia"{% if rol.finalizar_historia %} checked {% endif %}>Finalizar historia
+                <input type="checkbox" name="horas_sprint"{% if rol.horas_sprint %} checked {% endif %}>Cargar horas a trabajar en sprint
+
             </p>
             <p><h3>Permisos de Administración de Tabla kanban</h3></p>
             <p>
@@ -71,6 +77,14 @@
                 <input type="checkbox" name="modificar_flujo"{% if rol.modificar_flujo %} checked {% endif %}>Modificar flujo
                 <input type="checkbox" name="eliminar_flujo"{% if rol.eliminar_flujo %} checked {% endif %}>Eliminar flujo
                 <input type="checkbox" name="ver_tabla"{% if rol.ver_tabla %} checked {% endif %}>Ver tabla
+            </p>
+            <p><h3>Permisos de Administración de Actividades</h3></p>
+            <p>
+                <input type="checkbox" name="crear_actividad"{% if rol.crear_actividad %} checked {% endif %}>Crear actividad
+                <input type="checkbox" name="modificar_actividad"{% if rol.modificar_actividad %} checked {% endif %}>Modificar actividad
+                <input type="checkbox" name="eliminar_actividad"{% if rol.eliminar_actividad %} checked {% endif %}>Eliminar actividad
+                <input type="checkbox" name="establecer_secuencia"{% if rol.establecer_secuencia %} checked {% endif %}>Establecer secuencia
+                <input type="checkbox" name="restablecer_secuencia"{% if rol.restablecer_secuencia %} checked {% endif %}>Restablecer secuencia
             </p>
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >

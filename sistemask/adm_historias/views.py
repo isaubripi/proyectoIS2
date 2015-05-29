@@ -14,6 +14,8 @@ from django.utils.html import strip_tags
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+import base64
+
 # Create your views here.
 
 class HistoriaView(TemplateView):
@@ -243,7 +245,8 @@ class EditarHistoriaConfirm(EditarHistoria):
                                              prioridad=nuevo_prioridad, val_negocio=nuevo_negocio, val_tecnico=nuevo_tecnico, size=nuevo_size,
                                              descripcion=nuevo_descripcion, codigo=historia_editada.codigo, acumulador=historia_editada.acumulador,
                                              asignado=historia_editada.asignado, flujo=historia_editada.flujo, estado=historia_editada.estado,
-                                             sprint=historia_editada.sprint, asignado_p=historia_editada.asignado_p, activo=True)
+                                             sprint=historia_editada.sprint, asignado_p=historia_editada.asignado_p,
+                                             estado_sprint=historia_editada.estado_sprint, activo=True)
         historial.fecha = timezone.now()
         historial.save()
         return render(request, self.template_name, diccionario)
@@ -280,7 +283,8 @@ class EliminarHistoria(LoginRequiredMixin, HistoriaView):
                                              codigo=historia_eliminada.codigo, acumulador=historia_eliminada.acumulador,
                                              asignado=historia_eliminada.asignado, flujo=historia_eliminada.flujo,
                                              estado=historia_eliminada.estado, sprint=historia_eliminada.sprint,
-                                             asignado_p=historia_eliminada.asignado_p, activo=False)
+                                             asignado_p=historia_eliminada.asignado_p,
+                                             estado_sprint=historia_eliminada.estado_sprint, activo=False)
         historial.fecha = timezone.now()
         historial.save()
 
@@ -392,9 +396,12 @@ class CargarHorasConfirm(CargarHoras):
 
         registro_nuevo = Registro.objects.create(id_historia=historia, orden=ord, nombre=nombre_tarea,
                                                  proyecto=proyecto_actual, descripcion=descripcion_tarea,
-                                                 horas=int(horas), fecha=timezone.now(), activo=True)
+                                                 horas=int(horas), fecha=timezone.now(), fecha1=timezone.now().date(),
+                                                 activo=True)
         if 'adjuntar' in request.POST:
-            registro_nuevo.archivo = request.FILES['adjunto']
+
+            archi=request.FILES['adjunto']
+            registro_nuevo.adjunto = base64.b64encode(archi.read())
 
         registro_nuevo.save()
         total_horas = 0
@@ -413,7 +420,8 @@ class CargarHorasConfirm(CargarHoras):
                                              codigo=historia.codigo, acumulador=historia.acumulador,
                                              asignado=historia.asignado, flujo=historia.flujo,
                                              estado=historia.estado, sprint=historia.sprint,
-                                             asignado_p=historia.asignado_p, activo=False)
+                                             asignado_p=historia.asignado_p, estado_sprint=historia.estado_sprint,
+                                             activo=False)
         historial.fecha = timezone.now()
 
 
@@ -431,7 +439,7 @@ class CargarHorasConfirm(CargarHoras):
                             + '\nDESCRIPCION: ' + descripcion_tarea
                             + '\nHORAS EMPLEADAS: ' + horas
                             + '\nFLUJO: ' + historia.flujo.nombre
-                            + '\nACTIVIDAD: ' + historia.actividad.nombre,
+                            + '\nACTIVIDAD: ' + historia.actividad,
         }
         # se renderiza el template con el context
         email_html = render_to_string('email.html', email_context)
@@ -510,6 +518,11 @@ class VerTareas(LoginRequiredMixin, HistoriaNView):
 
         historia_actual = Historia.objects.get(id=request.POST['historia'])
         diccionario['historia'] = historia_actual
+
+        #registro = Registro.objects.filter(id_historia=historia_actual)
+
+        #a = base64.b64decode(registro.adjunto.read())
+        #diccionario['ar'] = a
 
         lista = Registro.objects.filter(id_historia=historia_actual, activo=True)
         diccionario['registros'] = lista
@@ -595,8 +608,8 @@ class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
                                              codigo=historia.codigo, acumulador=historia.acumulador,
                                              asignado=historia.asignado, flujo=historia.flujo,
                                              estado=historia.estado, actividad=historia.actividad.nombre,
-                                             sprint=historia.sprint,
-                                             asignado_p=historia.asignado_p, activo=False)
+                                             sprint=historia.sprint, asignado_p=historia.asignado_p,
+                                             estado_sprint=historia.estado_sprint, activo=False)
         historial.fecha = timezone.now()
         historial.save()
 

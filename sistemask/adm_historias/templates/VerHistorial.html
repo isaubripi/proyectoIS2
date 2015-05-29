@@ -12,25 +12,27 @@
         <center><input type="submit" value="<Atras"></center>
     </form>
 {% endblock %}
+<table border="1" bgcolor="white" align="center">
         <tr>
             <th scope="col" class="rounded"><font color="green">ID</font></th>
-            <th scope="col" class="rounded"><font color="white">Nombre</font></th>
+            <th scope="col" class="rounded"><font color="green">Nombre</font></th>
             <th scope="col" class="rounded"><font color="green">Proyecto</font></th>
-            <th scope="col" class="rounded"><font color="white">Codigo</font></th>
+            <th scope="col" class="rounded"><font color="green">Codigo</font></th>
             <th scope="col" class="rounded"><font color="green">Prioridad</font></th>
-            <th scope="col" class="rounded"><font color="white">ValorNegocio</font></th>
+            <th scope="col" class="rounded"><font color="green">ValorNegocio</font></th>
             <th scope="col" class="rounded"><font color="green">ValorTecnico</font></th>
-            <th scope="col" class="rounded"><font color="white">HorasEstimadas</font></th>
+            <th scope="col" class="rounded"><font color="green">HorasEstimadas</font></th>
             <th scope="col" class="rounded"><font color="green">Acumulador</font></th>
-            <th scope="col" class="rounded"><font color="white">Asignado</font></th>
+            <th scope="col" class="rounded"><font color="green">Asignado</font></th>
             <th scope="col" class="rounded"><font color="green">Flujo</font></th>
-            <th scope="col" class="rounded"><font color="white">Estado</font></th>
+            <th scope="col" class="rounded"><font color="green">Estado</font></th>
             <th scope="col" class="rounded"><font color="green">Actividad</font></th>
-            <th scope="col" class="rounded"><font color="white">Sprint</font></th>
+            <th scope="col" class="rounded"><font color="green">Sprint</font></th>
             <th scope="col" class="rounded"><font color="green">Activo</font></th>
-            <th scope="col" class="rounded"><font color="white">Descripcion</font></th>
+            <th scope="col" class="rounded"><font color="green">Descripcion</font></th>
             <th scope="col" class="rounded"><font color="green">Fecha de Modificacion</font></th>
         </tr>
+
 {% for historial in lista %}
         <tr>
             <td>
@@ -88,6 +90,7 @@
             </td>
         </tr>
 {% endfor %}
+    </table>
 
     <!--{% for historial in lista %}
 
