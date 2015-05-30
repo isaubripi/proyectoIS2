@@ -3,7 +3,6 @@ from adm_usuarios.models import Usuario
 from adm_flujos.models import Flujo
 from adm_proyectos.models import Proyecto
 from adm_actividades.models import Actividad
-from adm_sprints.models import Sprint
 
 # Create your models here.
 
@@ -130,7 +129,7 @@ class Registro(models.Model):
     archivo = models.FileField(upload_to='archivo')
     adjunto = models.BinaryField()
     fecha1 = models.DateField(null=True)
-    sprint = models.ForeignKey(Sprint, null=True)
+    sprint = models.CharField(max_length=30, null=True)
 
     def __unicode__(self):
         return self.nombre
