@@ -24,7 +24,7 @@ class UsuarioView(ProyectoView):
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         #Solamente el Administrador del Sistema puede ingresar a la Administracion de Usuarios
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(crear_usuario = True , usuario= usuario_logueado)):
             diccionario[self.context_object_name]= Usuario.objects.filter(estado=True)
             return render(request, self.template_name, diccionario)
         else:
@@ -35,11 +35,18 @@ class UsuarioView(ProyectoView):
 #Creacion de usuario
 class CrearUsuario(LoginRequiredMixin, UsuarioView):
     template_name = 'CrearUsuario.html'
+    context_object_name = 'lista_usuarios'
     def post(self, request, *args, **kwargs):
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
-        return render(request, self.template_name, diccionario)
+        if len(Rol.objects.filter(crear_usuario=True, usuario= usuario_logueado)):
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permiso para crear usuario'
+            diccionario[self.context_object_name]= Usuario.objects.filter(estado=True)
+            return render(request, super(CrearUsuario, self).template_name, diccionario)
+
 
 class CrearUsuarioConfirm(CrearUsuario):
     template_name = 'CrearUsuarioConfirm.html'
@@ -117,6 +124,7 @@ class EditarUsuarioConfirm(EditarUsuario):
 
 class EliminarUsuario(LoginRequiredMixin, UsuarioView):
     template_name = 'EliminarUsuario.html'
+    context_object_name = 'lista_usuarios'
     def post(self, request, *args, **kwargs):
         diccionario={}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
@@ -126,20 +134,26 @@ class EliminarUsuario(LoginRequiredMixin, UsuarioView):
         eliminado_user = User.objects.get(username=delete)
 
         #Verificar si es Administrador del Sistema
-        if len(Rol.objects.filter(nombre='Scrum Master', usuario= eliminado)):
-            diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
-            diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master'
+        if len(Rol.objects.filter(eliminar_usuario=True, usuario= usuario_logueado)):
+            if len(Rol.objects.filter(nombre='Scrum Master', usuario= eliminado)):
+                diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+                diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master'
+                return render(request, super(EliminarUsuario, self).template_name, diccionario)
+            #Verificar si es scrum master de algun proyecto
+            if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= eliminado, activo= True)):
+                diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
+                diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master de un proyecto activo'
+                return render(request, super(EliminarUsuario, self).template_name, diccionario)
+            eliminado.estado= False
+            eliminado.save()
+            eliminado_user.is_active=False
+            eliminado_user.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permiso para eliminar usuario'
+            diccionario[self.context_object_name]= Usuario.objects.filter(estado=True)
             return render(request, super(EliminarUsuario, self).template_name, diccionario)
-        #Verificar si es scrum master de algun proyecto
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= eliminado, activo= True)):
-            diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
-            diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master de un proyecto activo'
-            return render(request, super(EliminarUsuario, self).template_name, diccionario)
-        eliminado.estado= False
-        eliminado.save()
-        eliminado_user.is_active=False
-        eliminado_user.save()
-        return render(request, self.template_name, diccionario)
+
 
 class AsignarRoles(LoginRequiredMixin, UsuarioView):
     template_name = 'AsignarRoles.html'
@@ -149,9 +163,12 @@ class AsignarRoles(LoginRequiredMixin, UsuarioView):
         diccionario['logueado'] = usuario_logueado
         usuario_actual = Usuario.objects.get(id = request.POST['usuario'])
         diccionario['usuario_actual'] = usuario_actual
-        lista = Rol.objects.filter(activo=True)
-        diccionario['lista_roles'] = lista
+        lista = usuario_actual.roles.all()
+        diccionario['roles_asignados'] = lista
+        lista1 = Rol.objects.exclude(usuario=usuario_actual)
+        diccionario['no_asignados'] = lista1
         return render(request, self.template_name, diccionario)
+
 
 class AsignarRolesConfirm(AsignarRoles):
     template_name = 'AsignarRolesConfirm.html'
@@ -160,11 +177,15 @@ class AsignarRolesConfirm(AsignarRoles):
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         usuario_actual = Usuario.objects.get(id = request.POST['user'])
-        lista = Rol.objects.filter(activo=True)
-        for rol in lista:
-            if 'rol.nombre' in request.POST:
-                usuario_actual.roles.add(rol.nombre)
-                usuario_actual.save()
+        lista2 = usuario_actual.roles.all()
+        lista3 = Rol.objects.exclude(usuario=usuario_actual)
+        for rol in lista2:
+            if rol.nombre not in request.POST:
+                usuario_actual.roles.remove(rol)
+        for r in lista3:
+            if r.nombre in request.POST:
+                usuario_actual.roles.add(r)
+        usuario_actual.save()
         return render(request, self.template_name, diccionario)
 
 

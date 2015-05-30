@@ -3,17 +3,20 @@
 {% block TituloMenu %}ASIGNAR ROLES{% endblock %}
 {% block TituloOperacion %}Formulario Usuario Roles{% endblock %}
 {% block DatosOperacion %}
-    <form action="/proyecto/usuario/asignar/confirmar/" method="POST" class="niceform">{% csrf_token %}
+<form action="/proyecto/usuario/asignar/confirmar/" method="POST" class="niceform">{% csrf_token %}
 
         <dl><dt><label>Usuario: {{ usuario_actual.username }}</label></dt><dd><input type="hidden" value= {{ usuario_actual.username }} name="user" id="" size="54" required/></dd></dl>
 
-        {% for rol in lista_roles %}
-            <input type="checkbox" name={{ rol.nombre }} >{{ rol.nombre }}<br>
+        {% for rol in roles_asignados %}
+            <input type="checkbox" name={{ rol.nombre }} checked >{{ rol.nombre }}<br>
+        {% endfor %}
+        {% for r in no_asignados %}
+            <input type="checkbox" name={{ r.nombre }}>{{ r.nombre }}<br>
         {% endfor %}
         <input type="hidden" name='login' value= {{ logueado.id }} >
         <input type="hidden" name='user' value= {{ usuario_actual.id }} >
         <input type="submit" value="Asignar">
-    </form>
+</form>
 
     <form action="/proyecto/" method="POST">{% csrf_token %}
         <input type="hidden" name='login' value= {{ logueado.id }} >

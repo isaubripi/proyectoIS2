@@ -36,7 +36,11 @@
                     <form action="/proyecto/usuario/asignar/" method="post">{% csrf_token %}
                         <input type="hidden" name='usuario' value="{{ usuario.id }}" >
                         <input type="hidden" name='login' value={{ logueado.id }} >
-                       <input type="submit" value="Asignar roles" id="submitt">
+                        {% if usuario == logueado %}
+                            <input type="submit" value="Asignar roles" id="submitt" disabled>
+                        {% else %}
+                            <input type="submit" value="Asignar roles" id="submitt">
+                        {% endif %}
                     </form>
                 </td>
                 <td>
