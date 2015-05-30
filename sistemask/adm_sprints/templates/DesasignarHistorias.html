@@ -4,7 +4,7 @@
 {% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>{% endblock %}
 
 {% block Columnas %}
-   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+
 <h2>Lista de Historias del Sprint</h2>
 
 
@@ -18,11 +18,11 @@
             <dl>
                 <dt><label>Historias asignadas dentro del Sprint:</label></dt>
                 <dd>
-                    <select multiple name="historias[]" id="submitt" required>
-                        <option value="" disabled>Seleccionar historia/s</option>
+                    <select size="10" multiple name="historias[]" id="submitt" required>
+                        <option value="" disabled>Nombre ______Prioridad_____Val.Negocio_____Val.Tecnico______Desarrollador_______Flujo_________Actividad_________Estado </option>
                         {% for historia in historias %}
 
-                                <option value={{ historia.nombre }}>{{ historia.nombre }}</option>
+                                <option value={{ historia.nombre }}>{{ historia.nombre }} __________ {{historia.prioridad }} ____________ {{ historia.val_negocio }}_____________ {{ historia.val_tecnico }} _____________ {{ historia.asignado }} ____________ {{ historia.flujo }} __________ {{ historia.actividad }} ________ {{ historia.estado }}</option>
 
                         {% endfor %}
                     </select>

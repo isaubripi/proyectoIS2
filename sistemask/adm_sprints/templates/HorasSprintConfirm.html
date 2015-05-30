@@ -1,0 +1,15 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}:: Cargar Horas ::{% endblock %}
+{% block TituloMenu %} CARGAR HORAS SPRINT {% endblock %}
+{% block TituloOperacion %} Horas Establecidas {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>La historia se modifico exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/sprint/sprintbacklog/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

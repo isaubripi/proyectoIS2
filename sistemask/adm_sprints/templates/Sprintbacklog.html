@@ -2,15 +2,51 @@
 {% block title %}::Administracion de Sprints::{% endblock %}
 {% block TituloMenu %} SPRINT BACKLOG {% endblock %}
 {% block MigasDePan %}>>>Inicio >>> Proyecto: <h4> {{ proyecto.nombre }} </h4>>> Sprint: <h4>{{ sprint.nombre }}</h4>{% endblock %}
-{% block TituloLista %} Lista de Historias asignadas al Sprint {% endblock %}
+
 {% block content %}
+
 
 {% endblock %}
 
 {% block Columnas %}
-<table border="2"  bgcolor="white">
+<table width="1000" align="center" border="2" bgcolor="skyblue">
+    <caption style="color:#0000FF;font-size:20pt;font-style:verdana"> Datos Sprint</caption>
+    <td>
+    <h6 style="color:#FFFFFF"> Nombre: <h6>{{ sprint.nombre }}</h6> </h6>
+    <h6 style="color:#FFFFFF"> Pertenece al proyecto: <h6>{{ sprint.proyecto.nombre }}</h6></h6>
+    <h6 style="color:#FFFFFF"> Descripcion: <h6>{{ sprint.descripcion }}</h6> </h6>
+    <td>
+    <h6 style="color:#FFFFFF"> Fecha de Inicio: <h6>{{ sprint.fecha_inicio }}</h6> </h6>
+    <h6 style="color:#FFFFFF"> Fecha de Fin: <h6>{{ sprint.fecha_fin }} </h6></h6>
+    </td>
+    <td>
+    <h6 style="color:#FFFFFF"> Duracion: <h6>{{ sprint.duracion }} dias </h6></h6>
+    <h6 style="color:#FFFFFF"> Estado: <h6>{{ sprint.estado }} </h6></h6>
+    </td>
+    <td>
+    <h6 style="color:#FFFFFF"> HISTORIAS ASIGNADAS: </h6>
+    {% for historia in historias %}
+        <h6> * {{ historia.nombre }}</h6> </br>
 
-    <tr>
+    {% endfor %}
+    <h6 style="color:#FFFFFF">USUARIOS ASIGNADOS AL SPRINT:</h6>
+    {% for usuario in usuarios %}
+        <h6>* {{ usuario.usuario }}..... trabaja {{ usuario.horas_sprint }} hora/s por dia </h6></br>
+
+    {% endfor %}
+    </td>
+    <td>
+    <h6 style="color:#FFFFFF"> Capacidad Productiva: <h6>{{ capacidad }} horas reloj </h6></h6>
+    <h6 style="color:#FFFFFF"> Horas Estimadas de Trabajo: <h6>{{ horas_trabajo }} horas reloj </h6></h6>
+    <h6 style="color:#FFFFFF"> Saldo en horas de Trabajo: <h6>{{ saldo }} horas reloj </h6></h6>
+    </td>
+</table>
+<br>
+
+<table border="2"  bgcolor="white" style="font-size:15px" >
+    <caption style="color:#0000FF;font-size:20pt;font-style:verdana"> Historias de Usuario Asignadas al Sprint </caption>
+
+    <tr >
 		<th scope="col" class="rounded" >Nombre</th>
 		<th scope="col" class="rounded">Prioridad</th>
 		<th scope="col" class="rounded" >Valor de Negocio</th>
@@ -20,9 +56,12 @@
         <th scope="col" class="rounded">Horas Estimadas</th>
         <th scope="col" class="rounded">Horas Empleadas</th>
         <th scope="col" class="rounded">Horas Restantes</th>
+        <th scope="col" class="rounded">Horas en Sprint</th>
         <th scope="col" class="rounded" >Pertenece al Flujo</th>
         <th scope="col" class="rounded">Actividad en el Flujo</th>
         <th scope="col" class="rounded" >Estado en el Flujo</th>
+        <th scope="col" class="rounded" >Finalizar Historia</th>
+        <th scope="col" class="rounded" >Cargar Horas</th>
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
@@ -49,9 +88,40 @@
                             document.write(resta);
                         </script>
                         </td>
+                        <td align="center">{{ historia.horas_sprint }}</td>
                         <td align="center">{{ historia.flujo }}</td>
                         <td align="center">{{ historia.actividad }}</td>
                         <td align="center">{{ historia.estado }}</td>
+
+                        <td align="center">
+                        <form action="/sprint/finalizar/" method="post">{% csrf_token %}
+                            <input type="hidden" name='codigo' value={{ logueado.id }} >
+                            <input type="hidden" name='login' value={{ logueado.id }} >
+                            <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+                            <input type="hidden" name='historia' value={{ historia.id}}>
+                            <input type="hidden" name='sprint' value={{ sprint.id}}>
+                            {% if historia.estado_sprint == "En Progreso" %}
+                                <input style="color:#0EAE0E" type="submit" value="Finalizar" id="submitt">
+                            {% else %}
+                                <input style="color:#0EAE0E" type="submit" value="Finalizar" id="submitt" disabled>
+                            {% endif %}
+                        </form>
+                        </td>
+
+                        <td align="center">
+                        <form action="/sprint/cargar/" method="post">{% csrf_token %}
+                            <input type="hidden" name='codigo' value={{ logueado.id }} >
+                            <input type="hidden" name='login' value={{ logueado.id }} >
+                            <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+                            <input type="hidden" name='historia' value={{ historia.id}}>
+                            <input type="hidden" name='sprint' value={{ sprint.id}}>
+                            {% if historia.estado_sprint == "No iniciado" %}
+                                <input style="color:#1F1DBF" type="submit" value="Cargar" id="submitt">
+                            {% else %}
+                                <input style="color:#1F1DBF" type="submit" value="Cargar" id="submitt" disabled>
+                            {% endif %}
+                        </form>
+                        </td>
 
                     </tr>
 

@@ -4,7 +4,7 @@
 {% block MigasDePan %}>>Inicio>>Proyecto:<h5>{{ proyecto.nombre }}</h5>>>Sprint:<h5>{{sprint.nombre}}</h5>{% endblock %}
 
 {% block Columnas %}
-   <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE HISTORIAS</font></h1></b></div>
+
 <h2>Lista de Historias del Proyecto</h2>
 
 
@@ -12,19 +12,18 @@
 {% block MostrarDatos %}
 {% block DatosOperacion %}
     <form action="/sprint/asignar/confirmar/" method="post" class="niceform">{% csrf_token %}
-        <fieldset>
+        <fieldset >
 
 
             <dl>
-                <dt><label><h5>Estan disponibles aquellas historias que ya tienen asignados un Usuario y un Flujo</h5>Historias del Proyecto:</label></dt>
-                <dd>
-                    <select multiple name="historias[]" id="submitt" required>
-                        <option value="" disabled>Seleccionar historia/s</option>
+                <dt><label>Historias del Proyecto:</label></dt>
+                <dd >
+                    <select size="10" style="width:500" multiple name="historias[]" id="submitt" required>
+                        <option value="" disabled>Nombre ______Prioridad_____Val.Negocio_____Val.Tecnico______Desarrollador_______Flujo_________Actividad_________Estado </option>
                         {% for historia in historias %}
-
-                                <option value={{ historia.nombre }}>{{ historia.nombre }}</option>
-
+                                    <option value={{ historia.nombre }}>{{ historia.nombre }} __________ {{historia.prioridad }} ____________ {{ historia.val_negocio }}_____________ {{ historia.val_tecnico }} _____________ {{ historia.asignado }} ____________ {{ historia.flujo }} __________ {{ historia.actividad }} ________ {{ historia.estado }}</option>
                         {% endfor %}
+
                     </select>
                 </dd>
             </dl>

@@ -5,13 +5,21 @@ from adm_usuarios.models import Usuario
 from adm_roles.models import Rol
 from sistemask.views import LoginView
 from adm_sprints.models import Sprint
-from adm_historias.models import Historia
+from adm_historias.models import Historia, Registro
 from adm_flujos.models import Flujo
 from adm_sprints.models import Equipo
 
 from adm_proyectos.views import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
+from datetime import datetime, date, time, timedelta
+import calendar
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
 
 import datetime
 class SprintView(TemplateView):
@@ -64,12 +72,12 @@ class CrearSprint(LoginRequiredMixin, SprintView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= proyecto_actual
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto = proyecto_actual)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Scrum Master
+        if len(Rol.objects.filter(agregar_sprint=True, usuario= usuario_logueado)): #Si el logueado es Scrum Master
             #diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             #del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
         else:
-            diccionario['error']= 'No puedes realizar esta accion'
+            diccionario['error']= 'No posee permiso para crear sprint'
             return render(request, super(CrearSprint, self).template_name, diccionario)
 
 class CrearSprintConfirm(CrearSprint):
@@ -145,7 +153,7 @@ class EliminarSprint(LoginRequiredMixin, SprintView):
         diccionario['proyecto']= proyecto_actual
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado, activo= True)):
+        if len(Rol.objects.filter(eliminar_sprint=True, usuario= usuario_logueado, activo= True)):
             if sprint_actual.estado=='Futuro' and sprint_actual.asignado_h == False:
                 sprint_actual.activo= False
                 sprint_actual.save()
@@ -154,7 +162,7 @@ class EliminarSprint(LoginRequiredMixin, SprintView):
             else:
                 diccionario['error']= 'Sprint en Ejecucion, Ejecutado o con Historias de Usuario asignadas- No se puede eliminar'
         else:
-            diccionario['error']= 'No puedes realizar esta accion'
+            diccionario['error']= 'No posee permiso para eliminar sprint'
         return render(request, super(EliminarSprint,self).template_name, diccionario)
 
 
@@ -183,7 +191,7 @@ class ModificarSprint(LoginRequiredMixin, SprintView):
         proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es SM
+        if len(Rol.objects.filter(modificar_sprint=True, usuario= usuario_logueado)): #Si el logueado es SM
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             diccionario[self.context_object_name]
             if sprint_actual.estado == 'Futuro':
@@ -192,7 +200,7 @@ class ModificarSprint(LoginRequiredMixin, SprintView):
                 diccionario['error']= 'Sprint En Ejecucion o Ejecutado, no se puede modificar'
                 return render(request, super(ModificarSprint, self).template_name, diccionario)
         else:
-            diccionario['error']= 'No puedes realizar esta accion'
+            diccionario['error']= 'No posee permiso para modificar sprint'
             return render(request, super(ModificarSprint, self).template_name, diccionario)
 
 class ModificarSprintConfirm(ModificarSprint):
@@ -263,12 +271,12 @@ class CambiarEstado(LoginRequiredMixin, SprintView):
 
         sprint_actual = Sprint.objects.get(id=request.POST['sprint'])
         diccionario['sprint']=sprint_actual
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(activar_sprint=True, usuario= usuario_logueado)):
 
             return render(request, self.template_name, diccionario)
 
         else:
-            diccionario['error'] = 'No puedes realizar esta accion'
+            diccionario['error'] = 'No posee permiso para cambiar estado'
             return render(request, super(CambiarEstado, self).template_name, diccionario)
 
 
@@ -305,7 +313,7 @@ class CambiarEstadoConfirm(CambiarEstado):
         estado_actual = request.POST['estado_sprint']
         id_sprint = request.POST['sprint']
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(activar_sprint=True, usuario= usuario_logueado)):
             #si el estado ya se encuentra en futuro y se asigna nuevamente futuro, no pasa nada
             if estado_actual == 'Futuro' and sprint_actual.estado=='Futuro':
                 sprint_actual.estado = 'Futuro'
@@ -313,6 +321,14 @@ class CambiarEstadoConfirm(CambiarEstado):
             #si se quiere establecer En ejecucion, posee historias pero ya se encuentra otro en ejecucion
             elif estado_actual == 'En Ejecucion' and sprint_actual.asignado_h==True and Sprint.objects.filter(activo=True, proyecto=proyecto_actual, estado='En Ejecucion' ):
                 diccionario['error'] = 'El Sprint no se puede ejecutar, ya que otro Sprint se encuentra en Ejecucion'
+                return render(request, super(CambiarEstadoConfirm, self).template_name, diccionario)
+
+            elif estado_actual == 'Ejecutado' and sprint_actual.estado=='En Ejecucion' and not len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, estado_sprint='Completada').all()):
+                sprint_actual.estado = 'Ejecutado'
+                sprint_actual.save()
+
+            elif estado_actual == 'Ejecutado' and sprint_actual.estado=='En Ejecucion' and len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, estado_sprint='Completada').all()):
+                diccionario['error'] = 'El Sprint no se puede finalizar, quedan historias no completadas'
                 return render(request, super(CambiarEstadoConfirm, self).template_name, diccionario)
 
             #si se quiere establer En ejecucion, posee historias y no hay otro en ejecucion
@@ -323,6 +339,12 @@ class CambiarEstadoConfirm(CambiarEstado):
                     and len(Equipo.objects.filter(sprint=id_sprint))\
                     and len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, asignado = Usuario.objects.all(), flujo=Flujo.objects.all())):
                     sprint_actual.estado = 'En Ejecucion'
+
+                    historias = Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True)
+                    for i in historias:
+                        i.estado_sprint = 'En Progreso'
+                        i.save()
+
                     sprint_actual.save()
             elif estado_actual== 'En Ejecucion'\
                     or not len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True))\
@@ -330,6 +352,8 @@ class CambiarEstadoConfirm(CambiarEstado):
                     or not len(Historia.objects.filter(proyecto=proyecto_actual, sprint=id_sprint, activo=True, asignado = Usuario.objects.all(), flujo=Flujo.objects.all())):
                 diccionario['error']='El sprint no se puede iniciar, ya que no posee historias asignadas inicializadas o equipo asignado'
                 return render(request, super(CambiarEstadoConfirm, self).template_name, diccionario)
+
+
 
             return render(request, self.template_name, diccionario)
 
@@ -370,7 +394,7 @@ class AsignarHistorias(LoginRequiredMixin, SprintView):
         diccionario['sprint']=sprint_actual
 
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_historia=True, usuario= usuario_logueado)):
             if sprint_actual.estado=='Futuro':
                 return render(request, self.template_name, diccionario)
             else:
@@ -429,6 +453,8 @@ class AsignarHistoriasConfirm(AsignarHistorias):
                 Historia_asignada = Historia.objects.get(nombre=i)
                 Historia_asignada.sprint = id_sprint
                 Historia_asignada.asignado_p = True
+                Historia_asignada.estado_sprint = 'No iniciado'
+                Historia_asignada.horas_sprint = 0
                 Historia_asignada.save()
             else:
                 diccionario['error']= 'Una de las historias no tiene asignados Usuario y Flujo, no se puede agregar al Sprint'
@@ -469,7 +495,7 @@ class AsignarUsuarioFlujo(LoginRequiredMixin, SprintView):
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_usuario_flujo = True, usuario= usuario_logueado)):
             if sprint_actual.estado == 'Futuro':
                 if len(Equipo.objects.filter(sprint = request.POST['sprint'])):
                     return render(request, self.template_name, diccionario)
@@ -519,7 +545,7 @@ class AsignarUsuarioFlujo1(AsignarHistorias):
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_usuario_flujo = True , usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
 
         else:
@@ -563,7 +589,7 @@ class AsignarUsuarioFlujo2(AsignarUsuarioFlujo1):
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_usuario_flujo = True, usuario= usuario_logueado)):
             Usuario_asignado = Usuario.objects.get(username = request.POST['usuario'])
             Flujo_asignado = Flujo.objects.get(nombre = request.POST['flujo'])
 
@@ -573,9 +599,9 @@ class AsignarUsuarioFlujo2(AsignarUsuarioFlujo1):
 
             return render(request, self.template_name, diccionario)
 
-        #else:
-             #diccionario['error'] = 'No puedes realizar esta accion'
-             #return render(request, super(AsignarUsuarioFlujo2, self).template_name, diccionario)
+        else:
+             diccionario['error'] = 'No puedes realizar esta accion'
+             return render(request, super(AsignarUsuarioFlujo2, self).template_name, diccionario)
 
 class DesasignarHistorias(LoginRequiredMixin, SprintView):
     """
@@ -618,7 +644,7 @@ class DesasignarHistorias(LoginRequiredMixin, SprintView):
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(desasignar_historia = True, usuario= usuario_logueado)):
             if sprint_actual.estado == 'Futuro':
                 return render(request, self.template_name, diccionario)
             else:
@@ -808,7 +834,7 @@ class AsignarEquipo(LoginRequiredMixin, SprintView):
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_equipo = True, usuario= usuario_logueado)):
             if sprint_actual.estado == 'Futuro':
                 return render(request, self.template_name, diccionario)
             else:
@@ -907,7 +933,7 @@ class AsignarHoras(AsignarEquipo):
 
         diccionario['lista_flujos'] = Flujo.objects.filter(activo= True, proyecto=proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(asignar_equipo = True , usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
 
         else:
@@ -941,9 +967,187 @@ class Sprintbacklog(LoginRequiredMixin, SprintView):
         sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
         diccionario['sprint']=sprint_actual
 
+        usuarios_sprint = []
+
+        '''for i in Historias_sprint:
+            nombre = i.asignado
+            usuarios_sprint.append(nombre.username)
+
+        usuarios_sprint=list(set(usuarios_sprint))'''
+
+        #calcular la capacidad productiva en base a las horas asignadas a cada usuario
+        #primero se calculan la horas que puede trabajar un equipo por dia
+        horas_dia = 0
+        for i in sprint_actual.equipo.all():
+            horas_dia = horas_dia + i.horas_sprint
+            usuarios_sprint.append(i)
+
+
+        #elementos = len(usuarios_sprint)
+        capacidad_productiva = horas_dia*(sprint_actual.duracion)
+
+        # calcular cantidad de horas que requiere el sprint (suma de todas las horas estimadas)
+        horas = 0
+        for j in sprint_actual.historias.all():
+            horas = horas + j.size
+
+        horas_trabajadas=0
+        for k in sprint_actual.historias.all():
+            horas_trabajadas = horas_trabajadas + k.acumulador
+
+        #se calcula el saldo en horas de trabajo
+        saldo=0
+        saldo = horas - horas_trabajadas
+
+        diccionario['saldo']=saldo
+        diccionario['horas_trabajo']=horas
+
+        diccionario['capacidad'] = capacidad_productiva
+        diccionario['usuarios']=usuarios_sprint
+
         if len(Rol.objects.filter(usuario= usuario_logueado)):
              return render(request, self.template_name, diccionario)
 
         else:
              diccionario['error'] = 'No puedes realizar esta accion'
              return render(request, super(Sprintbacklog, self).template_name, diccionario)
+
+class BurndownChart(LoginRequiredMixin, SprintView):
+
+    template_name = 'Sprint.html'
+    context_object_name = 'lista_sprints'
+
+    def post(self, request, *args, **kwargs):
+
+        """
+        Se encarga de crear un nuevo sprint, teniendo como condicion que el usuario sea SM
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna el formulacion para creacion de sprint solo si el usuario posee el rol de Scrum Master
+                 En caso contrario retorna un mensaje de denegacion de acceso en la misma pagina.
+        """
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+        diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto = proyecto_actual)
+
+        sprint_actual = Sprint.objects.get(id=request.POST['sprint'])
+
+        duracion = sprint_actual.fecha_fin - sprint_actual.fecha_inicio
+        inicio = sprint_actual.fecha_inicio
+
+
+        lista_fechas = []
+        for j in range(1, duracion.days):
+
+            lista_fechas.append(inicio)
+            inicio = inicio + timedelta(days=1)
+
+        registros = Registro.objects.all()
+        lista_horas = []
+
+        for i in lista_fechas:
+            horas = 0
+            for j in registros:
+                if i == j.fecha:
+                    horas = horas + j.horas
+            lista_horas.append(horas)
+
+        historias_sprint = Historia.objects.filter(sprint=sprint_actual, activo=True)
+
+        horas_estimadas=0
+        for i in historias_sprint:
+            horas_estimadas = horas_estimadas + i.size
+
+
+
+        x = np.array([0,1,2])
+        y = np.array([horas_estimadas, 0, 0])
+
+        plt.xlabel('Dias de la iteracion')
+        plt.ylabel('Horas restantes del Sprint')
+
+
+
+
+        plt.title('Burndown Chart del '+ sprint_actual.nombre)
+
+        plt.plot(x, y)
+
+        #show plot
+        plt.show()
+
+        return render(request, self.template_name, diccionario)
+
+class FinalizarHistoria(LoginRequiredMixin, SprintView):
+    template_name = 'FinalizarHistoria.html'
+
+    def post(self, request, *args, **kwargs):
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        sprint_actual = Sprint.objects.get(id=request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        if len(Rol.objects.filter(finalizar_historia=True, usuario=usuario_logueado, activo=True)):
+            historia_actual.estado_sprint = 'Completada'
+            historia_actual.asignado_p = False
+            historia_actual.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']='No posee el permiso para finalizar Historia'
+            return render(request, super(FinalizarHistoria, self).template_name, diccionario)
+
+class HorasSprint(LoginRequiredMixin, SprintView):
+    template_name = 'HorasSprint.html'
+
+    def post(self, request, *args, **kwargs):
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+
+        sprint_actual = Sprint.objects.get(id=request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        diccionario['historia']=historia_actual
+
+        if len(Rol.objects.filter(horas_sprint=True, usuario=usuario_logueado, activo=True)):
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']='No posee el permiso'
+            return render(request, super(HorasSprint, self).template_name, diccionario)
+
+class HorasSprintConfirm(LoginRequiredMixin, SprintView):
+    template_name = 'HorasSprintConfirm.html'
+
+    def post(self, request, *args, **kwargs):
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+
+        sprint_actual = Sprint.objects.get(id=request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+        historia_actual = Historia.objects.get(id=request.POST['historia'])
+        hs_sprint = request.POST['horas_sprint']
+
+        historia_actual.horas_sprint = hs_sprint
+        historia_actual.save()
+
+        return render(request, self.template_name, diccionario)
+
