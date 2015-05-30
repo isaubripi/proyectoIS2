@@ -4,6 +4,7 @@ from .models import Flujo
 from adm_proyectos.models import Proyecto
 from adm_usuarios.models import Usuario
 from adm_proyectos.views import LoginRequiredMixin
+from adm_roles.models import Rol
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 # Create your views here.
@@ -69,8 +70,13 @@ class CrearFlujo(LoginRequiredMixin, FlujoView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= proyecto_actual
 
-
-        return render(request, self.template_name, diccionario)
+        if len(Rol.objects.filter(crear_flujo=True, usuario= usuario_logueado)):
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error'] = 'No posee permiso para crear flujo'
+            lista = Flujo.objects.filter(activo=True, proyecto=proyecto_actual)
+            diccionario['lista']=lista
+            return render(request, super(CrearFlujo, self).template_name, diccionario)
 
 class CrearFlujoConfirm(CrearFlujo):
 
@@ -141,7 +147,14 @@ class EditarFlujo(LoginRequiredMixin, FlujoView):
         flujo_actual = Flujo.objects.get(id= request.POST['flujo'])
         diccionario['flujo']=flujo_actual
 
-        return render(request, self.template_name, diccionario)
+        if len(Rol.objects.filter(crear_flujo=True, usuario= usuario_logueado)):
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error'] = 'No posee permiso para modificar flujo'
+            lista = Flujo.objects.filter(activo=True, proyecto=proyecto_actual)
+            diccionario['lista']=lista
+            return render(request, super(EditarFlujo, self).template_name, diccionario)
+
 
 
 class EditarFlujoConfirm(EditarFlujo):
@@ -213,13 +226,18 @@ class EliminarFlujo(LoginRequiredMixin, FlujoView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= proyecto_actual
 
-        flujo = Flujo.objects.get(id = request.POST['flujo'])
 
-        flujo.activo = False
+        if len(Rol.objects.filter(eliminar_flujo=True, usuario= usuario_logueado)):
+            flujo = Flujo.objects.get(id = request.POST['flujo'])
+            flujo.activo = False
+            flujo.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error'] = 'No posee permiso para eliminar flujo'
+            lista = Flujo.objects.filter(activo=True, proyecto=proyecto_actual)
+            diccionario['lista']=lista
+            return render(request, super(EliminarFlujo, self).template_name, diccionario)
 
-        flujo.save()
-
-        return render(request, self.template_name, diccionario)
 
 
 class Actividades(LoginRequiredMixin, TemplateView):
