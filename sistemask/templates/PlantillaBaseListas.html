@@ -7,7 +7,13 @@
             <form action="/salir/" method="get">{% csrf_token %}
                 <u> Usuario</u>:  {{ logueado.username }}  ||
                 <a href="/salir/" class="logout">Salir del Sistema</a>
+
             </form>
+        </div>
+        <div align="right" > <!--a href="#" class="messages">Messages</a-->
+                <u> Rol/es</u>: {% for rol in logueado.roles.all %}
+                                    {{ rol.nombre }}:
+                                {% endfor %}
         </div>
 	</div>
     <div class="main_content">
