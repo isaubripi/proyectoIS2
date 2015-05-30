@@ -117,14 +117,20 @@
                                 <input type="submit" value="Asignar Usuario y Flujo" id="submitt">
                             </form>
                         </td>
-                        <td>
+
+                        <th scope="col" class="rounded" style="color:#FFFFFF">BurndownChart</th>
+
+
+			            <td>
                             <form action= "/sprint/burndownchart/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Burndown Chart" id="submitt">
+                                <input type="submit" value="Ver BurndownChart" id="submitt">
                             </form>
                         </td>
+
+
                     </tr>
 
     {% endfor %}

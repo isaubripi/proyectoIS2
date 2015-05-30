@@ -18,7 +18,7 @@ import calendar
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+from pylab import *
 
 
 import datetime
@@ -1151,3 +1151,62 @@ class HorasSprintConfirm(LoginRequiredMixin, SprintView):
 
         return render(request, self.template_name, diccionario)
 
+
+class Burndownchart(LoginRequiredMixin, SprintView):
+
+
+    template_name = 'Burndownchart.html'
+    def post(self, request, *args, **kwargs):
+        '''
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
+
+        sprint_actual = Sprint.objects.get(id = request.POST['sprint'])
+        diccionario['sprint']=sprint_actual
+
+
+        #define some data
+        total = 0
+
+        for historia in sprint_actual.historias.all():
+            total += historia.size
+
+        plt.ylim(-1, total)
+        lista = Registro.objects.filter(sprint=str(sprint_actual.id))
+        listay = []
+        listay.append(total)
+
+        for registro in lista:
+
+            total-=registro.horas
+            listay.append(total)
+
+
+
+
+        x = np.arange(0., len(lista) + 1, 1)
+        y = np.array(listay)
+
+        plt.xlim(0, len(lista)+1)
+        plt.xlabel("Cargas de tareas")
+        plt.ylabel("Horas restantes")
+        plt.title("BurndownChart del Sprint " + sprint_actual.nombre)
+
+        #plot data
+        plt.plot(x, y, 'k', marker="o", color="green")
+        savefig("grafico1.jpg")
+
+        #show plot
+        #plt.show()
+
+        return render(request, self.template_name, diccionario)

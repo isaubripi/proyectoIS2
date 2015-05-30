@@ -1,0 +1,17 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::BurndownChart::{% endblock %}
+{% block TituloMenu %} BURNDOWNCHART {% endblock %}
+{% block TituloOperacion %} BurndownChart {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Presione Atras para volver</h3></center>
+{% endblock %}
+
+{% block Botones %}
+    <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <center><input type="submit" value="Atras"></center>
+    </form>
+    <center><a href="/historia/tareas/grafico1.jpg">Grafico BurndownChart</a></center>
+{% endblock %}
