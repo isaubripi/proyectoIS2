@@ -397,7 +397,7 @@ class CargarHorasConfirm(CargarHoras):
         registro_nuevo = Registro.objects.create(id_historia=historia, orden=ord, nombre=nombre_tarea,
                                                  proyecto=proyecto_actual, descripcion=descripcion_tarea,
                                                  horas=int(horas), fecha=timezone.now(), fecha1=timezone.now().date(),
-                                                 activo=True)
+                                                 sprint=historia.sprint, activo=True)
         if 'adjuntar' in request.POST:
 
             archi=request.FILES['adjunto']
@@ -438,8 +438,7 @@ class CargarHorasConfirm(CargarHoras):
                             + '\nPROYECTO: ' + proyecto_actual.nombre
                             + '\nDESCRIPCION: ' + descripcion_tarea
                             + '\nHORAS EMPLEADAS: ' + horas
-                            + '\nFLUJO: ' + historia.flujo.nombre
-                            + '\nACTIVIDAD: ' + historia.actividad,
+                            + '\nFLUJO: ' + historia.flujo.nombre,
         }
         # se renderiza el template con el context
         email_html = render_to_string('email.html', email_context)
