@@ -102,7 +102,8 @@ class CrearProyecto(LoginRequiredMixin, ProyectoView):
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Scrum Master
+        if len(Rol.objects.filter(crear_proyecto = True, usuario= usuario_logueado, activo=True)): #Si el logueado es Scrum Master
+        #if len(usuario_logueado.roles.crear_proyecto == True):
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
@@ -173,7 +174,7 @@ class EliminarProyecto(LoginRequiredMixin, ProyectoView):
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado, activo= True)):
+        if len(Rol.objects.filter(eliminar_proyecto = True, usuario= usuario_logueado, activo= True)):
             if proyecto_actual.estado=='F':
                 proyecto_actual.activo= False
                 proyecto_actual.save()
@@ -325,7 +326,7 @@ class ModificarProyecto(LoginRequiredMixin, ProyectoView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es SM
+        if len(Rol.objects.filter(modificar_proyecto =True, usuario= usuario_logueado, activo=True)): #Si el logueado es SM
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
@@ -410,9 +411,15 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
 
         diccionario['actividades_flujo']=actividades
 
+        if len(Rol.objects.filter(ver_tabla = True, usuario=usuario_logueado, activo=True)):
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee el permiso'
+            return render(request, self.template_name, diccionario)
 
 
-        return render(request, self.template_name, diccionario)
+
+
 
 class ProductBacklog(LoginRequiredMixin, ProyectoView):
     template_name = 'ProductBacklog.html'
@@ -529,3 +536,80 @@ class ProductBacklogTec(LoginRequiredMixin, ProyectoView):
 
 
         return render(request, self.template_name, diccionario)
+
+class CancelarHistoria(LoginRequiredMixin, TemplateView):
+
+    """
+    Para cancelar una historia. Boton "Cancelar"
+    """
+    template_name = 'CancelarHistoria.html'
+
+
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verificacion de roles y estado actual del proyecto,
+        luego cancela si es posible.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de cancelacion exitosa de la historia (cambio de estado)
+                 Retorna mensajes de error en caso de que el usuario no posea los permisos.
+        """
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        historia_actual = Historia.objects.get(id = request.POST['historia'])
+        diccionario['proyecto']=proyecto_actual
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['historias']=lista_historias
+
+        #diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
+        if len(Rol.objects.filter(cancelar_historia = True, usuario= usuario_logueado, activo= True)):
+            historia_actual.estado_scrum = 'Cancelado'
+            historia_actual.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permiso para cancelar historia'
+            return render(request, super(CancelarHistoria,self).template_name, diccionario)
+
+class ReleaseHistoria(LoginRequiredMixin, TemplateView):
+
+    """
+    Para hacer release a una historia. Boton "Release"
+    """
+    template_name = 'ReleaseHistoria.html'
+
+
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verificacion de roles y estado actual del proyecto,
+        luego cancela si es posible.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de release exitosa de la historia (cambio de estado scrum)
+                 Retorna mensajes de error en caso de que el usuario no posea los permisos.
+        """
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        historia_actual = Historia.objects.get(id = request.POST['historia'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['historias']=lista_historias
+
+        #diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
+        if len(Rol.objects.filter(release_historia = True, usuario= usuario_logueado, activo= True)):
+            historia_actual.estado_scrum = 'Released'
+            historia_actual.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permiso para finalizar la historia'
+            return render(request, super(ReleaseHistoria,self).template_name, diccionario)
+
+

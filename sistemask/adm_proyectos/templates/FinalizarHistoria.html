@@ -1,0 +1,15 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Finalizar Historia en Sprint::{% endblock %}
+{% block TituloMenu %} FINALIZAR HISTORIA EN SPRINT {% endblock %}
+{% block TituloOperacion %} Historia Finalizada en Sprint {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>La historia se finalizo correctamente </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/sprint/sprintbacklog/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='sprint' value={{ sprint.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

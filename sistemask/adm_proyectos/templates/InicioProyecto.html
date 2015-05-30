@@ -37,7 +37,9 @@
     <form action= "/flujo/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+        {% ifequal proyecto.scrum_master logueado %}
      	<input type="submit" value="Administrar Flujos" id="submitt">
+        {% endifequal %}
     </form>
 
     <br>
@@ -45,21 +47,27 @@
     <form action= "/sprint/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+        {% ifequal proyecto.scrum_master logueado %}
      	<input type="submit" value="Administrar Sprints" id="submitt">
+        {% endifequal %}
     </form>
     <br>
 
     <form action= "/inicio/rol/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id }}>
+        {% ifequal proyecto.scrum_master logueado %}
      	<input type="submit" value="Administrar Roles" id="submitt">
+        {% endifequal %}
     </form>
     <br>
 
     <form action= "/historia/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+        {% ifequal proyecto.scrum_master logueado %}
      	<input type="submit" value="Administrar Historias" id="submitt">
+        {% endifequal %}
     </form>
     </td>
 
@@ -68,7 +76,12 @@
     <form action= "/proyecto/kanban/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-     	<input type="submit" value="Ver Tabla Kanban" id="submitt">
+        {% for rol in logueado.roles.all %}
+            {% ifequal rol.ver_tabla True %}
+     	        <input type="submit" value="Ver Tabla Kanban" id="submitt">
+            {% endifequal %}
+        {% endfor %}
+
     </form>
 
     <form action= "/proyecto/productbacklog/" method="post"> {% csrf_token %}

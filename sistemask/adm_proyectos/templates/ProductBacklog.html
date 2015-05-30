@@ -20,6 +20,10 @@
         <th scope="col" class="rounded" >Pertenece al Flujo</th>
         <th scope="col" class="rounded">Actividad en el Flujo</th>
         <th scope="col" class="rounded" >Estado en el Flujo</th>
+        <th scope="col" class="rounded" >Estado Scrum</th>
+        <th scope="col" class="rounded" >Cancelar Historia</th>
+        <th scope="col" class="rounded" >Release Historia</th>
+        <th scope="col" class="rounded" >Regresar Historia</th>
 	</tr>
 {% endblock %}
 {% block MostrarDatos%}
@@ -35,7 +39,51 @@
                         <td align="center">{{ historia.flujo }}</td>
                         <td align="center">{{ historia.actividad }}</td>
                         <td align="center">{{ historia.estado }}</td>
+                        <td align="center">{{ historia.estado_scrum }}</td>
 
+
+                        <td align="center">
+                            <form action= "/proyecto/cancelar/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='historia' value={{ historia.id }} >
+                                {% if historia.estado_scrum == "Pendiente" and proyecto.scrum_master == logueado %}
+                                    <input style="color:#F51414" type="submit" value="Cancelar" id="submitt" >
+                                {% else %}
+                                    <input style="color:#F51414" type="submit" value="Cancelar" id="submitt" disabled>
+                                {% endif %}
+                            </form>
+                        </td>
+
+                        <td align="center">
+                            <form action= "/proyecto/release/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='historia' value={{ historia.id }} >
+                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" %}
+
+                                        <input style="color:#0EAE0E" type="submit" value="Release" id="submitt">
+
+                                {% else %}
+                                    <input style="color:#0EAE0E" type="submit" value="Release" id="submitt" disabled>
+                                {% endif %}
+                            </form>
+                        </td>
+
+                         <td align="center">
+                            <form action= "/historia/actividadestado/" method="post"> {% csrf_token %}
+                                <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                                <input type="hidden" name='login' value={{ logueado.id }} >
+                                <input type="hidden" name='historia' value={{ historia.id }} >
+                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" %}
+
+                                        <input style="color:#1F1DBF" type="submit" value="Regresar" id="submitt">
+
+                                {% else %}
+                                        <input style="color:#1F1DBF" type="submit" value="Regresar" id="submitt" disabled>
+                                {% endif %}
+                            </form>
+                        </td>
                     </tr>
 
     {% endfor %}
@@ -63,6 +111,7 @@
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
         <input type="submit" value="Ordenar por Valor Tecnico" id="submitt">
     </form>
+
     <br>
     <form action="/proyecto/ingresar/" method="post">{% csrf_token %}
         <input type="hidden" name='codigo' value={{ logueado.id }} >
