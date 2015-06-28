@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from .models import Cliente
 from adm_flujos.models import Flujo
 from adm_actividades.models import Actividad
-from adm_historias.models import Historia
+from adm_historias.models import Historia, Registro
+from adm_sprints.models import Sprint
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -18,6 +19,13 @@ from django.contrib import auth
 
 from django.utils.decorators import method_decorator
 
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+
+from reportlab.graphics.shapes import Drawing, Rect, String, Group, Line
+from reportlab.graphics.widgets.markers import makeMarker
+from reportlab.graphics.charts.barcharts import VerticalBarChart
+from reportlab.graphics.charts.textlabels import Label
 
 class LoginRequiredMixin(object):
     @method_decorator(login_required)
@@ -228,7 +236,7 @@ class InicializarProyecto(LoginRequiredMixin, ProyectoView):
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)):
+        if len(Rol.objects.filter(inicializar_proyecto = True , usuario= usuario_logueado)):
             if proyecto_actual.estado == 'N' or 'I':
                 diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
                 diccionario['lista_clientes']=Cliente.objects.filter(estado=True)
@@ -599,6 +607,49 @@ class ReleaseHistoria(LoginRequiredMixin, TemplateView):
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
         historia_actual = Historia.objects.get(id = request.POST['historia'])
         diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
+        diccionario['historia'] = historia_actual
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['historias']=lista_historias
+
+        lista = Registro.objects.filter(id_historia=historia_actual, activo=True)
+        diccionario['registros'] = lista
+
+        #diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
+        if len(Rol.objects.filter(release_historia = True, usuario= usuario_logueado, activo= True)):
+
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permiso para finalizar la historia'
+            return render(request, super(ReleaseHistoria,self).template_name, diccionario)
+
+
+class ReleaseConfirm(LoginRequiredMixin, TemplateView):
+    """
+    Para hacer release a una historia. Boton "Release"
+
+    """
+
+    template_name = 'ReleaseConfirm.html'
+
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verificacion de roles y estado actual del proyecto,
+        luego cancela si es posible.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna la pagina de release exitosa de la historia (cambio de estado scrum)
+                 Retorna mensajes de error en caso de que el usuario no posea los permisos.
+        """
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
+        historia_actual = Historia.objects.get(id = request.POST['historia'])
+        diccionario['logueado']= usuario_logueado
+        diccionario['proyecto']= proyecto_actual
 
         lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
         diccionario['historias']=lista_historias
@@ -611,5 +662,513 @@ class ReleaseHistoria(LoginRequiredMixin, TemplateView):
         else:
             diccionario['error']= 'No posee permiso para finalizar la historia'
             return render(request, super(ReleaseHistoria,self).template_name, diccionario)
+
+
+
+class GenerarReporte(LoginRequiredMixin, ProyectoView):
+    def post(self, request, *args, **kwargs):
+        proyecto_actual= Proyecto.objects.get(id=request.POST['proyecto'])
+
+        import os
+        import datetime
+        # Obtenemos de platypus las clases Paragraph, para escribir parrafos Image, para insertar imagenes y SimpleDocTemplate para definir el DocTemplate. Ademas importamos Spacer, para incluir espacios .
+        from reportlab.platypus import Paragraph
+        from reportlab.platypus import SimpleDocTemplate
+        from reportlab.platypus import Spacer
+        from reportlab.platypus import Table
+
+        # Importamos clase de hoja de estilo de ejemplo.
+        from reportlab.lib.styles import getSampleStyleSheet
+
+        # Se importa el tamanho de la hoja y los colores
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib import colors
+
+
+        # Creamos un PageTemplate de ejemplo.
+        estiloHoja = getSampleStyleSheet()
+
+        #Inicializamos la lista Platypus Story.
+        story = []
+
+        #Definimos como queremos que sea el estilo de la PageTemplate.
+        cabecera = estiloHoja['Heading5']
+
+        #No se hara un salto de pagina despues de escribir la cabecera (valor 1 en caso contrario).
+        cabecera.pageBreakBefore=0
+
+        # Se quiere que se empiece en la primera pagina a escribir. Si es distinto de 0 deja la primera hoja en blanco.
+        cabecera.keepWithNext=0
+
+
+
+        # Color de la cabecera.
+        cabecera.backColor=colors.white
+        cabecera.spaceAfter = 0
+        cabecera.spaceBefore = 0
+
+        titulo = estiloHoja['Heading1']
+        titulo.pageBreakBefore=0
+        titulo.keepWithNext=0
+        titulo.backColor=colors.orange
+        titulo.spaceAfter = 50
+        titulo.spaceBefore = 50
+        titulo.rightMargin = 50
+
+        parrafo = Paragraph('SISTEMA DE GESTION DE PROYECTOS AGILES SK',titulo)
+        story.append(parrafo)
+        parrafo = Paragraph('REPORTE DEL PROYECTO: '+ proyecto_actual.nombre,cabecera)
+        story.append(parrafo)
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+
+        #parrafo = Paragraph('1. CANTIDAD DE TRABAJO EN CURSO POR EQUIPO', cabecera)
+        #story.append(parrafo)
+        story.append(Spacer(0,20))
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True)
+        lista = []
+        lista.append(['1. CANTIDAD DE TRABAJO EN CURSO POR EQUIPO', ' ', ' '])
+        lista.append([' ', ' ', ' '])
+        lista.append(['Equipo', 'Cantidad', 'Estado'])
+
+        for j in historias:
+            cant = 0
+            sprint = j.sprint
+            sprint_actual = Sprint.objects.get(id=sprint)
+            if sprint_actual.estado == 'En Ejecucion':
+                cant = cant + 1
+
+        #team = []
+        #for k in proyecto_actual.scrum_team.all():
+        #    team.append(k.username)
+
+        lista.append([proyecto_actual.scrum_team.all(), cant, 'En Progreso'])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+
+        story.append(Spacer(0,20))
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True)
+        lista = []
+        lista.append(['2. CANTIDAD DE TRABAJO POR USUARIO: PENDIENTE, EN CURSO, FINALIZADO', ' ', ' ', ' '])
+        lista.append([' ', ' ', ' ', ' '])
+        lista.append(['Usuario', 'Pendiente', 'En Curso', 'Finalizado'])
+
+
+        for i in proyecto_actual.scrum_team.all():
+            cant_pen = 0
+            cant_cur = 0
+            cant_fin = 0
+
+            for j in historias:
+                if i == j.asignado:
+                    if j.estado_sprint == 'No Iniciado':
+                        cant_pen = cant_pen + 1
+                    elif j.estado_sprint == 'En Progreso':
+                        cant_cur = cant_cur + 1
+                    elif j.estado_sprint == 'Completada':
+                        cant_fin = cant_fin + 1
+
+            lista.append([i.username, cant_pen, cant_cur, cant_fin])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+        story.append(Spacer(0,20))
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True).order_by('prioridad')
+        lista = []
+        lista.append(['3. LISTA CLASIFICADA POR ORDEN DE PRIORIDAD PARA COMPLETAR EL PROYECTO', ' ', ' '])
+        lista.append([' ', ' ', ' '])
+        lista.append(['Prioridad', 'Actividad', 'Estado'])
+
+
+
+        for j in historias:
+            lista.append([j.prioridad, j.nombre, j.estado_sprint])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+        story.append(Spacer(0,20))
+
+
+        story.append(Spacer(0,20))
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True).order_by('prioridad')
+        lista = []
+        lista.append(['4. TIEMPO ESTIMADO POR PROYECTO Y EJECUCION', ' ', ' '])
+        lista.append([' ', ' ', ' ', ' '])
+        lista.append(['Sprint', 'Descripcion', 'Tiempo Estimado en dias', 'Tiempo en Ejecucion en dias'])
+
+
+        sprints_proyecto = Sprint.objects.filter(proyecto=proyecto_actual, activo=True).order_by("nombre")
+
+
+        lista1 = []
+        for j in sprints_proyecto:
+
+            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-orden")
+            for k in tareas:
+                lista1.append(k)
+
+            if len(lista1):
+                fecha_ultima_tarea = lista1[0].fecha1
+
+                tiempo_ejecutado = fecha_ultima_tarea - j.fecha_inicio
+
+            else:
+                tiempo_ejecutado = j.fecha_inicio - j.fecha_inicio
+
+            lista.append([j.nombre, j.descripcion, j.duracion, tiempo_ejecutado.days])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        duracion_estimada = []
+        duracion_ejecutada = []
+        nombres = []
+        lista2 = []
+
+
+        for j in sprints_proyecto:
+
+            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-orden")
+            for k in tareas:
+                lista2.append(k)
+
+            if len(lista2):
+                fecha_ultima_tarea = lista2[0].fecha1
+
+                tiempo_ejecutado = fecha_ultima_tarea - j.fecha_inicio
+            else:
+                tiempo_ejecutado = j.fecha_inicio - j.fecha_inicio
+
+            duracion_estimada.append(j.duracion)
+            nombres.append(j.nombre)
+            duracion_ejecutada.append(tiempo_ejecutado.days)
+
+        #cantSprints = sprints_proyecto.count()
+
+        d = Drawing(400, 200)
+        width=400
+        height=200
+        d.height=height
+        d.width=width
+        d.add(VerticalBarChart(), name='chart')
+        d.add(String(100,180,'Duracion de Sprints del Proyecto en dias'), name='title')
+
+
+        d.chart.x = 50
+        d.chart.y = 20
+        d.chart.width = d.width - 20
+        d.chart.height = d.height - 40
+        d.chart.valueAxis.valueMin = 0
+        d.chart.valueAxis.valueMax = 50
+        d.chart.valueAxis.valueStep = 10
+        d.chart.categoryAxis.categoryNames = nombres
+        d.chart.bars[0].fillColor = colors.orange
+        d.chart.bars[1].fillColor = colors.darkblue
+
+        d.title.fontName = 'Helvetica-Bold'
+        d.translate(50,-10)
+        d.title.fontSize = 12
+
+        data = [duracion_estimada, duracion_ejecutada]
+
+        lab1 = Label()
+        lab1.setOrigin(100,90)
+        lab1.angle = 0
+        lab1.dx = 370  # desplazamiento en x
+        lab1.dy = -20  # desplazamiento en y
+        lab1.boxStrokeColor = colors.darkorange
+        lab1.setText('Naranja: Tiempo \nEstimado')
+
+        lab2 = Label()
+        lab2.setOrigin(100,90)
+        lab2.angle = 0
+        lab2.dx = 370  # desplazamiento en x
+        lab2.dy = 20  # desplazamiento en y
+        lab2.boxStrokeColor = colors.darkblue
+        lab2.setText('Azul: Tiempo en \nEjecucion')
+
+        d.add(lab1)
+        d.add(lab2)
+
+        d.chart.data = data
+
+
+        story.append(d)
+
+         # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True).order_by('prioridad')
+        lista = []
+        lista.append(['5. BACKLOG DEL PRODUCTO', ' ', ' ', ' '])
+        lista.append([' ', ' ', ' ', ' '])
+        lista.append(['Nombre', 'Descripcion', 'Orden', 'Estado'])
+
+        story.append(Spacer(0,20))
+
+        for j in historias:
+            lista.append([j.nombre, j.descripcion, j.prioridad, j.estado_sprint])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+         # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+        story.append(Spacer(0,20))
+
+        historias = Historia.objects.filter(proyecto=proyecto_actual, activo= True).order_by('prioridad')
+        lista = []
+        lista.append(['6. BACKLOG DEL SPRINT', ' ', ' ', ' ', ' '])
+        lista.append([' ', ' ', ' ', ' ', ' '])
+        lista.append(['Nombre', 'Descripcion', 'Actividad','Estado Kanban',  'Estado'])
+
+
+        for j in historias:
+            sprint = j.sprint
+            sprint_actual = Sprint.objects.get(id=sprint)
+            if sprint_actual.estado == 'En Ejecucion':
+                lista.append([j.nombre, j.descripcion, j.actividad, j.estado, j.estado_sprint])
+
+        t=Table( lista, style = [
+                       ('GRID',(0,0),(-1,-1),0.5,colors.white),
+                       ('BOX',(0,0),(-1,-1),2,colors.white),
+                       ('SPAN',(0,0),(-1,0)),
+                       ('ROWBACKGROUNDS', (0, 3), (-1, -1), (colors.Color(0.9, 0.9, 0.9),colors.white)),
+                       ('BACKGROUND', (0, 2), (-1, 2), colors.rgb2cmyk(r=6,g=62,b=193)),
+                       ('BACKGROUND', (0, 1), (-1, 1), colors.white),
+                       ('LINEABOVE',(0,0),(-1,0),1.5,colors.black),
+                       ('LINEBELOW',(0,0),(-1,0),1.5,colors.black),
+                       ('SIZE',(0,0),(-1,0),12),
+                       ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                       ('TEXTCOLOR', (0, 2), (-1, 2), colors.white),
+                       ]
+              )
+
+        # Y lo incluimos en el story.
+        story.append(t)
+
+        # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+
+
+        # Incluimos un Flowable, que en este caso es un parrafo.
+
+        cabecera2 = estiloHoja['Heading3']
+        cabecera2.pageBreakBefore=0
+        cabecera2.keepWithNext=0
+        cabecera2.backColor=colors.white
+
+        parrafo = Paragraph('   ',cabecera2)
+        # Lo incluimos en el Platypus story.
+        story.append(parrafo)
+
+         # Dejamos espacio.
+        story.append(Spacer(0,20))
+
+        # Creamos un DocTemplate en una hoja DIN A4, en la que se muestra el texto enmarcado (showBoundary=1) por un recuadro.
+        doc=SimpleDocTemplate("Rep_items.pdf",pagesize=A4, rightMargin=1, leftMargin=1, topMargin=0, bottomMargin=0)
+
+        parrafo = Paragraph('-'*193,cabecera)
+        story.append(parrafo)
+        parrafo = Paragraph('Fin del Informe' + ' '*100 + '('+str(datetime.date.today()) + ')' ,cabecera)
+        story.append(parrafo)
+
+        # Construimos el Platypus story.
+        doc.build(story)
+
+        image_data = open("Rep_items.pdf", "rb").read()
+        return HttpResponse(image_data, mimetype="application/pdf")
+
+
+class FinalizarProyecto(LoginRequiredMixin, ProyectoView):
+
+    template_name = 'FinalizarProyecto.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
+        que pertenece al proyecto actual.
+
+        Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
+        dando las opciones de realizar distintos tipos de filtros sobre ellos.
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
+        diccionario['historias']=lista_historias
+
+        if len(Rol.objects.filter(cerrar_proyecto = True, usuario= usuario_logueado, activo=True)): #Si el logueado es Scrum Master
+
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee el permiso'
+            return render(request, super(FinalizarProyecto, self).template_name, diccionario)
+
+
+class FinalizarProyectoConfirm(LoginRequiredMixin, ProyectoView):
+
+    template_name = 'FinalizarProyectoConfirm.html'
+    def post(self, request, *args, **kwargs):
+        """
+        Realiza la verifiacion de que el usuario posea el permiso y luego muestra la finalizacion de proyecto
+
+        :param request: Peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
+                Retorna la pagina donde se puede observar el productBacklog del proyecto
+
+        """
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        Historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True)
+
+        if len(Historia.objects.filter(estado_scrum = 'Released', proyecto=proyecto_actual, activo=True).all()):
+            proyecto_actual.estado = 'F'
+            proyecto_actual.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'Algunas Historias aun no han sido finalizadas, no se puede finalizar'
+            return render(request, self.template_name, diccionario)
+
+
+
+
 
 
