@@ -34,7 +34,7 @@
                         <select  name="flujo" id="submitt" required>
                             <option value="">Seleccione un flujo</option>
                             {% for flujo in lista_flujos %}
-                                <option value={{ flujo.nombre }}>{{ flujo.nombre }} </option>
+                                <option value={{ flujo.id }}>{{ flujo.nombre }} </option>
                             {% endfor %}
                         </select>
                     </dd>

@@ -60,7 +60,7 @@
         <th scope="col" class="rounded" >Pertenece al Flujo</th>
         <th scope="col" class="rounded">Actividad en el Flujo</th>
         <th scope="col" class="rounded" >Estado en el Flujo</th>
-        <th scope="col" class="rounded" >Finalizar Historia</th>
+        <!--<th scope="col" class="rounded" >Finalizar Historia</th>-->
         <th scope="col" class="rounded" >Cargar Horas</th>
 	</tr>
 {% endblock %}
@@ -93,7 +93,7 @@
                         <td align="center">{{ historia.actividad }}</td>
                         <td align="center">{{ historia.estado }}</td>
 
-                        <td align="center">
+                        <!--<td align="center">
                         <form action="/sprint/finalizar/" method="post">{% csrf_token %}
                             <input type="hidden" name='codigo' value={{ logueado.id }} >
                             <input type="hidden" name='login' value={{ logueado.id }} >
@@ -106,7 +106,7 @@
                                 <input style="color:#0EAE0E" type="submit" value="Finalizar" id="submitt" disabled>
                             {% endif %}
                         </form>
-                        </td>
+                        </td>-->
 
                         <td align="center">
                         <form action="/sprint/cargar/" method="post">{% csrf_token %}

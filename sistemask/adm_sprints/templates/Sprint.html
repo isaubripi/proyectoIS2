@@ -51,7 +51,13 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Eliminar" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Eliminar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Eliminar" id="submitt">
+                                {% endif %}
+
+
                             </form>
                         </td>
                         <td>
@@ -59,7 +65,12 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Modificar" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Modificar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Modificar" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
                         <td>
@@ -67,7 +78,12 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Cambiar Estado" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Cambiar Estado" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Cambiar Estado" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
 
@@ -76,7 +92,12 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Asignar Historias" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Asignar Historias" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Asignar Historias" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
 
@@ -85,7 +106,12 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Desasignar Historias" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Desasignar Historias" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Desasignar Historias" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
 
@@ -96,7 +122,12 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Equipo de Trabajo" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Equipo de Trabajo" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Equipo de Trabajo" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
 
@@ -114,12 +145,16 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='sprint' value={{ sprint.id }} >
-                                <input type="submit" value="Asignar Usuario y Flujo" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Asignar Usuario y Flujo" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Asignar Usuario y Flujo" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
 
-                        <th scope="col" class="rounded" style="color:#FFFFFF">BurndownChart</th>
-
+                        <!--<th scope="col" class="rounded" style="color:#FFFFFF">BurndownChart</th>-->
 
 			            <td>
                             <form action= "/sprint/burndownchart/" method="post"> {% csrf_token %}
@@ -139,7 +174,12 @@
     <form action= "/sprint/crear/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id }} >
-     	<input type="submit" value="Crear Sprint" id="submitt">
+     	{% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Crear Sprint" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Crear Sprint" id="submitt">
+                                {% endif %}
+
     </form>
 
     <form action= "/proyecto/ingresar/" method="post"> {% csrf_token %}

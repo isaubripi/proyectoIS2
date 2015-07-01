@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from .views import SprintView, CrearSprint, CrearSprintConfirm, EliminarSprint, ModificarSprint, ModificarSprintConfirm, AsignarHistorias, AsignarHistoriasConfirm, AsignarUsuarioFlujo, AsignarUsuarioFlujo1, AsignarUsuarioFlujo2, DesasignarHistorias, DesasignarHistoriasConfirm, VerInformacionSprint, AsignarEquipo, AsignarHoras, AsignarEquipoConfirm, Sprintbacklog, CambiarEstado, CambiarEstadoConfirm, Burndownchart, FinalizarHistoria, HorasSprint, HorasSprintConfirm
+from .views import SprintView, CrearSprint, CrearSprintConfirm, EliminarSprint, ModificarSprint, ModificarSprintConfirm, AsignarHistorias, AsignarHistoriasConfirm, AsignarUsuarioFlujo, AsignarUsuarioFlujo1, AsignarUsuarioFlujo2, DesasignarHistorias, DesasignarHistoriasConfirm, VerInformacionSprint, AsignarEquipo, AsignarHoras, AsignarEquipoConfirm, Sprintbacklog, CambiarEstado, CambiarEstadoConfirm, BurndownChart, FinalizarHistoria, HorasSprint, HorasSprintConfirm
 
 
 urlpatterns= patterns('',
@@ -23,8 +23,9 @@ urlpatterns= patterns('',
     url(r'^equipo/horas/$', AsignarHoras.as_view(), name="asignar_equipo"),
     url(r'^equipo/horas/confirmar/$', AsignarEquipoConfirm.as_view(), name="asignar_equipo"),
     url(r'^sprintbacklog/$', Sprintbacklog.as_view(), name="sprintbacklog"),
-    url(r'^burndownchart/$', Burndownchart.as_view(), name="burndownchart"),
+    #url(r'^burndownchart/$', Burndownchart.as_view(), name="burndownchart"),
     url(r'^finalizar/$', FinalizarHistoria.as_view(), name="finalizar"),
     url(r'^cargar/$', HorasSprint.as_view(), name="cargar"),
     url(r'^cargar/confirmar/$', HorasSprintConfirm.as_view(), name="cargar_confirm"),
+    url(r'^burndownchart/$', BurndownChart.as_view(), name="burndownchart"),
 )
