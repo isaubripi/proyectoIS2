@@ -70,7 +70,7 @@ class CrearFlujo(LoginRequiredMixin, FlujoView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= proyecto_actual
 
-        if len(Rol.objects.filter(crear_flujo=True, usuario= usuario_logueado)):
+        if len(Rol.objects.filter(crear_flujo=True, usuario= usuario_logueado, activo=True, proyecto=request.POST['proyecto'])):
             return render(request, self.template_name, diccionario)
         else:
             diccionario['error'] = 'No posee permiso para crear flujo'
@@ -147,7 +147,7 @@ class EditarFlujo(LoginRequiredMixin, FlujoView):
         flujo_actual = Flujo.objects.get(id= request.POST['flujo'])
         diccionario['flujo']=flujo_actual
 
-        if len(Rol.objects.filter(crear_flujo=True, usuario= usuario_logueado)):
+        if len(Rol.objects.filter(modificar_flujo=True, usuario= usuario_logueado, activo=True, proyecto=request.POST['proyecto'])):
             return render(request, self.template_name, diccionario)
         else:
             diccionario['error'] = 'No posee permiso para modificar flujo'
@@ -227,11 +227,15 @@ class EliminarFlujo(LoginRequiredMixin, FlujoView):
         diccionario['proyecto']= proyecto_actual
 
 
-        if len(Rol.objects.filter(eliminar_flujo=True, usuario= usuario_logueado)):
+        if len(Rol.objects.filter(eliminar_flujo=True, usuario= usuario_logueado, activo=True, proyecto=request.POST['proyecto'])):
             flujo = Flujo.objects.get(id = request.POST['flujo'])
-            flujo.activo = False
-            flujo.save()
-            return render(request, self.template_name, diccionario)
+            if flujo.nro_actividades == 0:
+                flujo.activo = False
+                flujo.save()
+                return render(request, self.template_name, diccionario)
+            else:
+                diccionario['error']='No puede eliminar un flujo con actividades'
+                return render(request, super(EliminarFlujo, self).template_name, diccionario)
         else:
             diccionario['error'] = 'No posee permiso para eliminar flujo'
             lista = Flujo.objects.filter(activo=True, proyecto=proyecto_actual)

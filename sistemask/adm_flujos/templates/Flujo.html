@@ -23,7 +23,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
-                    <input type="submit" value="Modificar">
+                    {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Modificar" disabled>
+                    {% else %}
+                        <input type="submit" value="Modificar">
+                    {% endif %}
                 </form>
             </td>
             <td>
@@ -31,7 +35,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
-                    <input type="submit" value="Eliminar">
+                    {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Eliminar" disabled>
+                    {% else %}
+                        <input type="submit" value="Eliminar">
+                    {% endif %}
                 </form>
             </td>
 
@@ -50,7 +58,11 @@
 
 {% block Botones%}
     <form action="/flujo/crear/" method="POST">{% csrf_token %}
-        <input type="submit" value="Crear nuevo flujo">
+        {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Crear" disabled>
+                    {% else %}
+                        <input type="submit" value="Crear">
+                    {% endif %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
     </form>
