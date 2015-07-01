@@ -1,3 +1,4 @@
+# -.- coding: utf-8 -.-
 __author__ = 'isidro'
 
 from django.template import RequestContext
@@ -15,6 +16,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 
+from django.utils import timezone
+from django.core.mail.message import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 #La clase Login es la encargada de la primera vista del proyecto que es un formulario para logueo
 class LoginView(TemplateView):
@@ -26,6 +32,64 @@ class LoginView(TemplateView):
 def cerrar(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+class Recuperar(TemplateView):
+
+    template_name = 'Recuperar.html'
+    def post(self, request, *args, **kwargs):
+
+        return render(request, self.template_name)
+
+
+class RecuperarConfirm(TemplateView):
+
+    template_name = 'RecuperarConfirm.html'
+
+    def post(self, request, *args, **kwargs):
+
+        diccionario = {}
+        email = request.POST['email']
+
+        Usuarios = Usuario.objects.filter(estado=True)
+        existe= Usuario.objects.filter(email=request.POST['email'], estado=True)
+
+        for u in Usuarios:
+            if u.email == email:
+
+                password = u.password
+
+                email_context = {
+                    'titulo': 'SISTEMA DE GESTION DE PROYECTOS AGILES SK',
+                    'usuario': u.nombre,
+                    'mensaje': 'Se le ha enviado su password. Le recomendamos que la cambie una vez que ingrese al sistema:\n'
+                                    + '\nPASSWORD: ' + password
+
+                }
+                # se renderiza el template con el context
+                email_html = render_to_string('email.html', email_context)
+
+                # se quitan las etiquetas html para que quede en texto plano
+                email_text = strip_tags(email_html)
+
+                correo = EmailMultiAlternatives(
+                    'Recuperacion de Password',  # Asunto
+                    email_text,  # contenido del correo
+                    'sistemaskmail@gmail.com',  # quien lo envía
+                    [u.email],  # a quien se envía
+                )
+
+                # se especifica que el contenido es html
+                correo.attach(email_html, 'text/html')
+                # se envía el correo
+                correo.send()
+
+                diccionario['error']='El password ha sido enviado a su direccion de correo'
+                return render(request, self.template_name, diccionario)
+
+        if not len(existe):
+            diccionario['error']='La direccion proporcionada no se encuentra en la base de datos del sistema'
+            return render(request, self.template_name, diccionario)
 
 
 

@@ -6,7 +6,7 @@ from django.conf import settings
 admin.autodiscover()
 
 
-from views import LoginView
+from views import LoginView, Recuperar, RecuperarConfirm
 
 urlpatterns = patterns('',
     # Examples:
@@ -17,6 +17,10 @@ urlpatterns = patterns('',
     #url(r'^$', LoginView.as_view(), name= 'login' ),
      #AUTENTICACION
     url(r'^$', LoginView.as_view(), name="login" ),
+    url(r'^recuperar/', Recuperar.as_view(), name="recuperar"),
+
+    url(r'^password/', RecuperarConfirm.as_view(), name="recuperar_confirm"),
+
     #url(r'^$', 'sistemask.views.login_page', name="login"),
     #PROYECTO
     url(r'^proyecto/', include('adm_proyectos.urls')),
