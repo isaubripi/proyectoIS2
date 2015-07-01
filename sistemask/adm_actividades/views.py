@@ -76,12 +76,13 @@ class CrearActividad(LoginRequiredMixin, ActividadView):
         diccionario['logueado']= usuario_logueado
         diccionario['proyecto']= proyecto_actual
         diccionario[self.context_object_name]= Actividad.objects.filter(estado= True, proyecto = proyecto_actual, flujo=id_flujo)
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es Scrum Master
+        if len(Rol.objects.filter(crear_actividad = True, usuario= usuario_logueado, activo=True,  proyecto=request.POST['proyecto'])): #Si el logueado es Scrum Master
             #diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             #del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
         else:
             diccionario['error']= 'No puedes realizar esta accion'
+            diccionario['lista_actividades']= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=id_flujo).order_by('secuencia')
             return render(request, super(CrearActividad, self).template_name, diccionario)
 
 
@@ -167,7 +168,7 @@ class EliminarActividad(LoginRequiredMixin, ActividadView):
         #diccionario['sprint']= sprint_actual
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado, activo= True)):
+        if len(Rol.objects.filter(eliminar_actividad = True, usuario= usuario_logueado, activo= True, proyecto=request.POST['proyecto'])):
             if actividad_actual.asignado_h == False:
                 actividad_actual.estado= False
 
@@ -183,7 +184,8 @@ class EliminarActividad(LoginRequiredMixin, ActividadView):
                 diccionario['error']= 'Actividad con Historias de Usuario Asignadas- No se puede eliminar'
         else:
             diccionario['error']= 'No puedes realizar esta accion'
-        return render(request, super(EliminarActividad,self).template_name, diccionario)
+            diccionario['lista_actividades']= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=request.POST['flujo']).order_by('secuencia')
+            return render(request, super(EliminarActividad,self).template_name, diccionario)
 
 class ModificarActividad(LoginRequiredMixin, ActividadView):
     """
@@ -214,12 +216,13 @@ class ModificarActividad(LoginRequiredMixin, ActividadView):
         proyecto_actual = Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario[self.context_object_name]= Sprint.objects.filter(activo= True, proyecto= proyecto_actual)
 
-        if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= usuario_logueado)): #Si el logueado es SM
+        if len(Rol.objects.filter(modificar_actividad = True, usuario= usuario_logueado, activo= True, proyecto=request.POST['proyecto'])): #Si el logueado es SM
             diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
             del diccionario[self.context_object_name]
             return render(request, self.template_name, diccionario)
         else:
             diccionario['error']= 'No puedes realizar esta accion'
+            diccionario['lista_actividades']= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=request.POST['flujo']).order_by('secuencia')
             return render(request, super(ModificarActividad, self).template_name, diccionario)
 
 class ModificarActividadConfirm(ModificarActividad):
@@ -289,20 +292,27 @@ class EstablecerSecuencia(LoginRequiredMixin, ActividadView):
         actividad_actual = Actividad.objects.get(id=request.POST['actividad'])
         diccionario['actividad']=actividad_actual
 
-        max = flujo_actual.nro_actividades
 
-        lista = []
-        lista_actividades = Actividad.objects.filter(proyecto=proyecto_actual, flujo=id_flujo, estado=True)
+        if len(Rol.objects.filter(establecer_secuencia = True, usuario= usuario_logueado, activo= True, proyecto=request.POST['proyecto'])):
+            max = flujo_actual.nro_actividades
 
-        for i in range(1,max+1):
-            lista.append(i)
-            for j in lista_actividades:
-                if j.secuencia == i:
-                    lista.remove(i)
+            lista = []
+            lista_actividades = Actividad.objects.filter(proyecto=proyecto_actual, flujo=id_flujo, estado=True)
 
-        diccionario['actividades']=lista
+            for i in range(1,max+1):
+                lista.append(i)
+                for j in lista_actividades:
+                    if j.secuencia == i:
+                        lista.remove(i)
 
-        return render(request, self.template_name, diccionario)
+            diccionario['actividades']=lista
+
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee el permiso'
+            diccionario['lista_actividades']= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=id_flujo).order_by('secuencia')
+            return render(request, super(EstablecerSecuencia,self).template_name, diccionario)
+
 
 class EstablecerSecuenciaConfirm(ActividadView):
     template_name = 'EstablecerSecuenciaConfirm.html'
@@ -382,9 +392,14 @@ class RestablecerSecuencia(ActividadView):
 
         actividades_actuales = Actividad.objects.filter(proyecto=proyecto_actual, flujo=id_flujo, estado=True)
 
-        for i in actividades_actuales:
-            i.secuencia = 0
-            i.save()
+        if len(Rol.objects.filter(restablecer_secuencia = True, usuario= usuario_logueado, activo= True, proyecto=request.POST['proyecto'])):
+            for i in actividades_actuales:
+                i.secuencia = 0
+                i.save()
 
-        return render(request, self.template_name, diccionario)
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee el permiso'
+            diccionario['lista_actividades']= Actividad.objects.filter(estado= True, proyecto= proyecto_actual, flujo=id_flujo).order_by('secuencia')
+            return render(request, super(RestablecerSecuencia,self).template_name, diccionario)
 

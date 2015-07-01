@@ -27,7 +27,12 @@
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
                     <input type="hidden" name='actividad' value={{ actividad.id }} >
-                    <input type="submit" value="Modificar">
+                    {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Modificar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Modificar" id="submitt">
+                                {% endif %}
+
                 </form>
             </td>
             <td>
@@ -37,7 +42,12 @@
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
                     <input type="hidden" name='actividad' value={{ actividad.id }} >
                     <input type="hidden" name='sprint' value={{ sprint.id }} >
-                    <input type="submit" value="Eliminar">
+                    {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Eliminar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Eliminar" id="submitt">
+                                {% endif %}
+
                 </form>
             </td>
 
@@ -47,7 +57,12 @@
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='flujo' value={{ flujo.id }} >
                     <input type="hidden" name='actividad' value={{ actividad.id }} >
-                    <input type="submit" value="Establecer Secuencia">
+                    {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Establecer Secuencia" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Establecer Secuencia" id="submitt">
+                                {% endif %}
+
                 </form>
             </td>
         </tr>
@@ -57,7 +72,12 @@
 
 {% block Botones%}
     <form action="/actividad/crear/" method="POST">{% csrf_token %}
-        <input type="submit" value="Crear nueva actividad">
+        {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Crear" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Crear" id="submitt">
+                                {% endif %}
+
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='flujo' value={{ flujo.id }} >
@@ -67,7 +87,12 @@
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='flujo' value={{ flujo.id }} >
         <input type="hidden" name='actividad' value={{ actividad.id }} >
-        <input type="submit" value="Restablecer Secuencia">
+        {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Restablecer Secuencia" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Restablecer Secuencia" id="submitt">
+                                {% endif %}
+
     </form><br>
     <form action="/flujo/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
