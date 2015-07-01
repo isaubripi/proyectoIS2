@@ -154,6 +154,73 @@ class CrearProyectoConfirm(CrearProyecto):
             nuevo_proyecto.scrum_master= new_scrum_master
             nuevo_proyecto.save()
             #Agregamos al scrum master a el scrum_team para que pueda visualizar el proyecto
+            #cuando se crea un proyecto y se asigna al scrum master, seguidamente se crea un rol de scrum master y se asigna al scrum
+
+            nuevo_scrum = Rol(nombre='Scrum_Master',
+                    crear_proyecto =True,
+                    modificar_proyecto = True,
+                    eliminar_proyecto = True,
+                    cerrar_proyecto = True,
+                    inicializar_proyecto = True,
+                    ingresar_proyecto = True,
+
+                    crear_usuario = False,
+                    modificar_usuario = False,
+                    eliminar_usuario = False,
+                    agregar_rol = True,
+                    modificar_rol = True,
+                    eliminar_rol = True,
+
+                    generar_reporte = True,
+                    generar_burndown = True,
+
+                    asignar_usuario_inicial = True,
+                    asignar_permisos_roles = True,
+                    asignar_roles_usuario = True,
+                    asignar_usuarios_proyecto = True,
+
+
+                    agregar_sprint = True,
+                    modificar_sprint = True,
+                    eliminar_sprint = True,
+                    activar_sprint = True,
+                    asignar_historia = True,
+                    desasignar_historia = True,
+                    asignar_usuario_flujo = True,
+                    asignar_equipo = True,
+                    ver_sprintbacklog = True,
+
+                    crear_actividad = True,
+                    modificar_actividad = True,
+                    eliminar_actividad = True,
+                    establecer_secuencia = True,
+                    restablecer_secuencia = True,
+
+                    agregar_historia = True,
+                    modificar_historia = True,
+                    eliminar_historia = True,
+                    cargar_horas = True,
+                    ver_historial = True,
+                    cancelar_historia = True,
+                    release_historia = True,
+                    ver_detalles = True,
+                    cambiar_actividad_estado = True,
+                    finalizar_historia = True,
+                    horas_sprint = True,
+
+                    crear_flujo = True,
+                    modificar_flujo = True,
+                    eliminar_flujo = True,
+                    ver_tabla = True,
+                    activo= True,
+                    proyecto = nuevo_proyecto.id
+
+            )
+
+            nuevo_scrum.save()
+
+            new_scrum_master.roles.add(nuevo_scrum)
+            new_scrum_master.save()
             nuevo_proyecto.scrum_team.add(new_scrum_master)
             nuevo_proyecto.save()
             return render(request, self.template_name, diccionario)
@@ -236,10 +303,12 @@ class InicializarProyecto(LoginRequiredMixin, ProyectoView):
         proyecto_actual= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario['logueado']= usuario_logueado
         diccionario[self.context_object_name]= Proyecto.objects.filter(activo= True)
+        rol_cliente = Rol.objects.filter(nombre='Cliente', proyecto=request.POST['proyecto'])
         if len(Rol.objects.filter(inicializar_proyecto = True , usuario= usuario_logueado)):
             if proyecto_actual.estado == 'N' or 'I':
                 diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
-                diccionario['lista_clientes']=Cliente.objects.filter(estado=True)
+                #diccionario['lista_clientes']=Cliente.objects.filter(estado=True)
+                diccionario['lista_clientes'] = Usuario.objects.filter(roles=rol_cliente)
                 diccionario['proyecto']= proyecto_actual
                 del diccionario[self.context_object_name]
                 return render(request, self.template_name, diccionario)
@@ -282,8 +351,12 @@ class InicializarProyectoConfirm(InicializarProyecto):
         #proyecto_detalles.sprints= request.POST['sprints']
         usuarios_miembros= request.POST.getlist('miembros[]')
         for i in usuarios_miembros: proyecto_detalles.scrum_team.add(Usuario.objects.get(username= i))
-        new_cliente= Cliente.objects.get(username= request.POST['cliente'])
-        proyecto_detalles.cliente= new_cliente
+        #new_cliente= Cliente.objects.get(username= request.POST['cliente'])
+        if request.POST['cliente']:
+            new_cliente = Usuario.objects.get(username=request.POST['cliente'])
+            cliente = Cliente(username=request.POST['cliente'])
+            cliente.save()
+            proyecto_detalles.cliente= cliente
 
         proyecto_detalles.estado= 'I'
         proyecto_detalles.save()
@@ -310,8 +383,12 @@ class Ingresar(LoginRequiredMixin, TemplateView):
         diccionario = {}
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
+
         proyecto_detalles= Proyecto.objects.get(id= request.POST['proyecto'])
         diccionario['proyecto']= proyecto_detalles
+        id_proyecto = request.POST['proyecto']
+        roles = Rol.objects.filter(usuario=usuario_logueado, proyecto=id_proyecto)
+        diccionario['roles']=roles
         return render(request,self.template_name, diccionario)
 
 class ModificarProyecto(LoginRequiredMixin, ProyectoView):
@@ -385,6 +462,7 @@ class ModificarProyectoConfirm(ModificarProyecto):
 
 class Generarkanban(LoginRequiredMixin, ProyectoView):
     template_name = 'Generarkanban.html'
+    template_ant = 'InicioProyecto.html'
     def post(self, request, *args, **kwargs):
         """
         Realiza la verifiacion de que el usuario posea el permiso y luego muestra la tabla kanban
@@ -403,6 +481,7 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
         """
         diccionario = {}
         proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        id_proyecto = request.POST['proyecto']
         diccionario['proyecto']=proyecto_actual
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
@@ -412,6 +491,10 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
         diccionario['flujos']=lista_flujos
         diccionario['historias']=lista_historias
 
+        id_proyecto = request.POST['proyecto']
+        roles = Rol.objects.filter(usuario=usuario_logueado, proyecto=id_proyecto)
+        diccionario['roles']=roles
+
         actividades=[]
         for i in lista_flujos:
             actividades = Actividad.objects.filter(proyecto=proyecto_actual, estado=True).order_by('secuencia')
@@ -419,11 +502,11 @@ class Generarkanban(LoginRequiredMixin, ProyectoView):
 
         diccionario['actividades_flujo']=actividades
 
-        if len(Rol.objects.filter(ver_tabla = True, usuario=usuario_logueado, activo=True)):
+        if len(Rol.objects.filter(ver_tabla = True, usuario=usuario_logueado, activo=True, proyecto=id_proyecto)):
             return render(request, self.template_name, diccionario)
         else:
             diccionario['error']= 'No posee el permiso'
-            return render(request, self.template_name, diccionario)
+            return render(request, self.template_ant, diccionario)
 
 
 
@@ -666,8 +749,11 @@ class ReleaseConfirm(LoginRequiredMixin, TemplateView):
 
 
 class GenerarReporte(LoginRequiredMixin, ProyectoView):
+
+    template_name = 'InicioProyecto.html'
     def post(self, request, *args, **kwargs):
         proyecto_actual= Proyecto.objects.get(id=request.POST['proyecto'])
+
 
         import os
         import datetime
@@ -684,6 +770,13 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         from reportlab.lib.pagesizes import A4
         from reportlab.lib import colors
 
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['proyecto'] = proyecto_actual
+        diccionario['logueado'] = usuario_logueado
+        id_proyecto = request.POST['proyecto']
+        roles = Rol.objects.filter(usuario=usuario_logueado, proyecto=id_proyecto)
+        diccionario['roles']=roles
 
         # Creamos un PageTemplate de ejemplo.
         estiloHoja = getSampleStyleSheet()
@@ -731,19 +824,24 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         lista.append(['1. CANTIDAD DE TRABAJO EN CURSO POR EQUIPO', ' ', ' '])
         lista.append([' ', ' ', ' '])
         lista.append(['Equipo', 'Cantidad', 'Estado'])
-
+        cant=0
         for j in historias:
-            cant = 0
             sprint = j.sprint
             sprint_actual = Sprint.objects.get(id=sprint)
-            if sprint_actual.estado == 'En Ejecucion':
+            if sprint_actual.estado == 'En Ejecucion' and j.estado_scrum=='Pendiente':
                 cant = cant + 1
 
         #team = []
         #for k in proyecto_actual.scrum_team.all():
         #    team.append(k.username)
 
-        lista.append([proyecto_actual.scrum_team.all(), cant, 'En Progreso'])
+        #sprint_ejecucion = Sprint.objects.get(proyecto=proyecto_actual, activo=True, estado='En Ejecucion')
+        if cant==0:
+            estado = 'Completado'
+        else:
+            estado= 'En Progreso'
+
+        lista.append([proyecto_actual.scrum_team.all(), cant, estado])
 
         t=Table( lista, style = [
                        ('GRID',(0,0),(-1,-1),0.5,colors.white),
@@ -786,11 +884,11 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
 
             for j in historias:
                 if i == j.asignado:
-                    if j.estado_sprint == 'No Iniciado':
+                    if j.estado_scrum== 'Pendiente' and j.estado_sprint=='No iniciado':
                         cant_pen = cant_pen + 1
-                    elif j.estado_sprint == 'En Progreso':
+                    elif j.estado_sprint == 'En Progreso' and j.estado_scrum=='Pendiente':
                         cant_cur = cant_cur + 1
-                    elif j.estado_sprint == 'Completada':
+                    elif j.estado_scrum == 'Released' or j.estado_sprint=='Completada':
                         cant_fin = cant_fin + 1
 
             lista.append([i.username, cant_pen, cant_cur, cant_fin])
@@ -830,7 +928,7 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
 
 
         for j in historias:
-            lista.append([j.prioridad, j.nombre, j.estado_sprint])
+            lista.append([j.prioridad, j.nombre, j.estado_scrum])
 
         t=Table( lista, style = [
                        ('GRID',(0,0),(-1,-1),0.5,colors.white),
@@ -1005,7 +1103,7 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         story.append(Spacer(0,20))
 
         for j in historias:
-            lista.append([j.nombre, j.descripcion, j.prioridad, j.estado_sprint])
+            lista.append([j.nombre, j.descripcion, j.prioridad, j.estado_scrum])
 
         t=Table( lista, style = [
                        ('GRID',(0,0),(-1,-1),0.5,colors.white),
@@ -1040,14 +1138,14 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         lista = []
         lista.append(['6. BACKLOG DEL SPRINT', ' ', ' ', ' ', ' '])
         lista.append([' ', ' ', ' ', ' ', ' '])
-        lista.append(['Nombre', 'Descripcion', 'Actividad','Estado Kanban',  'Estado'])
+        lista.append(['Nombre', 'Descripcion', 'Actividad','Estado Kanban',  'Flujo'])
 
 
         for j in historias:
             sprint = j.sprint
             sprint_actual = Sprint.objects.get(id=sprint)
             if sprint_actual.estado == 'En Ejecucion':
-                lista.append([j.nombre, j.descripcion, j.actividad, j.estado, j.estado_sprint])
+                lista.append([j.nombre, j.descripcion, j.actividad, j.estado, j.flujo])
 
         t=Table( lista, style = [
                        ('GRID',(0,0),(-1,-1),0.5,colors.white),
@@ -1098,8 +1196,15 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         # Construimos el Platypus story.
         doc.build(story)
 
+
+
         image_data = open("Rep_items.pdf", "rb").read()
-        return HttpResponse(image_data, mimetype="application/pdf")
+        if len(Rol.objects.filter(generar_reporte = True, usuario= usuario_logueado, activo= True,proyecto=request.POST['proyecto'])):
+            return HttpResponse(image_data, mimetype="application/pdf")
+        else:
+            diccionario['error']= 'No posee permiso para generar el reporte'
+            return render(request, self.template_name, diccionario)
+
 
 
 class FinalizarProyecto(LoginRequiredMixin, ProyectoView):
@@ -1129,7 +1234,7 @@ class FinalizarProyecto(LoginRequiredMixin, ProyectoView):
         lista_historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True).order_by('nombre')
         diccionario['historias']=lista_historias
 
-        if len(Rol.objects.filter(cerrar_proyecto = True, usuario= usuario_logueado, activo=True)): #Si el logueado es Scrum Master
+        if len(Rol.objects.filter(cerrar_proyecto = True, usuario= usuario_logueado, activo=True, proyecto=request.POST['proyecto'])): #Si el logueado es Scrum Master
 
             return render(request, self.template_name, diccionario)
         else:
@@ -1159,12 +1264,12 @@ class FinalizarProyectoConfirm(LoginRequiredMixin, ProyectoView):
 
         Historias = Historia.objects.filter(proyecto=proyecto_actual, activo=True)
 
-        if len(Historia.objects.filter(estado_scrum = 'Released', proyecto=proyecto_actual, activo=True).all()):
+        if not len(Historia.objects.filter(estado_scrum = 'Pendiente', proyecto=proyecto_actual, activo=True).all()) and not len(Sprint.objects.filter(estado='En Ejecucion', proyecto=proyecto_actual, activo=True).all()):
             proyecto_actual.estado = 'F'
             proyecto_actual.save()
             return render(request, self.template_name, diccionario)
         else:
-            diccionario['error']= 'Algunas Historias aun no han sido finalizadas, no se puede finalizar'
+            diccionario['error']= 'Algunas Historias aun no han sido finalizadas o algunos Sprints no han sido Ejecutados, no se puede finalizar'
             return render(request, self.template_name, diccionario)
 
 

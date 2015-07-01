@@ -60,7 +60,7 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='historia' value={{ historia.id }} >
-                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" %}
+                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" and historia.estado_scrum == "Pendiente" %}
 
                                         <input style="color:#0EAE0E" type="submit" value="Release" id="submitt">
 
@@ -75,7 +75,7 @@
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
                                 <input type="hidden" name='historia' value={{ historia.id }} >
-                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" %}
+                                {% if historia.actividad.secuencia == historia.flujo.nro_actividades and historia.estado == "Done" and historia.estado_scrum == "Pendiente" %}
 
                                         <input style="color:#1F1DBF" type="submit" value="Regresar" id="submitt">
 

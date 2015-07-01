@@ -11,6 +11,7 @@
     <tr>
 		<th scope="col" class="rounded">Nombre</th>
 		<th scope="col" class="rounded">Scrum Master</th>
+        <th scope="col" class="rounded">Estado</th>
 		<th scope="col" class="rounded">Eliminar</th>
         <th scope="col" class="rounded">Modificar</th>
         <th scope="col" class="rounded">Inicializar</th>
@@ -25,25 +26,41 @@
 		    	    <tr>
                         <td>{{ proyecto.nombre }}</td>
                         <td>{{ proyecto.scrum_master }}</td>
+                        <td>{{ proyecto.estado }}</td>
                         <td>
                             <form action= "/proyecto/eliminar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                <input type="submit" value="Eliminar" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Eliminar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Eliminar" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
                         <td>
                             <form action= "/proyecto/modificar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                <input type="submit" value="Modificar" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Modificar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Modificar" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
                         <td>
                             <form action= "/proyecto/inicializar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                <input type="submit" value="Inicializar" id="submitt">
+                                {% if proyecto.estado == 'F' %}
+                                    <input type="submit" value="Inicializar" id="submitt" disabled>
+                                {% else %}
+                                     <input type="submit" value="Inicializar" id="submitt">
+                                {% endif %}
+
                             </form>
                         </td>
                         <td>

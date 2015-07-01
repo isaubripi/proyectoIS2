@@ -1,15 +1,80 @@
 {% extends 'PlantillaBaseMetodos.html' %}
-{% block title %}::Finalizar Historia en Proyecto::{% endblock %}
-{% block TituloMenu %} FINALIZAR HISTORIA EN PROYECTO {% endblock %}
-{% block TituloOperacion %} Historia Culminada Exitosamente {% endblock %}
+{% block title %}::Release Historia::{% endblock %}
+{% block TituloMenu %} RELEASE HISTORIA {% endblock %}
+{% block TituloOperacion %} Tareas realizadas en la historia {% endblock %}
 {% block DatosOperacion %}
-    <center><h3>La historia se culmino correctamente </h3></center>
+    <center><h3>HISTORIA: {{ historia.nombre }}</h3></center>
+<table border="1" bgcolor="white" align="center">
+        <tr>
+            <th scope="col" class="rounded"><font color="green">Numero</font></th>
+            <th scope="col" class="rounded"><font color="green">Nombre</font></th>
+            <th scope="col" class="rounded"><font color="green">Horas Empleadas</font></th>
+            <th scope="col" class="rounded"><font color="green">Fecha</font></th>
+            <!---<th scope="col" class="rounded"><font color="green">Archivo Adjunto</font></th>!-->
+            <th scope="col" class="rounded"><font color="green">Descripcion</font></th>
+            <th scope="col" class="rounded"><font color="green">Archivo</font></th>
+
+
+        </tr>
+
+    {% for registro in registros %}
+        <tr>
+            <td><center>{{ registro.orden }}</center></td>
+
+
+            <td>
+                <center>{{ registro.nombre }}</center>
+            </td>
+
+            <td>
+                <center>{{ registro.horas }}</center>
+            </td>
+            <td>
+                <center>{{ registro.fecha }}</center>
+            </td>
+            <!--<td>
+                <center><a href={{ registro.archivo }}> {{ registro.archivo }}</a></center>
+            </td>!-->
+            <td>
+                <center>{{ registro.descripcion }}</center>
+            </td>
+            <td>
+                <center><a href="data:application/octect-stream;base64, {{ registro.adjunto }}">Adjunto </a></center>
+            </td>
+            <!--<td>
+                <center><a href="Base64.decode( {{ registro.adjunto }})">Adjunto </a></center>
+            </td>!-->
+
+        </tr>
+
+        <!--<tr>
+            <td><h4>Nombre: {{ registro.nombre }}</h4></td>
+            <td><h4>Numero: {{ registro.orden }}</h4></td>
+            <td><h4>Descripcion: {{ registro.descripcion }}</h4></td>
+        </tr>
+        <tr>
+            <td><h4>Horas Empleadas: {{ registro.horas }}</h4><br>----------------------------------------------------------</td>
+            <td><h4>Fecha: {{ registro.fecha }}</h4><br>----------------------------------------------------------------------</td>
+            <td><h4>Archivo Adjunto: <a href={{ registro.archivo }}> {{ registro.archivo }}</a></h4><br>----------------------------------------------------------------------</td>
+
+        </tr>!-->
+    {% endfor %}
+    </table>
+
 {% endblock %}
+
+
 {% block Botones %}
-    <form action="/proyecto/productbacklog/" method="POST"> {% csrf_token %}
-        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+    <form action="/proyecto/release/confirmar/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
         <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="hidden" name='sprint' value={{ sprint.id }} >
-        <center><input type="submit" value="Aceptar"></center>
+        <input type="hidden" name="historia" value={{ historia.id }}>
+        <center><input type="submit" value="Confirmar Release"></center>
+    </form>
+    <form action="/proyecto/productbacklog/" method="POST">{% csrf_token %}
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name="historia" value={{ historia.id }}>
+        <center><input type="submit" value="<Atras"></center>
     </form>
 {% endblock %}

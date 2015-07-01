@@ -26,7 +26,7 @@
              <dl>
                 <dt><label>Cliente:</label></dt>
                 <dd>
-                    <select  name="cliente"id="submitt" required>
+                    <select  name="cliente"id="submitt" >
                         <option value="">Seleccione un usuario</option>
                         {% for usuario in lista_clientes %}
                             <option value={{ usuario.username }}>{{ usuario.username }} </option>

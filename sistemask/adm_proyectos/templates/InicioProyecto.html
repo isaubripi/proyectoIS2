@@ -25,6 +25,13 @@
         <td>
         <h4> Cliente: {{ proyecto.cliente.username }} </h4>
         </td>
+
+        <td>
+        <h4> Rol/es:</h4>
+            {% for rol in roles %}
+                * {{ rol.nombre }} </br>
+            {% endfor %}
+        </td>
         </table>
         {% endblock %}
 
@@ -76,11 +83,8 @@
     <form action= "/proyecto/kanban/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-        {% for rol in logueado.roles.all %}
-            {% ifequal rol.ver_tabla True %}
-     	        <input type="submit" value="Ver Tabla Kanban" id="submitt">
-            {% endifequal %}
-        {% endfor %}
+
+        <input type="submit" value="Ver Tabla Kanban" id="submitt">
 
     </form>
 
@@ -88,6 +92,19 @@
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
      	<input type="submit" value="Ver Product Backlog" id="submitt">
+    </form>
+
+     <form action= "/proyecto/reporte/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Generar Reporte" id="submitt">
+    </form>
+    <br>
+    <br>
+     <form action= "/proyecto/finalizar/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Finalizar Proyecto" id="submitt">
     </form>
 
     </td>
