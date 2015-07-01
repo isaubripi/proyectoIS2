@@ -10,6 +10,8 @@ urlpatterns= patterns('',
     url('^eliminar/$', EliminarUsuario.as_view(), name='eliminar_usuario'),
     url('^asignar/$', AsignarRoles.as_view(), name='asignar_roles'),
     url('^asignar/confirmar/$', AsignarRolesConfirm.as_view(), name='asignar_roles_confirmar'),
+
+
     #url('^mostrar/$', MostrarUsuario.as_view(), name='mostrar_usuario'),
 )
 

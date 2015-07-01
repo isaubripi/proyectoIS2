@@ -12,6 +12,12 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from adm_proyectos.views import LoginRequiredMixin
+
+from django.utils import timezone
+from django.core.mail.message import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 # Create your views here.
 #Lista de usuarios
 class UsuarioView(ProyectoView):
@@ -140,7 +146,7 @@ class EliminarUsuario(LoginRequiredMixin, UsuarioView):
                 diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master'
                 return render(request, super(EliminarUsuario, self).template_name, diccionario)
             #Verificar si es scrum master de algun proyecto
-            if len(Rol.objects.filter(nombre= 'Scrum Master', usuario= eliminado, activo= True)):
+            if len(Rol.objects.filter(nombre= 'Scrum_Master', usuario= eliminado, activo= True)):
                 diccionario['lista_usuarios']= Usuario.objects.filter(estado= True)
                 diccionario['error']= 'No se puede eliminar - El usuario es Scrum Master de un proyecto activo'
                 return render(request, super(EliminarUsuario, self).template_name, diccionario)
@@ -163,9 +169,11 @@ class AsignarRoles(LoginRequiredMixin, UsuarioView):
         diccionario['logueado'] = usuario_logueado
         usuario_actual = Usuario.objects.get(id = request.POST['usuario'])
         diccionario['usuario_actual'] = usuario_actual
-        lista = usuario_actual.roles.all()
+        #lista = usuario_actual.roles.all()
+        lista = usuario_actual.roles.filter(proyecto= '')
         diccionario['roles_asignados'] = lista
-        lista1 = Rol.objects.exclude(usuario=usuario_actual)
+        #lista1 = Rol.objects.exclude(usuario=usuario_actual)
+        lista1 = Rol.objects.filter(proyecto= '')
         diccionario['no_asignados'] = lista1
         return render(request, self.template_name, diccionario)
 
@@ -187,6 +195,7 @@ class AsignarRolesConfirm(AsignarRoles):
                 usuario_actual.roles.add(r)
         usuario_actual.save()
         return render(request, self.template_name, diccionario)
+
 
 
 
