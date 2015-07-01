@@ -23,5 +23,9 @@
 	               </dl>
                </fieldset>
         </form>
+
+            <form action='/recuperar/' method="POST" class="niceform"> {% csrf_token %}
+                <input type="submit" name="submit" id="submit" value="Olvide Mi Contraseña" />
+            </form>
     </div>
 {% endblock %}
