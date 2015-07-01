@@ -29,9 +29,10 @@ class RolView(TemplateView):
         usuario_logueado= Usuario.objects.get(id= request.POST['login'])
         diccionario['logueado']= usuario_logueado
         proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
+        id_proyecto = request.POST['proyecto']
         diccionario['proyecto'] = proyecto_actual
 
-        lista = Rol.objects.filter(activo = True)
+        lista = Rol.objects.filter(activo = True, proyecto=id_proyecto)
         diccionario['lista'] = lista
         return render(request, self.template_name, diccionario)
 
@@ -82,11 +83,12 @@ class CrearRolConfirm(CrearRol):
         proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
         diccionario['proyecto'] = proyecto_actual
         rol_nombre= request.POST['nombre_rol']
-        if len(Rol.objects.filter(nombre= rol_nombre, activo= True)):
+        id_proyecto = request.POST['proyecto']
+        if len(Rol.objects.filter(nombre= rol_nombre, activo= True, proyecto=id_proyecto)):
             error = "Nombre del rol ya existe. Intente otro"
             return render(request, super(CrearRolConfirm, self).template_name, {'error':error})
         nuevo_rol = Rol(nombre= rol_nombre)
-
+        nuevo_rol.proyecto = id_proyecto
         nuevo_rol.activo= True
 
         nuevo_rol.save()
@@ -179,14 +181,21 @@ class EliminarRol(LoginRequiredMixin, RolView):
 
         rol_actual= Rol.objects.get(id= request.POST['rol'])
 
-        if rol_actual.nombre== 'Scrum Master':
+        if rol_actual.nombre== 'Scrum_Master':
             diccionario['error']= 'Rol: Scrum Master - No se puede eliminar'
 
             return render(request, super(EliminarRol, self).template_name, diccionario)
-        roles= Rol.objects.filter(nombre= rol_actual.nombre, activo= True)
-        for rol_actual in roles:
-            rol_actual.activo= False
-            rol_actual.save()
+
+        if len(Rol.objects.filter(activo=True, proyecto=request.POST['proyecto'])):
+            diccionario['error']= 'El rol esta asignado, no se puede eliminar'
+
+            return render(request, super(EliminarRol, self).template_name, diccionario)
+
+        #roles= Rol.objects.filter(nombre= rol_actual.nombre, activo= True)
+        #for rol_actual in roles:
+        rol_actual.activo= False
+        rol_actual.save()
+
         return render(request, self.template_name, diccionario)
 
 class ConsultarRol(RolView):
@@ -259,7 +268,7 @@ class AsignarDesasignarPermisosConfirmar(AsignarDesasignarPermisos):
         proyecto_actual = Proyecto.objects.get(id = request.POST['proyecto'])
         diccionario['proyecto'] = proyecto_actual
 
-        rol_actual = Rol.objects.get(nombre = request.POST['nombre_rol'], activo=True)
+        rol_actual = Rol.objects.get(id = request.POST['nombre_rol'], activo=True)
 
         if 'crear_proyecto' in request.POST: rol_actual.crear_proyecto= True
         else: rol_actual.crear_proyecto= False
@@ -485,4 +494,64 @@ class AsignarRolConfirm(RolView):
         )
 
         nuevo_rol.save()
+        return render(request, self.template_name, diccionario)
+
+class UsuarioProyecto(RolView):
+    template_name = 'UsuariosProyecto.html'
+
+    def post(self, request, *args, **kwargs):
+        diccionario={}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto']=proyecto_actual
+        #Solamente el Administrador del Sistema puede ingresar a la Administracion de Usuarios
+        if len(Rol.objects.filter(crear_usuario = True , usuario= usuario_logueado)):
+
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'No posee permisos para ver los usuarios del proyecto'
+
+            return render(request, super(UsuarioProyecto, self).template_name, diccionario)
+
+
+class AsignarRolesProyecto(LoginRequiredMixin, RolView):
+    template_name = 'AsignarRolesProyecto.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+        id_proyecto = request.POST['proyecto']
+        usuario_logueado = Usuario.objects.get(id = request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+        usuario_actual = Usuario.objects.get(id = request.POST['usuario'])
+        diccionario['usuario_actual'] = usuario_actual
+        lista = usuario_actual.roles.filter(proyecto= id_proyecto)
+        diccionario['roles_asignados'] = lista
+        lista1 = Rol.objects.filter(proyecto=id_proyecto)
+
+        diccionario['no_asignados'] = lista1
+        return render(request, self.template_name, diccionario)
+
+
+class AsignarRolesConfirmProyecto(AsignarRolesProyecto):
+    template_name = 'AsignarRolesConfirmProyecto.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+
+        proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
+        diccionario['proyecto'] = proyecto_actual
+        id_proyecto = request.POST['proyecto']
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+        usuario_actual = Usuario.objects.get(id = request.POST['user'])
+        lista2 = usuario_actual.roles.filter(proyecto= id_proyecto)
+        lista3 = Rol.objects.filter(proyecto=id_proyecto)
+        for rol in lista2:
+            if rol.nombre not in request.POST:
+                usuario_actual.roles.remove(rol)
+        for r in lista3:
+            if r.nombre in request.POST:
+                usuario_actual.roles.add(r)
+        usuario_actual.save()
         return render(request, self.template_name, diccionario)

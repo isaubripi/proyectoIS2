@@ -1,6 +1,6 @@
 from django.db import models
 #from adm_proyectos.models import Proyecto
-#from adm_usuarios.models import Usuario
+
 
 
 class Rol(models.Model):
@@ -89,7 +89,8 @@ class Rol(models.Model):
     restablecer_secuencia = models.BooleanField(default=False)
 
     activo = models.BooleanField(default=False)
-    #usuario= models.ForeignKey(Usuario)
+
+    proyecto = models.CharField(max_length=10)
 
     def __unicode__(self):
         return self.nombre

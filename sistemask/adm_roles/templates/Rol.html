@@ -4,7 +4,7 @@
 
 {% block Columnas %}
    <div style="text-align: center;"><b><h1><font color="orange">ADMINISTRACION DE ROLES</font></h1></b></div>
-<h2>Lista de Roles del Sistema</h2>
+<h2>Lista de Roles del Proyecto</h2>
     <tr>
         <th scope="col" class="rounded">Nombre</th>
         <th scope="col" class="rounded"><font color="green">Editar</font></th>
@@ -28,7 +28,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='rol' value={{ rol.id }} >
-                    <input type="submit" value="Modificar">
+                    {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Modificar" disabled>
+                    {% else %}
+                        <input type="submit" value="Modificar">
+                    {% endif %}
                 </form>
             </td>
             <td>
@@ -37,7 +41,11 @@
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name="usuario" value={{ rol.usuario.id }}>
                     <input type="hidden" name='rol' value={{ rol.id }} >
-                    <input type="submit" value="Eliminar">
+                    {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Eliminar" disabled>
+                    {% else %}
+                        <input type="submit" value="Eliminar">
+                    {% endif %}
                 </form>
             </td>
 
@@ -46,7 +54,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='rol' value={{ rol.id }} >
-                    <input type="submit" value="Asignar permisos">
+                    {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Asignar Permisos" disabled>
+                    {% else %}
+                        <input type="submit" value="Asignar Permisos">
+                    {% endif %}
                 </form>
             </td>
 
@@ -81,10 +93,26 @@
 {% endblock %}
 {% block Botones%}
     <form action="/inicio/rol/crear/" method="POST">{% csrf_token %}
-        <input type="submit" value="Crear nuevo rol">
+        {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Crear Nuevo Rol" disabled>
+                    {% else %}
+                        <input type="submit" value="Crear Nuevo Rol">
+                    {% endif %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
     </form>
+    <br>
+
+    <form action="/inicio/rol/usuarios/" method="POST">{% csrf_token %}
+       {% if proyecto.estado == 'F' %}
+                        <input type="submit" value="Asignar/Desasignar Rol" disabled>
+                    {% else %}
+                        <input type="submit" value="Asignar/Desasignar Rol">
+                    {% endif %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+    </form>
+    <br>
     <form action="/proyecto/ingresar/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >

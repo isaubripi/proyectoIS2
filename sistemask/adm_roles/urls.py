@@ -1,11 +1,14 @@
 __author__ = 'isidro'
 
 from django.conf.urls import patterns, include, url
-from .views import RolView, CrearRol, CrearRolConfirm, EditarRol, EditarRolConfirmar, EliminarRol, AsignarDesasignarPermisos, AsignarDesasignarPermisosConfirmar, AsignarRol, AsignarRolConfirm, DesasignarRol, ConsultarRol
+from .views import RolView, CrearRol, CrearRolConfirm, EditarRol, EditarRolConfirmar, EliminarRol, AsignarDesasignarPermisos, AsignarDesasignarPermisosConfirmar, AsignarRol, AsignarRolConfirm, DesasignarRol, ConsultarRol, UsuarioProyecto, AsignarRolesProyecto, AsignarRolesConfirmProyecto
 
 urlpatterns= patterns('',
     url(r'^inicio/rol/$', RolView.as_view(), name='rol'),
     url(r'^inicio/rol/crear/$', CrearRol.as_view(), name='crear_rol'),
+    url(r'^inicio/rol/usuarios/$', UsuarioProyecto.as_view(), name='crear_rol'),
+    url(r'^inicio/rol/usuarios/asignar/$', AsignarRolesProyecto.as_view(), name='crear_rol'),
+    url(r'^inicio/rol/usuarios/asignar/confirmar/$', AsignarRolesConfirmProyecto.as_view(), name='crear_rol'),
     url(r'^confirmar/$', CrearRolConfirm.as_view(), name='crear_rol_confirmar'),
     url(r'^editar/$', EditarRol.as_view(), name='editar_rol'),
     url(r'^editar/confirmar/$', EditarRolConfirmar.as_view(), name='editar_rol_confirmar'),
