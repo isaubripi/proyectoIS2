@@ -1,0 +1,29 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %} ::RECUPERAR {% endblock %}
+{% block DatosOperacion %}
+    <br><br><br><br>
+
+        <h1> SISTEMA DE GESTION DE PROYECTOS AGILES SK<h1>
+            <br>
+        <h3>Recuperar Contraseña</h3>
+            <h5>Introduzca su direccion de correo electronico</h5>
+
+
+            <form action="/password/" method="POST" class="niceform"> {% csrf_token %}
+               <fieldset>
+                   <dl>
+                       <dl><dt><label>Email:</label></dt><dd><input type="email" name="email" required/></dd></dl>
+                   </dl>
+
+                   <div style="text-align: center;"><span style="color:#FF0000">{{ error }}</span></div>
+                   <br><br>
+
+               </fieldset>
+                <input type="submit" name="submit" id="submitt" value="Solicitar Contraseña" />
+            </form>
+
+         <form action='/confirmar/' method="post" class="niceform"> {% csrf_token %}
+                <input type="submit" name="submit" id="submit" value="Atras" />
+         </form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Asignar Roles::{% endblock %}
+{% block TituloMenu %} ASIGNAR ROLES {% endblock %}
+{% block TituloOperacion %} Usuario Actualizado {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>Las asignaciones de roles han sido guardadas exitosamente.</h3></center>
+{% endblock %}
+{% block Botones %}
+<form action="/inicio/rol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <center><input type="submit" value="Aceptar" id="submitt"></center>
+    </form>
+{% endblock %}

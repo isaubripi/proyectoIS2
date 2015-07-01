@@ -1,0 +1,67 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Finalizar Proyecto::{% endblock %}
+{% block TituloMenu %} FINALIZACION DE PROYECTO {% endblock %}
+{% block MigasDePan %}>>>Inicio >>> Proyecto: <h4> {{ proyecto.nombre }} </h4>{% endblock %}
+{% block TituloLista %} Lista de todas las Historias del Proyecto {% endblock %}
+{% block content %}
+
+{% endblock %}
+
+{% block Columnas %}
+
+<table border="2"  bgcolor="white">
+
+    <tr>
+		<th scope="col" class="rounded" >Nombre</th>
+		<th scope="col" class="rounded">Prioridad</th>
+		<th scope="col" class="rounded" >Valor de Negocio</th>
+        <th scope="col" class="rounded">Valor Tecnico</th>
+        <th scope="col" class="rounded" >Asignado a Sprint</th>
+        <th scope="col" class="rounded">Desarrollador</th>
+        <th scope="col" class="rounded" >Pertenece al Flujo</th>
+        <th scope="col" class="rounded">Actividad en el Flujo</th>
+        <th scope="col" class="rounded" >Estado en el Flujo</th>
+        <th scope="col" class="rounded" >Estado Scrum</th>
+
+	</tr>
+{% endblock %}
+{% block MostrarDatos%}
+    {% for historia in historias %}
+
+		    	    <tr>
+                        <td align="center">{{ historia.nombre }}</td>
+                        <td align="center">{{ historia.prioridad }}</td>
+                        <td align="center">{{ historia.val_negocio }}</td>
+                        <td align="center">{{ historia.val_tecnico }}</td>
+                        <td align="center">{{ historia.sprint }}</td>
+                        <td align="center">{{ historia.asignado }}</td>
+                        <td align="center">{{ historia.flujo }}</td>
+                        <td align="center">{{ historia.actividad }}</td>
+                        <td align="center">{{ historia.estado }}</td>
+                        <td align="center">{{ historia.estado_scrum }}</td>
+
+
+                    </tr>
+
+    {% endfor %}
+{% endblock %}
+</table>
+{% block Botones %}
+
+    <br>
+    <form action= "/proyecto/finalizar/confirmar/" method="post"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+     	<input type="submit" value="Confirmar finalizacion" id="submitt">
+    </form>
+
+
+    <br>
+    <form action="/proyecto/ingresar/" method="post">{% csrf_token %}
+        <input type="hidden" name='codigo' value={{ logueado.id }} >
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id}}>
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+
+{% endblock %}

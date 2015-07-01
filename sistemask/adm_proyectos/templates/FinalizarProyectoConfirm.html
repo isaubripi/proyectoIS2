@@ -1,0 +1,14 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Finalizar Proyecto::{% endblock %}
+{% block TituloMenu %} FINALIZAR PROYECTO {% endblock %}
+{% block TituloOperacion %} Proyecto Finalizado {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>El proyecto se finalizo exitosamente. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/proyecto/ingresar/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

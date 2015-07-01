@@ -1,0 +1,12 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Recuperar Contraseña::{% endblock %}
+{% block TituloMenu %} RECUPERAR CONTRASEÑA {% endblock %}
+{% block TituloOperacion %}  {% endblock %}
+{% block DatosOperacion %}
+    <div align="center"><h3>Gracias por utilizar este servicio. </h3></div>
+{% endblock %}
+{% block Botones %}
+    <form action="/recuperar/" method="POST"> {% csrf_token %}
+        <div align="center"><input type="submit" value="Aceptar" id="submitt"></div>
+    </form>
+{% endblock %}

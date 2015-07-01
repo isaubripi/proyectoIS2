@@ -1,0 +1,52 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %}::Administrar Usuario::{% endblock %}
+{% block TituloMenu %}ADMINISTRACION DE USUARIOS{% endblock %}
+{% block MigasDePan %}>>>Inicio>>Usuarios>>Proyecto: {{proyecto.nombre }}{% endblock %}
+{% block TituloLista %}Lista de Usuarios del Proyecto{% endblock %}
+{% block Columnas %}
+    <tr>
+
+		<center><th scope="col" class="rounded">Nombre</th></center>
+		<center><th scope="col" class="rounded">Apellido</th></center>
+        <center><th scope="col" class="rounded">Cedula</th></center>
+        <center><th scope="col" class="rounded">Email</th></center>
+        <center><th scope="col" class="rounded">Asignar Roles</th></center>
+
+	</tr>
+{% endblock %}
+{% block MostrarDatos %}
+    {% for usuario in proyecto.scrum_team.all %}
+		    <tr>
+
+		        <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellido }}</td>
+                <td>{{ usuario.cedula }}</td>
+                <td>{{ usuario.email }}</td>
+
+
+                <td>
+                    <form action="/inicio/rol/usuarios/asignar/" method="post">{% csrf_token %}
+                        <input type="hidden" name='usuario' value="{{ usuario.id }}" >
+                        <input type="hidden" name='login' value={{ logueado.id }} >
+                        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+                        {% if usuario == logueado %}
+                            <input type="submit" value="Asignar roles" id="submitt" disabled>
+                        {% else %}
+                            <input type="submit" value="Asignar roles" id="submitt">
+                        {% endif %}
+                    </form>
+                </td>
+                <td>
+
+		        </td>
+		    </tr>
+    {% endfor %}
+{% endblock %}
+{% block Botones%}
+
+    <form action="/inicio/rol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras" id="submitt"><br>
+        <input type="hidden" name='proyecto' value={{ proyecto.id }} >
+    </form>
+{% endblock %}

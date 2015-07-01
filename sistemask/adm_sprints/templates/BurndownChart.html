@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<script type="text/javascript">
+	var chart;
+	$(document).ready(function() {
+
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'graficaLineal', 	// Le doy el nombre a la gráfica
+				defaultSeriesType: 'line'	// Pongo que tipo de gráfica es
+			},
+			title: {
+				text: 'Burndown Chart' 	// Titulo (Opcional)
+			},
+			subtitle: {
+				text: '{{sprint.nombre}}'		// Subtitulo (Opcional)
+			},
+			// Pongo los datos en el eje de las 'X'
+			xAxis: {
+				categories: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+				// Pongo el título para el eje de las 'X'
+				title: {
+					text: 'Dias de la Iteracion'
+				}
+			},
+			yAxis: {
+				// Pongo el título para el eje de las 'Y'
+				title: {
+					text: 'Horas restantes'
+				}
+			},
+			// Doy formato al la "cajita" que sale al pasar el ratón por encima de la gráfica
+			tooltip: {
+				enabled: true,
+				formatter: function() {
+					return '<b>'+ this.series.name +'</b><br/>'+
+						this.x +': '+ this.y +' '+this.series.name;
+				}
+			},
+			// Doy opciones a la gráfica
+			plotOptions: {
+				line: {
+					dataLabels: {
+						enabled: true
+					},
+					enableMouseTracking: true
+				}
+			},
+			// Doy los datos de la gráfica para dibujarlas
+			series: [{
+		                name: 'Ideal',
+		                data: {{ ideal }} //[1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300, 250, 200]
+		            },
+		            {
+		                name: 'Real',
+		                data: {{ datos }}// [1000, 970, 920, 850, 810, 710, 690, 650, 630, 580, 500, 430, 370, 340, 300, 240, 200]
+		            }],
+		});
+	});
+</script>
+<body>
+<div id="graficaLineal" style="width: 100%; height: 500px; margin: 0 auto">
+</div>
+</body>
+
+    <form action="/sprint/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="hidden" name='proyecto' value= {{ proyecto.id }} >
+        <input type="submit" value="<Atras" id="submitt">
+    </form>
+</html>

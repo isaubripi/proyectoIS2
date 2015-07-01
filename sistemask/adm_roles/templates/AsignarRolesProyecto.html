@@ -1,0 +1,38 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Asignar Roles de Proyecto::{% endblock %}
+{% block TituloMenu %}ASIGNAR ROLES DE PROYECTO{% endblock %}
+{% block TituloOperacion %}Formulario Usuario Roles Proyecto{% endblock %}
+{% block DatosOperacion %}
+<form action="/inicio/rol/usuarios/asignar/confirmar/" method="POST" class="niceform">{% csrf_token %}
+
+        <dl><dt><label>Usuario: {{ usuario_actual.username }}</label></dt><dd><input type="hidden" value= {{ usuario_actual.username }} name="user" id="" size="54" required/></dd></dl>
+
+        {% for rol in roles_asignados %}
+            {% if rol.nombre == 'Scrum_Master' %}
+                <input type="checkbox" name={{ rol.nombre }} checked disabled>{{ rol.nombre }}<br>
+            {% else %}
+                <input type="checkbox" name={{ rol.nombre }} checked >{{ rol.nombre }}<br>
+            {% endif %}
+        {% endfor %}
+        {% for r in no_asignados %}
+            {% if r.nombre == 'Scrum_Master' %}
+                <input type="checkbox" name={{ r.nombre }} disabled>{{ r.nombre }}<br>
+            {% else %}
+                <input type="checkbox" name={{ r.nombre }} >{{ r.nombre }}<br>
+            {% endif %}
+        {% endfor %}
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+        <input type="hidden" name='proyecto' value= {{ proyecto.id }} >
+        <input type="submit" value="Asignar">
+</form>
+
+    <form action="/inicio/rol/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="hidden" name='proyecto' value= {{ proyecto.id }} >
+        <input type="submit" value="Cancelar" id="submit">
+    </form>
+
+{% endblock %}
+{% block Botones %}
+{% endblock %}
