@@ -21,7 +21,7 @@
                     <select size="10" style="width:500" multiple name="historias[]" id="submitt" required>
                         <option value="" disabled>Nombre ______Prioridad_____Val.Negocio_____Val.Tecnico______Desarrollador_______Flujo_________Actividad_________Estado </option>
                         {% for historia in historias %}
-                                    <option value={{ historia.nombre }}>{{ historia.nombre }} __________ {{historia.prioridad }} ____________ {{ historia.val_negocio }}_____________ {{ historia.val_tecnico }} _____________ {{ historia.asignado }} ____________ {{ historia.flujo }} __________ {{ historia.actividad }} ________ {{ historia.estado }}</option>
+                                    <option value={{ historia.id }}>{{ historia.nombre }} __________ {{historia.prioridad }} ____________ {{ historia.val_negocio }}_____________ {{ historia.val_tecnico }} _____________ {{ historia.asignado }} ____________ {{ historia.flujo }} __________ {{ historia.actividad }} ________ {{ historia.estado }}</option>
                         {% endfor %}
 
                     </select>

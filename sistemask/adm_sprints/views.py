@@ -458,12 +458,12 @@ class AsignarHistoriasConfirm(AsignarHistorias):
 
         for i in stories:
 
-            H = Historia.objects.get(nombre=i)
+            H = Historia.objects.get(id=i)
 
             if H.asignado_p == False:
 
-                sprint_detalles.historias.add(Historia.objects.get(nombre=i))
-                Historia_asignada = Historia.objects.get(nombre=i)
+                sprint_detalles.historias.add(Historia.objects.get(id=i))
+                Historia_asignada = Historia.objects.get(id=i)
                 Historia_asignada.sprint = id_sprint
                 Historia_asignada.asignado_p = True
                 Historia_asignada.estado_sprint = 'No iniciado'
