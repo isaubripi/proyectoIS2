@@ -1,0 +1,36 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Editar Rol::{% endblock %}
+{% block TituloMenu %} EDITAR ROL {% endblock %}
+{% block TituloOperacion %} Formulario Rol {% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/usuario/editarrol/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_rol" value={{rol.nombre}} required /></dd></dl>
+
+            <p>
+            <input type="checkbox" name="crear_proyecto" {% if rol.crear_proyecto %} checked {% endif %}>Crear proyecto
+            <input type="checkbox" name="crear_usuario" {% if rol.crear_usuario %} checked {% endif %} >Crear usuario
+            <input type="checkbox" name="modificar_usuario" {% if rol.modificar_usuario %} checked {% endif %} >Modificar usuario
+            <input type="checkbox" name="eliminar_usuario" {% if rol.eliminar_usuario %} checked {% endif %} >Eliminar usuario
+            </p>
+            <p>
+            <input type="checkbox" name="agregar_rol" {% if rol.agregar_rol %} checked {% endif %} >Agregar rol
+            <input type="checkbox" name="modificar_rol" {% if rol.modificar_rol %} checked {% endif %} >Modificar rol
+            <input type="checkbox" name="eliminar_rol" {% if rol.eliminar_rol %} checked {% endif %} >Eliminar rol
+            </p>
+            <p>
+            <input type="checkbox" name="asignar_usuario_inicial" {% if rol.asignar_usuario_inicial %} checked {% endif %} >Asignar usuario inicial
+            <input type="checkbox" name="asignar_roles_usuario" {% if rol.asignar_roles_usuario %} checked {% endif %} >Asignar roles a usuario
+            </p>
+
+            <input type="hidden" name="login" value={{ logueado.id }} >
+            <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+            <input type="hidden" name='rol' value= {{ rol.id }} >
+        <input type="submit" value="Guardar cambios">
+    </form>
+    <form action="/proyecto/usuario/gestionarrol/" method="POST">{% csrf_token %}
+        <input type="hidden" name="login" value={{ logueado.id }} >
+        <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}

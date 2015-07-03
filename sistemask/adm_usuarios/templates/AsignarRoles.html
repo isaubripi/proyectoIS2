@@ -8,10 +8,10 @@
         <dl><dt><label>Usuario: {{ usuario_actual.username }}</label></dt><dd><input type="hidden" value= {{ usuario_actual.username }} name="user" id="" size="54" required/></dd></dl>
 
         {% for rol in roles_asignados %}
-            <input type="checkbox" name={{ rol.nombre }} checked >{{ rol.nombre }}<br>
+            <td><input type="checkbox" name={{ rol.nombre }} checked >{{ rol.nombre }}</td><br>
         {% endfor %}
         {% for r in no_asignados %}
-            <input type="checkbox" name={{ r.nombre }}>{{ r.nombre }}<br>
+            <input type="checkbox" name={{ r.nombre }}>{{ r.nombre }}</td><br>
         {% endfor %}
         <input type="hidden" name='login' value= {{ logueado.id }} >
         <input type="hidden" name='user' value= {{ usuario_actual.id }} >
@@ -23,6 +23,12 @@
         <input type="submit" value="Cancelar" id="submit">
     </form>
 
+<form action="/proyecto/usuario/gestionarrol/" method="POST">{% csrf_token %}
+        <input type="hidden" name='login' value= {{ logueado.id }} >
+        <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+        <input type="submit" value="Gestionar roles de sistema" id="submit">
+</form>
+
+
 {% endblock %}
-{% block Botones %}
-{% endblock %}
+

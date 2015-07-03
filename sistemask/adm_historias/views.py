@@ -159,7 +159,7 @@ class CrearHistoriaConfirm(CrearHistoria):
                                   activo=True)
         nueva_historia.estado = 'To Do'
         nueva_historia.save()
-        historial = Historial.objects.create(id_historia = nueva_historia.id,
+        historial = Historial.objects.create(id_historia = nueva_historia,
                                              nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
                                              prioridad=hu_prioridad, val_negocio=hu_val_negocio,
                                              val_tecnico=hu_val_tecnico, size=hu_size, estado='To Do',
@@ -248,7 +248,7 @@ class EditarHistoriaConfirm(EditarHistoria):
 
         diccionario['historia'] = historia_editada
 
-        historial = Historial.objects.create(id_historia = historia_editada.id,
+        historial = Historial.objects.create(id_historia = historia_editada,
                                              nombre=nuevo_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto']),
                                              prioridad=nuevo_prioridad, val_negocio=nuevo_negocio, val_tecnico=nuevo_tecnico, size=nuevo_size,
                                              descripcion=nuevo_descripcion, codigo=historia_editada.codigo, acumulador=historia_editada.acumulador,

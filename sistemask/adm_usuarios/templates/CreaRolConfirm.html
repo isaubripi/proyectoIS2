@@ -1,0 +1,13 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Rol::{% endblock %}
+{% block TituloMenu %} CREAR ROL {% endblock %}
+{% block TituloOperacion %} Rol Creado {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>El rol se cre&oacute exitosamente. </h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/proyecto/usuario/gestionarrol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'PlantillaBaseListas.html' %}
+{% block title %} ::Gestion de Roles:: {% endblock %}
+{% block TituloMenu %} GESTION DE ROLES DEL SISTEMA {% endblock %}
+
+{% block Columnas %}
+   <div style="text-align: center;"><b><h1><font color="orange">GESTION DE ROLES</font></h1></b></div>
+<h2>Lista de Roles del Sistema</h2>
+    <tr>
+        <th scope="col" class="rounded">Nombre</th>
+        <th scope="col" class="rounded"><font color="green">Editar</font></th>
+        <th scope="col" class="rounded"><font color="red">Eliminar</font></th>
+    </tr>
+
+
+
+{% endblock %}
+{% block MostrarDatos%}
+    {% for rol in roles %}
+        <tr>
+            <td>{{ rol.nombre }}</td>
+
+            <td>
+                <form action= "/proyecto/usuario/editarrol/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='rol' value={{ rol.id }} >
+                    <input type="submit" value="Modificar">
+                </form>
+            </td>
+            <td>
+                <form action= "/proyecto/usuario/eliminarrol/" method="post"> {% csrf_token %}
+                    <input type="hidden" name='login' value={{ logueado.id }} >
+                    <input type="hidden" name='rol' value={{ rol.id }} >
+                    <input type="submit" value="Eliminar">
+                </form>
+            </td>
+
+        </tr>
+    {% endfor %}
+{% endblock %}
+{% block Botones%}
+    <form action="/proyecto/usuario/crearrol/" method="POST">{% csrf_token %}
+
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Crear nuevo rol">
+    </form>
+    <br>
+
+
+    <form action="/proyecto/usuario/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="<Atras"><br>
+    </form>
+{% endblock %}

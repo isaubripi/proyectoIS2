@@ -39,7 +39,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" or logueado != historia.asignado or historia.actividad == null or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado%}
+                    {% if historia.flujo == null and historia.sprint == "" or logueado != historia.asignado or historia.actividad == null or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado or historia.estado_scrum == 'Cancelado' %}
                         <center><input type="submit" value="Cargar horas" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cargar Horas"></center>
@@ -87,7 +87,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado %}
+                    {% if historia.flujo == null and historia.sprint == "" or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado or historia.estado_scrum == 'Cancelado' %}
                         <center><input type="submit" value="Cambiar" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cambiar"></center>
