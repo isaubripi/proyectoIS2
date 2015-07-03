@@ -51,20 +51,16 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if proyecto.scrum_master == logueado or logueado == historia.asignado %}
-                        <input type="submit" value="Opciones">
-                    {% else %}
-                        <input type="submit" value="Opciones" disabled>
-                    {% endif %}
+                    <input type="submit" value="Opciones">
                 </form>
             </td>
             <td><form action= "/historia/eliminar/" method="post"> {% csrf_token %}
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" and logueado == proyecto.scrum_master %}
+                    {% if historia.flujo == null and historia.sprint == "" and logueado == proyecto.scrum_master and proyecto.estado == 'I' %}
                         <input type="submit" value="Eliminar">
-                    {% elif historia.flujo == null and historia.sprint == "" and logueado == historia.asignado %}
+                    {% elif historia.flujo == null and historia.sprint == "" and logueado == historia.asignado and proyecto.estado == 'I' %}
                         <input type="submit" value="Eliminar">
                     {% else %}
                         <input type="submit" value="Eliminar" disabled>(Historia asignada o no tienes permisos.)
@@ -78,9 +74,13 @@
 
 {% block Botones%}
     <form action="/historia/crear/" method="POST">{% csrf_token %}
-        <input type="submit" value="Crear nueva historia">
         <input type="hidden" name='proyecto' value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
+        {% if proyecto.estado == 'F' or proyecto.estado == 'N' %}
+            <input type="submit" value="Crear nueva historia" disabled>
+        {% else %}
+            <input type="submit" value="Crear nueva historia">
+        {% endif %}
     </form>
     <form action="/proyecto/ingresar/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>

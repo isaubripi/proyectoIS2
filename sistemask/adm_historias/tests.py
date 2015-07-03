@@ -31,6 +31,7 @@ class HistoriaTest(TestCase):
 
         historia1 = Historia.objects.create(nombre='Historia 1', descripcion='Historia Prueba 1', activo=True)
         historia2 = Historia.objects.create(nombre='Historia 2', descripcion='Historia Prueba 2', activo=True)
+        historia3 = Historia.objects.create(nombre='Historia 3', descripcion='Historia Prueba 3', activo=True)
 
         print('Creacion de Historias ejecutada correctamente.')
 
@@ -42,6 +43,7 @@ class HistoriaTest(TestCase):
 
         historia1 = Historia.objects.update(nombre='Historia 1.1')
         historia2 = Historia.objects.update(nombre='Historia 2.1')
+        historia3 = Historia.objects.update(nombre='Historia 3.1')
         print('Modificacion de Historia ejecutada correctamente.')
 
     def test_eliminar(self):
@@ -51,10 +53,12 @@ class HistoriaTest(TestCase):
         '''
 
         historia1 = Historia.objects.get(nombre='Historia 1')
-        historia2 = Historia.objects.get(nombre='Historia 1')
+        historia2 = Historia.objects.get(nombre='Historia 2')
+        historia3 = Historia.objects.get(nombre='Historia 3')
 
         historia1.delete()
         historia2.delete()
+        historia3.delete()
         print('Eliminacion de Historias ejecutada correctamente.')
 
     def test_cargarhoras(self):
@@ -66,7 +70,11 @@ class HistoriaTest(TestCase):
         historia1 = Historia.objects.create(nombre='Historia1', descripcion='Historia1 prueba', activo=True)
 
         historia1.acumulador += 8
-        print('Carga de horas efectuada correctamente')
+
+        historia2 = Historia.objects.create(nombre='Historia1', descripcion='Historia1 prueba', activo=True)
+
+        historia2.acumulador +=7
+        print('Cargas de horas efectuadas correctamente')
 
     def test_cambiarestado(self):
         '''
@@ -90,4 +98,8 @@ class HistoriaTest(TestCase):
         registro1 = Registro.objects.create(id_historia=historia3, nombre='tarea1', descripcion='Prueba de registro1')
         registro1.fecha = timezone.now()
         registro1.activo = True
-        print('Registro de tareas correcto')
+
+        registro2 = Registro.objects.create(id_historia=historia3, nombre='tarea1', descripcion='Prueba de registro1')
+        registro2.fecha = timezone.now()
+        registro2.activo = True
+        print('Registros de tareas correctos')

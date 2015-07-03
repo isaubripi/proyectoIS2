@@ -26,7 +26,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <center><input type="submit" value="Modificar"></center>
+                    {% if proyecto.estado == 'F' or proyecto.estado == 'N' %}
+                        <center><input type="submit" value="Modificar" disabled></center>
+                    {% else %}
+                        <center><input type="submit" value="Modificar"></center>
+                    {% endif %}
                 </form>
             </td>
 
@@ -35,7 +39,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" or logueado != historia.asignado or historia.actividad == null %}
+                    {% if historia.flujo == null and historia.sprint == "" or logueado != historia.asignado or historia.actividad == null or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado%}
                         <center><input type="submit" value="Cargar horas" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cargar Horas"></center>
@@ -47,7 +51,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <center><input type="submit" value="Historial"></center>
+                    {% if historia.asignado == logueado or logueado == proyecto.scrum_master%}
+                        <center><input type="submit" value="Historial"></center>
+                    {% else %}
+                        <center><input type="submit" value="Historial" disabled></center>
+                    {% endif %}
                 </form>
             </td>
             <td>
@@ -55,7 +63,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <center><input type="submit" value="Ver"></center>
+                    {% if historia.asignado == logueado or logueado == proyecto.scrum_master%}
+                        <center><input type="submit" value="Ver"></center>
+                    {% else %}
+                        <center><input type="submit" value="Ver" disabled></center>
+                    {% endif %}
                 </form>
             </td>
             <td>
@@ -63,7 +75,11 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    <center><input type="submit" value="Tareas"></center>
+                    {% if historia.asignado == logueado or logueado == proyecto.scrum_master%}
+                        <center><input type="submit" value="Tareas"></center>
+                    {% else %}
+                        <center><input type="submit" value="Tareas" disabled></center>
+                    {% endif %}
                 </form>
             </td>
             <td>
@@ -71,7 +87,7 @@
                     <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                     <input type="hidden" name='login' value={{ logueado.id }} >
                     <input type="hidden" name='historia' value={{ historia.id }} >
-                    {% if historia.flujo == null and historia.sprint == "" %}
+                    {% if historia.flujo == null and historia.sprint == "" or proyecto.estado == 'F' or proyecto.estado == 'N' or historia.estado_sprint == 'No iniciado' or historia.estado_sprint == 'Ejecutado' or proyecto.scrum_master != logueado and logueado != historia.asignado %}
                         <center><input type="submit" value="Cambiar" disabled></center>
                     {% else %}
                         <center><input type="submit" value="Cambiar"></center>
@@ -87,6 +103,11 @@
     <form action="/historia/" method="POST"> {% csrf_token %}
         <input type="hidden" name="proyecto" value={{ proyecto.id }}>
         <input type="hidden" name='login' value={{ logueado.id }} >
-        <input type="submit" value="<Atras"><br>
+        <input type="submit" value="Administracion de Historias"><br>
+    </form>
+    <form action="/proyecto/kanban/" method="POST"> {% csrf_token %}
+        <input type="hidden" name="proyecto" value={{ proyecto.id }}>
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <input type="submit" value="Tabla kanban"><br>
     </form>
 {% endblock %}
