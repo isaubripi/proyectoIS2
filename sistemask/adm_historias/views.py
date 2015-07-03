@@ -5,6 +5,8 @@ from .models import Historia, Historial, Registro
 from adm_usuarios.models import Usuario
 from adm_proyectos.models import Proyecto
 from adm_actividades.models import Actividad
+from adm_sprints.models import Sprint
+from adm_roles.models import Rol
 from adm_proyectos.views import LoginRequiredMixin
 from django.utils import timezone
 from django.core.mail.message import EmailMultiAlternatives
@@ -95,6 +97,9 @@ class CrearHistoria(LoginRequiredMixin, HistoriaView):
         diccionario['logueado']= usuario_logueado
         proyecto_actual = Proyecto.objects.get(id=request.POST['proyecto'])
         diccionario['proyecto'] = proyecto_actual
+        if not len(Rol.objects.filter(usuario=usuario_logueado, proyecto=proyecto_actual.id, agregar_historia=True, activo=True)):
+            diccionario['error'] = 'No tiene permisos para crear historia'
+            return render(request, super(CrearHistoria, self).template_name, diccionario)
         return render(request, self.template_name, diccionario)
 
 class CrearHistoriaConfirm(CrearHistoria):
@@ -154,7 +159,7 @@ class CrearHistoriaConfirm(CrearHistoria):
                                   activo=True)
         nueva_historia.estado = 'To Do'
         nueva_historia.save()
-        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=hu_nombre, activo=True ),
+        historial = Historial.objects.create(id_historia = nueva_historia.id,
                                              nombre=hu_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto_historia']),
                                              prioridad=hu_prioridad, val_negocio=hu_val_negocio,
                                              val_tecnico=hu_val_tecnico, size=hu_size, estado='To Do',
@@ -190,6 +195,9 @@ class EditarHistoria(LoginRequiredMixin, HistoriaNView):
         diccionario['proyecto'] = proyecto_actual
         historia_actual = Historia.objects.get(id=request.POST['historia'])
         diccionario['historia'] = historia_actual
+        if not len(Rol.objects.filter(usuario=usuario_logueado, proyecto=proyecto_actual.id, modificar_historia=True, activo=True)):
+            diccionario['error'] = 'No tiene permisos para modificar historia'
+            return render(request, super(EditarHistoria, self).template_name, diccionario)
         return render (request, self.template_name, diccionario)
 
 class EditarHistoriaConfirm(EditarHistoria):
@@ -240,7 +248,7 @@ class EditarHistoriaConfirm(EditarHistoria):
 
         diccionario['historia'] = historia_editada
 
-        historial = Historial.objects.create(id_historia = Historia.objects.get(nombre=nuevo_nombre, activo=True),
+        historial = Historial.objects.create(id_historia = historia_editada.id,
                                              nombre=nuevo_nombre, proyecto=Proyecto.objects.get(id=request.POST['proyecto']),
                                              prioridad=nuevo_prioridad, val_negocio=nuevo_negocio, val_tecnico=nuevo_tecnico, size=nuevo_size,
                                              descripcion=nuevo_descripcion, codigo=historia_editada.codigo, acumulador=historia_editada.acumulador,
@@ -274,9 +282,11 @@ class EliminarHistoria(LoginRequiredMixin, HistoriaView):
         diccionario['proyecto'] = proyecto_actual
         historia_eliminada = Historia.objects.get(id=request.POST['historia'])
         historia_eliminada.activo = False
-        historia_eliminada.save()
 
-        historial = Historial.objects.create(id_historia=historia_eliminada, nombre=historia_eliminada.nombre, proyecto=proyecto_actual,
+        if len(Rol.objects.filter(usuario=usuario_logueado, proyecto=proyecto_actual.id, eliminar_historia=True, activo=True)):
+            historia_eliminada.save()
+
+            historial = Historial.objects.create(id_historia=historia_eliminada, nombre=historia_eliminada.nombre, proyecto=proyecto_actual,
                                              prioridad=historia_eliminada.prioridad, val_negocio=historia_eliminada.val_negocio,
                                              val_tecnico=historia_eliminada.val_tecnico, size=historia_eliminada.size,
                                              descripcion=historia_eliminada.descripcion,
@@ -284,11 +294,14 @@ class EliminarHistoria(LoginRequiredMixin, HistoriaView):
                                              asignado=historia_eliminada.asignado, flujo=historia_eliminada.flujo,
                                              estado=historia_eliminada.estado, sprint=historia_eliminada.sprint,
                                              asignado_p=historia_eliminada.asignado_p,
-                                             estado_sprint=historia_eliminada.estado_sprint, activo=False)
-        historial.fecha = timezone.now()
-        historial.save()
+                                             estado_sprint=historia_eliminada.estado_sprint, fecha=timezone.now(), activo=False)
 
-        return render(request, self.template_name, diccionario)
+            historial.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error'] = 'No tiene permisos para eliminar historia'
+            return render(request, super(EliminarHistoria, self).template_name, diccionario)
+
 
 
 class VerHistorial(LoginRequiredMixin, HistoriaNView):
@@ -345,6 +358,9 @@ class CargarHoras(LoginRequiredMixin, HistoriaNView):
         diccionario['proyecto'] = proyecto_actual
         historia_actual = Historia.objects.get(id=request.POST['historia'])
         diccionario['historia'] = historia_actual
+        if not len(Rol.objects.filter(usuario=usuario_logueado, proyecto=proyecto_actual.id, cargar_horas=True, activo=True)):
+            diccionario['error'] = 'No tiene permisos para registrar horas'
+            return render(request, super(CargarHoras, self).template_name, diccionario)
         return render(request, self.template_name, diccionario)
 
 class CargarHorasConfirm(CargarHoras):
@@ -421,7 +437,7 @@ class CargarHorasConfirm(CargarHoras):
                                              asignado=historia.asignado, flujo=historia.flujo,
                                              estado=historia.estado, sprint=historia.sprint,
                                              asignado_p=historia.asignado_p, estado_sprint=historia.estado_sprint,
-                                             activo=False)
+                                             activo=True)
         historial.fecha = timezone.now()
 
 
@@ -567,6 +583,10 @@ class CambiarEstadoActividad(LoginRequiredMixin, HistoriaNView):
         actividades = Actividad.objects.filter(flujo=historia_actual.flujo.id, estado=True).order_by('secuencia')
         diccionario['actividades'] = actividades
 
+        if not len(Rol.objects.filter(usuario=usuario_logueado, proyecto=proyecto_actual.id, cambiar_actividad_estado=True, activo=True)):
+            diccionario['error'] = 'No tiene permisos para cambiar el estado y actividad de la historia'
+            return render(request, super(CambiarEstadoActividad, self).template_name, diccionario)
+
         return render(request, self.template_name, diccionario)
 
 class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
@@ -608,7 +628,7 @@ class CambiarEstadoActividadConfirm(CambiarEstadoActividad):
                                              asignado=historia.asignado, flujo=historia.flujo,
                                              estado=historia.estado, actividad=historia.actividad.nombre,
                                              sprint=historia.sprint, asignado_p=historia.asignado_p,
-                                             estado_sprint=historia.estado_sprint, activo=False)
+                                             estado_sprint=historia.estado_sprint, activo=True)
         historial.fecha = timezone.now()
         historial.save()
 
