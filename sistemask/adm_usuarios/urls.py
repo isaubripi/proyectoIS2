@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from .views import UsuarioView, CrearUsuario, CrearUsuarioConfirm, EditarUsuario, EditarUsuarioConfirm, EliminarUsuario, AsignarRoles, AsignarRolesConfirm
+from .views import UsuarioView, CrearUsuario, CrearUsuarioConfirm, EditarUsuario, EditarUsuarioConfirm, EliminarUsuario, AsignarRoles, AsignarRolesConfirm, CreaRol, CreaRolConfirm, EditaRol, EditaRolConfirm, EliminaRol, GestionarRol
 
 urlpatterns= patterns('',
     url('^$', UsuarioView.as_view(), name='usuario'),
@@ -10,6 +10,12 @@ urlpatterns= patterns('',
     url('^eliminar/$', EliminarUsuario.as_view(), name='eliminar_usuario'),
     url('^asignar/$', AsignarRoles.as_view(), name='asignar_roles'),
     url('^asignar/confirmar/$', AsignarRolesConfirm.as_view(), name='asignar_roles_confirmar'),
+    url('^crearrol/$', CreaRol.as_view(), name='crea_roles'),
+    url('^crearrol/confirmar/$', CreaRolConfirm.as_view(), name='crea_roles_confirmar'),
+    url('^editarrol/$', EditaRol.as_view(), name='edita_roles'),
+    url('^editarrol/confirmar/$', EditaRolConfirm.as_view(), name='edita_roles_confirmar'),
+    url('^eliminarrol/$', EliminaRol.as_view(), name='elimina_roles'),
+    url('^gestionarrol/$', GestionarRol.as_view(), name='gestionar_roles'),
 
 
     #url('^mostrar/$', MostrarUsuario.as_view(), name='mostrar_usuario'),

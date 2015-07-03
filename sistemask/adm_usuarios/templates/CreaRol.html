@@ -1,0 +1,36 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Crear Rol::{% endblock %}
+{% block TituloMenu %} CREAR ROL {% endblock %}
+{% block TituloOperacion %} Formulario Rol {% endblock %}
+{% block DatosOperacion %}
+    <form action="/proyecto/usuario/crearrol/confirmar/" method="POST">{% csrf_token %}
+        <fieldset>
+            <dl><dt><label>Nombre:</label></dt><dd><input type="text" name="nombre_rol" required /></dd></dl>
+
+            <p>
+            <input type="checkbox" name="crear_proyecto">Crear proyecto
+            <input type="checkbox" name="crear_usuario">Crear usuario
+            <input type="checkbox" name="modificar_usuario">Modificar usuario
+            <input type="checkbox" name="eliminar_usuario">Eliminar usuario
+            </p>
+            <p>
+            <input type="checkbox" name="agregar_rol">Agregar rol
+            <input type="checkbox" name="modificar_rol">Modificar rol
+            <input type="checkbox" name="eliminar_rol">Eliminar rol
+            </p>
+            <p>
+            <input type="checkbox" name="asignar_usuario_inicial">Asignar usuario inicial
+            <input type="checkbox" name="asignar_roles_usuario">Asignar roles a usuario
+            </p>
+
+            <input type="hidden" name="login" value={{ logueado.id }} >
+            <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+            <input type="hidden" name="activo" value="true">
+        <input type="submit" value="Crear">
+    </form>
+    <form action="/proyecto/usuario/gestionarrol/" method="POST">{% csrf_token %}
+        <input type="hidden" name="login" value={{ logueado.id }} >
+        <input type="hidden" name='user' value= {{ usuario_actual.id }} >
+        <input type="submit" value="<Atras">
+    </form>
+{% endblock %}

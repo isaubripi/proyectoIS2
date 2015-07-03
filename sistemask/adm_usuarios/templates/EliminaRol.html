@@ -1,0 +1,13 @@
+{% extends 'PlantillaBaseMetodos.html' %}
+{% block title %}::Eliminar Rol::{% endblock %}
+{% block TituloMenu %} ELIMINAR ROL {% endblock %}
+{% block TituloOperacion %} Rol Eliminado {% endblock %}
+{% block DatosOperacion %}
+    <center><h3>El rol pasó a estado : INACTIVO</h3></center>
+{% endblock %}
+{% block Botones %}
+    <form action="/proyecto/usuario/gestionarrol/" method="POST"> {% csrf_token %}
+        <input type="hidden" name='login' value={{ logueado.id }} >
+        <center><input type="submit" value="Aceptar"></center>
+    </form>
+{% endblock %}

@@ -170,10 +170,10 @@ class AsignarRoles(LoginRequiredMixin, UsuarioView):
         usuario_actual = Usuario.objects.get(id = request.POST['usuario'])
         diccionario['usuario_actual'] = usuario_actual
         #lista = usuario_actual.roles.all()
-        lista = usuario_actual.roles.filter(proyecto= '')
+        lista = usuario_actual.roles.filter(proyecto= '', activo=True)
         diccionario['roles_asignados'] = lista
         #lista1 = Rol.objects.exclude(usuario=usuario_actual)
-        lista1 = Rol.objects.filter(proyecto= '')
+        lista1 = Rol.objects.filter(proyecto= '', activo=True)
         diccionario['no_asignados'] = lista1
         return render(request, self.template_name, diccionario)
 
@@ -196,6 +196,186 @@ class AsignarRolesConfirm(AsignarRoles):
         usuario_actual.save()
         return render(request, self.template_name, diccionario)
 
+
+class GestionarRol(AsignarRoles):
+    template_name = 'GestionarRol.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id=request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+        roles_sistema = Rol.objects.filter(proyecto='', activo=True)
+        diccionario['roles'] = roles_sistema
+        return render(request, self.template_name, diccionario)
+
+
+class CreaRol(AsignarRoles):
+    template_name = 'CreaRol.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id=request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+        #usuario_actual = Usuario.objects.get(id=request.POST['user'])
+        #diccionario['usuario_actual'] = usuario_actual
+        return render(request, self.template_name, diccionario)
+
+class CreaRolConfirm(CreaRol):
+    template_name = 'CreaRolConfirm.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id=request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+
+        rol_nombre= request.POST['nombre_rol']
+        nuevo_rol = Rol(nombre= rol_nombre)
+
+        if len(Rol.objects.filter(nombre= rol_nombre, activo= True, proyecto='')):
+            i = 1
+            while len(Rol.objects.filter(nombre= rol_nombre + '(' + str(i) + ')', activo= True, proyecto='')):
+                i+=1
+            rol_nombre = rol_nombre + '(' + str(i) + ')'
+
+        nuevo_rol.nombre = rol_nombre
+
+
+        nuevo_rol.proyecto = ''
+
+        if 'crear_proyecto' in request.POST: nuevo_rol.crear_proyecto= True
+        else: nuevo_rol.crear_proyecto= False
+
+        if 'crear_usuario' in request.POST: nuevo_rol.crear_usuario= True
+        else: nuevo_rol.crear_usuario= False
+
+        if 'modificar_usuario' in request.POST: nuevo_rol.modificar_usuario= True
+        else: nuevo_rol.modificar_usuario= False
+
+        if 'eliminar_usuario' in request.POST: nuevo_rol.eliminar_usuario= True
+        else: nuevo_rol.eliminar_usuario= False
+
+        if 'agregar_rol' in request.POST: nuevo_rol.agregar_rol= True
+        else: nuevo_rol.agregar_rol= False
+
+        if 'modificar_rol' in request.POST: nuevo_rol.modificar_rol= True
+        else: nuevo_rol.modificar_rol= False
+
+        if 'eliminar_rol' in request.POST: nuevo_rol.eliminar_rol= True
+        else: nuevo_rol.eliminar_rol= False
+
+        if 'asignar_usuario_inicial' in request.POST: nuevo_rol.asignar_usuario_inicial= True
+        else: nuevo_rol.asignar_usuario_inicial= False
+
+        if 'asignar_roles_usuario' in request.POST: nuevo_rol.asignar_roles_usuario= True
+        else: nuevo_rol.asignar_roles_usuario= False
+
+        nuevo_rol.activo= True
+
+        nuevo_rol.save()
+        return render(request, self.template_name, diccionario)
+
+
+class EditaRol(GestionarRol):
+    template_name = 'EditaRol.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id=request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+        #usuario_actual = Usuario.objects.get(id=request.POST['user'])
+        #diccionario['usuario_actual'] = usuario_actual
+        rol_editar = Rol.objects.get(id=request.POST['rol'])
+        diccionario['rol'] = rol_editar
+        if rol_editar.nombre== 'Administrador':
+            diccionario['error']= 'Rol: Administrador - No se puede eliminar'
+
+            return render(request, super(EditaRol, self).template_name, diccionario)
+        return render(request, self.template_name, diccionario)
+
+class EditaRolConfirm(EditaRol):
+    template_name = 'EditaRolConfirm.html'
+    def post(self, request, *args, **kwargs):
+        diccionario = {}
+        usuario_logueado = Usuario.objects.get(id=request.POST['login'])
+        diccionario['logueado'] = usuario_logueado
+
+        rol_editar = Rol.objects.get(id=request.POST['rol'])
+
+        rol_nombre= request.POST['nombre_rol']
+
+
+        rol_editar.nombre = rol_nombre
+
+        rol_editar.proyecto = ''
+
+        if 'crear_proyecto' in request.POST: rol_editar.crear_proyecto= True
+        else: rol_editar.crear_proyecto= False
+
+        if 'crear_usuario' in request.POST: rol_editar.crear_usuario= True
+        else: rol_editar.crear_usuario= False
+
+        if 'modificar_usuario' in request.POST: rol_editar.modificar_usuario= True
+        else: rol_editar.modificar_usuario= False
+
+        if 'eliminar_usuario' in request.POST: rol_editar.eliminar_usuario= True
+        else: rol_editar.eliminar_usuario= False
+
+        if 'agregar_rol' in request.POST: rol_editar.agregar_rol= True
+        else: rol_editar.agregar_rol= False
+
+        if 'modificar_rol' in request.POST: rol_editar.modificar_rol= True
+        else: rol_editar.modificar_rol= False
+
+        if 'eliminar_rol' in request.POST: rol_editar.eliminar_rol= True
+        else: rol_editar.eliminar_rol= False
+
+        if 'asignar_usuario_inicial' in request.POST: rol_editar.asignar_usuario_inicial= True
+        else: rol_editar.asignar_usuario_inicial= False
+
+        if 'asignar_roles_usuario' in request.POST: rol_editar.asignar_roles_usuario= True
+        else: rol_editar.asignar_roles_usuario= False
+
+        rol_editar.activo= True
+
+        rol_editar.save()
+        return render(request, self.template_name, diccionario)
+
+class EliminaRol(GestionarRol):
+    '''Esta clase elimina un rol, es decir, pone en estado inactivo el rol.
+    El rol de Scrum Master no se puede eliminar.
+    Hereda de RolView.
+    template_name es el archivo html de esta funcion.
+
+    '''
+    template_name = 'EliminaRol.html'
+    def post(self, request, *args, **kwargs):
+        '''
+        Esta funcion tiene los parametros:
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: request, el archivo html y el diccionario.
+        '''
+
+
+        diccionario = {}
+        usuario_logueado= Usuario.objects.get(id= request.POST['login'])
+        diccionario['logueado']= usuario_logueado
+
+        rol_actual= Rol.objects.get(id= request.POST['rol'])
+
+        if rol_actual.nombre== 'Administrador':
+            diccionario['error']= 'Rol: Administrador - No se puede eliminar'
+
+            return render(request, super(EliminaRol, self).template_name, diccionario)
+
+        if len(Rol.objects.filter(id=rol_actual.id, activo=True, proyecto='', usuario=None)) != 0:
+            rol_actual.activo = False
+            rol_actual.save()
+            return render(request, self.template_name, diccionario)
+        else:
+            diccionario['error']= 'El rol esta asignado, no se puede eliminar'
+
+            return render(request, super(EliminaRol, self).template_name, diccionario)
+
+        #roles= Rol.objects.filter(nombre= rol_actual.nombre, activo= True)
+        #for rol_actual in roles:
 
 
 
