@@ -43,9 +43,15 @@
 
                 <tr>
                 {% for actividad in actividades_flujo %}
+
+
                     {% ifequal actividad.flujo flujo.id %}
+                        {% if actividad.secuencia != 1 %}
+                            <td><td><td></td></td></td>
+                        {% endif %}
                         {% for historia in historias %}
-                            {% ifequal historia.actividad actividad %}
+
+                            {% if historia.actividad == actividad %}
 
 
                                 {% ifequal historia.estado "To Do" %}
@@ -107,16 +113,17 @@
                                 </td>
                                 {% endifequal %}
 
-                            {% endifequal %}
-
+                            {% endif %}
 
                         {% endfor %}
 
-                        {% ifnotequal actividad.secuencia flujo.nro_actividades %}
-                            <td><td><td></td></td></td>
-                        {% endifnotequal %}
 
-                        {% endifequal %}
+                        <!--{% ifnotequal actividad.secuencia flujo.nro_actividades %}-->
+
+                        <!--{% endifnotequal %}-->
+
+                    {% endifequal %}
+
 
 
                 {% endfor %}

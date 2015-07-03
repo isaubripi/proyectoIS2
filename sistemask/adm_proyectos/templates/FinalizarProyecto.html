@@ -52,7 +52,12 @@
     <form action= "/proyecto/finalizar/confirmar/" method="post"> {% csrf_token %}
         <input type="hidden" name='login' value={{ logueado.id }} >
         <input type="hidden" name='proyecto' value={{ proyecto.id}}>
-     	<input type="submit" value="Confirmar finalizacion" id="submitt">
+        {% if proyecto.estado == 'I' %}
+
+     	    <input type="submit" value="Confirmar finalizacion" id="submitt">
+        {% else %}
+            <input type="submit" value="Confirmar finalizacion" id="submitt" disabled>
+        {% endif %}
     </form>
 
 

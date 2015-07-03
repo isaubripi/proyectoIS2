@@ -31,7 +31,7 @@
                             <form action= "/proyecto/eliminar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                {% if proyecto.estado == 'F' %}
+                                {% if proyecto.estado == 'F' or logueado != proyecto.scrum_master %}
                                     <input type="submit" value="Eliminar" id="submitt" disabled>
                                 {% else %}
                                      <input type="submit" value="Eliminar" id="submitt">
@@ -43,7 +43,7 @@
                             <form action= "/proyecto/modificar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id }} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                {% if proyecto.estado == 'F' %}
+                                {% if proyecto.estado == 'F' or logueado != proyecto.scrum_master %}
                                     <input type="submit" value="Modificar" id="submitt" disabled>
                                 {% else %}
                                      <input type="submit" value="Modificar" id="submitt">
@@ -55,7 +55,7 @@
                             <form action= "/proyecto/inicializar/" method="post"> {% csrf_token %}
                                 <input type="hidden" name='proyecto' value={{ proyecto.id}} >
                                 <input type="hidden" name='login' value={{ logueado.id }} >
-                                {% if proyecto.estado == 'F' %}
+                                {% if proyecto.estado == 'F' or logueado != proyecto.scrum_master %}
                                     <input type="submit" value="Inicializar" id="submitt" disabled>
                                 {% else %}
                                      <input type="submit" value="Inicializar" id="submitt">

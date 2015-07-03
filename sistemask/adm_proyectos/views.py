@@ -711,6 +711,7 @@ class ReleaseHistoria(LoginRequiredMixin, TemplateView):
 class ReleaseConfirm(LoginRequiredMixin, TemplateView):
     """
     Para hacer release a una historia. Boton "Release"
+    Pasa del estado "Pendiente" a "Released"
 
     """
 
@@ -752,6 +753,13 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
 
     template_name = 'InicioProyecto.html'
     def post(self, request, *args, **kwargs):
+        """
+
+        :param request: peticion web
+        :param args: Para mapear los argumentos posicionales a al tupla
+        :param kwargs: Diccionario para mapear los argumentos de palabra clave
+        :return:retorna el informe en formato pdf y se visualiza con al aplicacion
+        """
         proyecto_actual= Proyecto.objects.get(id=request.POST['proyecto'])
 
 
@@ -826,10 +834,11 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         lista.append(['Equipo', 'Cantidad', 'Estado'])
         cant=0
         for j in historias:
-            sprint = j.sprint
-            sprint_actual = Sprint.objects.get(id=sprint)
-            if sprint_actual.estado == 'En Ejecucion' and j.estado_scrum=='Pendiente':
-                cant = cant + 1
+            if(j.sprint):
+                sprint = j.sprint
+                sprint_actual = Sprint.objects.get(id=sprint)
+                if sprint_actual.estado == 'En Ejecucion' and j.estado_scrum=='Pendiente':
+                    cant = cant + 1
 
         #team = []
         #for k in proyecto_actual.scrum_team.all():
@@ -973,10 +982,11 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         sprints_proyecto = Sprint.objects.filter(proyecto=proyecto_actual, activo=True).order_by("nombre")
 
 
-        lista1 = []
+        #lista1 = []
         for j in sprints_proyecto:
+            lista1=[]
 
-            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-orden")
+            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-id")
             for k in tareas:
                 lista1.append(k)
 
@@ -1016,12 +1026,13 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
         duracion_estimada = []
         duracion_ejecutada = []
         nombres = []
-        lista2 = []
+        #lista2 = []
 
 
         for j in sprints_proyecto:
+            lista2=[]
 
-            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-orden")
+            tareas = Registro.objects.filter(proyecto=proyecto_actual,sprint=j.id ).order_by("-id")
             for k in tareas:
                 lista2.append(k)
 
@@ -1142,10 +1153,11 @@ class GenerarReporte(LoginRequiredMixin, ProyectoView):
 
 
         for j in historias:
-            sprint = j.sprint
-            sprint_actual = Sprint.objects.get(id=sprint)
-            if sprint_actual.estado == 'En Ejecucion':
-                lista.append([j.nombre, j.descripcion, j.actividad, j.estado, j.flujo])
+            if(j.sprint):
+                sprint = j.sprint
+                sprint_actual = Sprint.objects.get(id=sprint)
+                if sprint_actual.estado == 'En Ejecucion':
+                    lista.append([j.nombre, j.descripcion, j.actividad, j.estado, j.flujo])
 
         t=Table( lista, style = [
                        ('GRID',(0,0),(-1,-1),0.5,colors.white),
@@ -1212,8 +1224,8 @@ class FinalizarProyecto(LoginRequiredMixin, ProyectoView):
     template_name = 'FinalizarProyecto.html'
     def post(self, request, *args, **kwargs):
         """
-        Realiza la verifiacion de que el usuario posea el permiso y luego muestra el product backlog
-        que pertenece al proyecto actual.
+        Realiza la verificacion de que el usuario posea el permiso y luego muestra historias
+        que pertenecen al proyecto actual.
 
         Para el product backlog se lleva la lista de historias de usuario priorizadas del proyecto
         dando las opciones de realizar distintos tipos de filtros sobre ellos.
@@ -1221,8 +1233,8 @@ class FinalizarProyecto(LoginRequiredMixin, ProyectoView):
         :param request: Peticion web
         :param args: Para mapear los argumentos posicionales a al tupla
         :param kwargs: Diccionario para mapear los argumentos de palabra clave
-        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
-                Retorna la pagina donde se puede observar el productBacklog del proyecto
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para finalizar o no se pueda
+                Retorna la pagina donde se puede observar la finalizacion correcta
 
         """
         diccionario = {}
@@ -1252,8 +1264,8 @@ class FinalizarProyectoConfirm(LoginRequiredMixin, ProyectoView):
         :param request: Peticion web
         :param args: Para mapear los argumentos posicionales a al tupla
         :param kwargs: Diccionario para mapear los argumentos de palabra clave
-        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para ver el product backlog
-                Retorna la pagina donde se puede observar el productBacklog del proyecto
+        :return: Retorna un mensaje de error, en el caso de que el usuario no posea permisos para finalizar o no se pueda
+                Retorna la pagina donde se puede observar la finalizacion correcta
 
         """
         diccionario = {}
