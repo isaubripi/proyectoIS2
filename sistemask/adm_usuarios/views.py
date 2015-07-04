@@ -188,7 +188,7 @@ class AsignarRolesConfirm(AsignarRoles):
         lista2 = usuario_actual.roles.all()
         lista3 = Rol.objects.exclude(usuario=usuario_actual)
         for rol in lista2:
-            if rol.nombre not in request.POST:
+            if rol.proyecto == '' and rol.nombre not in request.POST:
                 usuario_actual.roles.remove(rol)
         for r in lista3:
             if r.nombre in request.POST:
